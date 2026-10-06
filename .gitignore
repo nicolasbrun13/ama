@@ -1,0 +1,33 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/build/
+
+# NestJS
+backend/dist/
+
+# Env — ne jamais committer les vrais secrets
+.env
+frontend/.env.local
+backend/.env
+
+# Keep examples
+!frontend/.env.local.example
+!backend/.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Graft
+graft/
+
+# Misc
+*.log
+.turbo/

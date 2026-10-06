@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Nunito:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --rose:       #C8587A;
+  --rose-deep:  #A03460;
+  --rose-neon:  #D4607A;
+  --rose-glow:  rgba(200,88,122,.15);
+  --rose-dim:   rgba(200,88,122,.08);
+  --border:     rgba(200,88,122,.12);
+  --gold:       #E8BF50;
+  --gold-light: #F5D878;
+  --bg:         #06030F;
+  --bg-mid:     #0C0620;
+  --bg-soft:    #120830;
+  --white:      #FDF0F7;
+  --dim:        rgba(253,240,247,.55);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+/* Scroll reveal */
+.pre-rv {
+  opacity: 0;
+  transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+}
+.pre-rv[data-rv="up"]    { transform: translateY(30px); }
+.pre-rv[data-rv="left"]  { transform: translateX(-36px); }
+.pre-rv[data-rv="right"] { transform: translateX(36px); }
+.pre-rv.in { opacity: 1 !important; transform: none !important; }
+
+/* Séparateurs animés */
+.sep-line {
+  display: flex; align-items: center; gap: .75rem; max-width: 160px; margin: 0 auto 1.5rem;
+}
+.sep-line::before, .sep-line::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(200,88,122,.6) 50%, transparent 100%);
+  background-size: 200% 1px;
+  animation: sepFlow 3.5s linear infinite;
+}
+.sep-line::after { animation-direction: reverse; animation-delay: -.8s; }
+@keyframes sepFlow { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
+/* Breathing cards */
+.card-breath {
+  animation: cardBreath 6s ease-in-out infinite;
+  transition: box-shadow .9s ease, border-color .9s ease, background .9s ease, transform .9s ease;
+}
+.card-breath:hover {
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease, transform .2s ease;
+  transform: translateY(-5px);
+  border-color: rgba(200,88,122,.4) !important;
+  box-shadow: 0 8px 32px rgba(200,88,122,.18), 0 0 60px rgba(200,88,122,.08) !important;
+}
+@keyframes cardBreath {
+  0%,100% { box-shadow: 0 4px 20px rgba(200,88,122,.04); }
+  50%      { box-shadow: 0 4px 40px rgba(200,88,122,.14), 0 0 60px rgba(200,88,122,.06); }
+}
+.card-breath:nth-child(2) { animation-delay: -1s; }
+.card-breath:nth-child(3) { animation-delay: -2s; }
+.card-breath:nth-child(4) { animation-delay: -3s; }
+.card-breath:nth-child(5) { animation-delay: -4s; }
+.card-breath:nth-child(6) { animation-delay: -5s; }
+
+/* Float animation for testimonial cards */
+.card-float { animation: acFloat 8s ease-in-out infinite; }
+.card-float:nth-child(2) { animation-delay: -2.8s; animation-duration: 10s; }
+.card-float:nth-child(3) { animation-delay: -5.2s; animation-duration: 7.3s; }
+@keyframes acFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+
+/* Ambient section glow */
+.sec-ambient::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(200,88,122,.04) 0%, transparent 75%);
+  animation: secAmb 12s ease-in-out infinite;
+}
+@keyframes secAmb { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.2)} }
+
+/* Callout border breathe */
+.callout-glow { animation: callGlow 4s ease-in-out infinite; }
+@keyframes callGlow {
+  0%,100%{border-left-color:var(--rose);box-shadow:none}
+  50%{border-left-color:var(--rose-neon);box-shadow:-5px 0 18px rgba(212,96,122,.25)}
+}
+
+/* Video background */
+.vid-bg {
+  position: absolute; inset: 0; overflow: hidden; z-index: 0;
+}
+.vid-bg video {
+  width: 100%; height: 100%; object-fit: cover; pointer-events: none;
+}
+.vid-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--vid-overlay, rgba(6,3,15,.72));
+}
+.vid-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  z-index: 1; pointer-events: none;
+}

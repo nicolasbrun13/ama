@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anna Blanc — Hypnose HRE · Prototype 2 : Rose Nuit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Nunito:wght@300;400;500;600;700&display=swap">
+  <style>
+    :root {
+      --bg:         #06030F;
+      --bg-mid:     #0C0620;
+      --bg-soft:    #120830;
+      --rose:       #FF5E8A;
+      --rose-deep:  #C03268;
+      --rose-neon:  #FF3D78;
+      --rose-glow:  rgba(255,94,138,.15);
+      --rose-dim:   rgba(255,94,138,.08);
+      --gold:       #E8BF50;
+      --gold-light: #F5D878;
+      --white:      #FDF0F7;
+      --dim:        rgba(253,240,247,.55);
+      --border:     rgba(255,94,138,.12);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--white); overflow-x:hidden; }
+
+    /* ─── Nav ─── */
+    nav {
+      position:sticky; top:0; z-index:200;
+      background:rgba(6,3,15,0.90); backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      padding:0 2rem;
+      display:flex; align-items:center; justify-content:space-between; height:66px;
+    }
+    .nav-logo {
+      font-family:'Playfair Display',serif; font-style:italic;
+      font-size:1.5rem; color:var(--white); letter-spacing:.05em;
+      display:flex; align-items:center; gap:.5rem;
+    }
+    .nav-star { color:var(--rose); font-style:normal; font-size:.9rem; animation:pulse 2.2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.2)} }
+    .nav-links { display:flex; list-style:none; gap:0; align-items:center; }
+    .nav-links a { color:rgba(253,240,247,.6); text-decoration:none; font-size:.76rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:.5rem .9rem; transition:color .2s; }
+    .nav-links a:hover { color:var(--rose); }
+    .nav-links a.active { color:var(--white); }
+    .nav-cta { background:var(--rose-deep) !important; color:white !important; border-radius:50px; padding:.5rem 1.4rem !important; box-shadow:0 4px 20px rgba(192,50,104,.4); }
+
+    /* ══════════════════════════════════════════════════════════
+       HERO — fond noir + nébuleuse rose + étoiles filantes
+    ══════════════════════════════════════════════════════════ */
+    .hero {
+      position:relative; overflow:hidden;
+      min-height:100vh;
+      display:flex; align-items:center;
+      padding:7rem 2rem 5rem;
+      background:var(--bg);
+    }
+    #heroCanvas { position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+    /* Nébuleuses */
+    .neb { position:absolute; border-radius:50%; filter:blur(100px); pointer-events:none; z-index:1; }
+    .neb-1 { width:750px;height:750px; background:radial-gradient(circle,rgba(255,94,138,.2) 0%,transparent 60%); top:-300px;right:-200px; animation:nbA 16s ease-in-out infinite; }
+    .neb-2 { width:500px;height:500px; background:radial-gradient(circle,rgba(192,50,104,.12) 0%,transparent 65%); bottom:-150px;left:-100px; animation:nbB 20s ease-in-out infinite; }
+    .neb-3 { width:400px;height:400px; background:radial-gradient(circle,rgba(232,191,80,.07) 0%,transparent 65%); top:20%;left:30%; animation:nbC 24s ease-in-out infinite; }
+    @keyframes nbA { 0%,100%{transform:translate(0,0) scale(1);opacity:.8} 50%{transform:translate(-60px,40px) scale(1.18);opacity:1} }
+    @keyframes nbB { 0%,100%{transform:translate(0,0) scale(1);opacity:.5} 50%{transform:translate(40px,-30px) scale(.9);opacity:.8} }
+    @keyframes nbC { 0%,100%{transform:translate(0,0) scale(1);opacity:.35} 50%{transform:translate(-25px,25px) scale(1.12);opacity:.65} }
+
+    .hero-inner { position:relative; z-index:2; max-width:1200px; margin:0 auto; width:100%; display:grid; grid-template-columns:1fr 400px; gap:4rem; align-items:center; }
+
+    /* Contenu */
+    .hero-tag { display:inline-flex; align-items:center; gap:.5rem; background:rgba(255,94,138,.1); border:1px solid rgba(255,94,138,.25); border-radius:50px; padding:.4rem 1.1rem; font-size:.68rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--rose); margin-bottom:1.5rem; }
+    .hero h1 { font-family:'Playfair Display',serif; font-weight:500; font-size:clamp(2.1rem,3.8vw,3.6rem); line-height:1.18; color:var(--white); margin-bottom:1.5rem; }
+    .hero h1 em { font-style:italic; color:var(--rose); }
+    .hero-sub { font-size:.97rem; font-weight:300; color:var(--dim); line-height:1.9; max-width:500px; margin-bottom:2.5rem; }
+    .btns { display:flex; gap:1rem; flex-wrap:wrap; }
+    .btn-rose { display:inline-flex; align-items:center; gap:.6rem; background:linear-gradient(135deg,var(--rose-deep),#8A1840); color:white; text-decoration:none; font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1rem 2.2rem; border-radius:50px; box-shadow:0 8px 36px rgba(255,94,138,.38); transition:all .3s; }
+    .btn-rose:hover { transform:translateY(-3px); box-shadow:0 14px 48px rgba(255,94,138,.56); }
+    .btn-ghost { display:inline-flex; align-items:center; gap:.6rem; border:1px solid rgba(255,94,138,.35); color:var(--rose); text-decoration:none; font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1rem 2.2rem; border-radius:50px; transition:all .25s; }
+    .btn-ghost:hover { background:rgba(255,94,138,.1); border-color:var(--rose); }
+
+    /* Photo card avec halo pulsant */
+    .photo-zone { display:flex; flex-direction:column; align-items:center; gap:1.2rem; }
+    .photo-halo { position:relative; display:flex; align-items:center; justify-content:center; }
+    .halo-ring {
+      position:absolute; border-radius:50%; pointer-events:none;
+      border:1px solid rgba(255,94,138,.15);
+      animation:haloSpin linear infinite;
+    }
+    .h1 { width:400px;height:400px;animation-duration:25s; }
+    .h2 { width:340px;height:340px;animation-duration:18s;animation-direction:reverse;border-style:dashed;opacity:.6; }
+    .h3 { width:460px;height:460px;animation-duration:40s;border-color:rgba(232,191,80,.07); }
+    /* point lumineux qui tourne */
+    .h1::after,.h2::after { content:''; position:absolute; top:-4px; left:50%; width:8px; height:8px; border-radius:50%; margin-left:-4px; }
+    .h1::after { background:var(--rose); box-shadow:0 0 12px var(--rose),0 0 24px rgba(255,94,138,.5); }
+    .h2::after { background:var(--gold); box-shadow:0 0 8px var(--gold); top:auto; bottom:-4px; }
+    @keyframes haloSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+    /* Halo pulsant derrière le cadre */
+    .photo-glow {
+      position:absolute; width:220px; height:220px; border-radius:50%;
+      background:radial-gradient(circle,rgba(255,94,138,.25),transparent 70%);
+      filter:blur(30px);
+      animation:glowPulse 3s ease-in-out infinite;
+    }
+    @keyframes glowPulse { 0%,100%{opacity:.6;transform:scale(.9)} 50%{opacity:1;transform:scale(1.1)} }
+
+    .photo-frame {
+      position:relative; z-index:2;
+      width:240px; height:320px; border-radius:120px 120px 100px 100px;
+      border:1px solid rgba(255,94,138,.3);
+      box-shadow:0 24px 80px rgba(0,0,0,.8), 0 0 0 1px rgba(255,94,138,.08), 0 0 60px rgba(255,94,138,.12);
+      overflow:hidden;
+    }
+    /* Ligne shimmer au-dessus de la photo */
+    .photo-frame::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px; z-index:3;
+      border-radius:100px 100px 0 0;
+      background:linear-gradient(90deg,transparent,var(--rose),transparent);
+    }
+    /* Fondu bas + caption */
+    .photo-frame::after {
+      content:''; position:absolute; bottom:0; left:0; right:0; height:110px; z-index:2;
+      background:linear-gradient(0deg,rgba(6,3,15,.92) 0%,transparent 100%);
+      border-radius:0 0 100px 100px; pointer-events:none;
+    }
+    .photo-caption {
+      position:absolute; bottom:0; left:0; right:0; z-index:4;
+      padding:.8rem 1rem 1.1rem;
+      text-align:center; display:flex; flex-direction:column; align-items:center; gap:.3rem;
+    }
+    .photo-stars { display:flex; gap:3px; }
+    .photo-stars span { color:var(--gold); font-size:.7rem; }
+    .photo-name { font-family:'Playfair Display',serif; font-style:italic; font-size:.88rem; color:rgba(253,240,247,.85); }
+
+    /* ─── Sections communes ─── */
+    section { position:relative; z-index:1; padding:6rem 2rem; }
+    .container { max-width:1200px; margin:0 auto; }
+    .eyebrow { display:inline-flex; align-items:center; gap:.4rem; background:var(--rose-dim); border:1px solid var(--border); border-radius:50px; padding:.35rem 1rem; font-size:.67rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--rose); margin-bottom:.75rem; }
+    .eyebrow-wrap { text-align:center; margin-bottom:.75rem; display:flex; justify-content:center; }
+    .section-h2 { font-family:'Playfair Display',serif; font-weight:500; font-size:clamp(1.8rem,3vw,2.8rem); color:var(--white); text-align:center; line-height:1.22; margin-bottom:.9rem; }
+    .section-h2 em { font-style:italic; color:var(--rose); }
+    .section-lead { text-align:center; color:var(--dim); font-size:.92rem; line-height:1.85; max-width:600px; margin:0 auto 3.5rem; }
+    .sep { display:flex; align-items:center; gap:.75rem; max-width:160px; margin:0 auto 1.5rem; }
+    .sep::before,.sep::after { content:''; flex:1; height:1px; background:rgba(255,94,138,.18); }
+    .sep span { color:var(--rose); font-size:.65rem; }
+
+    /* ─── Méthode ─── */
+    .s-methode { background:var(--bg-mid); }
+    .methode-wrap { display:grid; grid-template-columns:1fr 1fr; gap:3.5rem; max-width:940px; margin:0 auto 3rem; align-items:start; }
+    .methode-text p { font-size:.9rem; color:var(--dim); line-height:1.88; margin-bottom:1rem; }
+    .methode-text strong { color:var(--rose); font-weight:600; }
+    .callout { background:rgba(255,94,138,.06); border-left:3px solid var(--rose); padding:1.15rem 1.4rem; font-size:.86rem; font-style:italic; color:var(--dim); line-height:1.75; margin-top:1.25rem; }
+    .steps-col { display:flex; flex-direction:column; gap:.9rem; }
+    .step-row { display:flex; gap:1.1rem; align-items:flex-start; padding:1.25rem; background:rgba(18,8,48,.5); border:1px solid var(--border); border-radius:4px; transition:all .25s; }
+    .step-row:hover { border-color:rgba(255,94,138,.3); box-shadow:0 4px 24px rgba(255,94,138,.1); }
+    .step-num { width:38px;height:38px;flex-shrink:0; background:var(--rose-deep); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:700; box-shadow:0 4px 16px rgba(192,50,104,.4); }
+    .step-row h4 { font-size:.88rem; font-weight:700; color:var(--white); margin-bottom:.3rem; }
+    .step-row p { font-size:.8rem; color:var(--dim); line-height:1.65; }
+
+    /* ─── Bienfaits ─── */
+    .s-bienfaits { background:var(--bg-soft); }
+    .benef-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; max-width:1000px; margin:0 auto; }
+    .benef-card { background:rgba(6,3,15,.6); border:1px solid var(--border); border-radius:8px; padding:1.75rem 1.4rem; text-align:center; transition:all .25s; }
+    .benef-card:hover { transform:translateY(-4px); border-color:rgba(255,94,138,.3); box-shadow:0 12px 40px rgba(255,94,138,.1); }
+    .benef-orb { width:54px;height:54px; background:var(--rose-dim); border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; font-size:1.4rem; }
+    .benef-card h4 { font-size:.88rem; font-weight:700; color:var(--white); margin-bottom:.5rem; }
+    .benef-card p { font-size:.8rem; color:var(--dim); line-height:1.65; }
+
+    /* ─── Canvas sections ─── */
+    .sec-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+    .s-resa > .container, .s-avis > .container { position:relative; z-index:1; }
+
+    /* ─── Réservation ─── */
+    .s-resa { background:var(--bg-mid); overflow:hidden; }
+    .resa-wrap { display:grid; grid-template-columns:1fr 320px; gap:3.5rem; max-width:860px; margin:0 auto; align-items:start; }
+    .resa-info h3 { font-family:'Playfair Display',serif; font-size:1.7rem; font-style:italic; color:var(--white); margin-bottom:1rem; }
+    .resa-info p { font-size:.86rem; color:var(--dim); line-height:1.85; margin-bottom:1rem; }
+    .resa-bullets { list-style:none; margin-bottom:1.75rem; }
+    .resa-bullets li { font-size:.82rem; color:var(--dim); padding:.4rem 0; border-bottom:1px solid rgba(255,255,255,.04); display:flex; gap:.6rem; align-items:center; }
+    .resa-bullets li::before { content:'✿'; color:var(--rose); font-size:.7rem; }
+    .tarif-pill { display:inline-block; background:rgba(232,191,80,.08); border:1px solid rgba(232,191,80,.25); color:var(--gold-light); border-radius:50px; font-size:.73rem; letter-spacing:.12em; text-transform:uppercase; padding:.45rem 1.1rem; margin-bottom:1.5rem; }
+    .cal { background:rgba(6,3,15,.7); border:1px solid var(--border); padding:1.4rem; border-radius:8px; }
+    .cal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+    .cal-head span { font-family:'Playfair Display',serif; font-style:italic; font-size:1rem; color:var(--white); }
+    .cal-head button { background:rgba(255,94,138,.1); border:1px solid var(--border); color:var(--rose); width:28px;height:28px; cursor:pointer; font-size:.8rem; border-radius:50%; }
+    .cal-dow { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:3px; }
+    .cal-dow span { text-align:center; font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); padding:3px 0; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+    .d { text-align:center; padding:6px 3px; font-size:.76rem; cursor:pointer; border-radius:50%; color:rgba(253,240,247,.25); transition:all .15s; }
+    .d.ok { color:var(--white); }
+    .d.ok:hover { background:rgba(255,94,138,.3); }
+    .d.sel { background:var(--rose-deep); color:white; font-weight:700; }
+    .cal-note { font-size:.6rem; color:var(--dim); margin-top:.75rem; text-align:center; }
+
+    /* ─── YouTube ─── */
+    .s-yt { background:var(--bg-soft); }
+    .yt-card { max-width:580px; margin:0 auto; background:rgba(18,8,48,.7); border:1px solid var(--border); border-radius:12px; padding:3rem 2.5rem; display:flex; flex-direction:column; align-items:center; gap:1.4rem; }
+    .yt-ico { width:60px;height:60px; border-radius:14px; background:#FF0000; display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:white; box-shadow:0 6px 24px rgba(255,0,0,.3); }
+    .yt-card h3 { font-family:'Playfair Display',serif; font-size:1.5rem; font-style:italic; color:var(--white); }
+    .yt-card p { color:var(--dim); font-size:.87rem; line-height:1.75; max-width:380px; text-align:center; }
+    .btn-outline { display:inline-block; border:1px solid var(--rose); color:var(--rose); text-decoration:none; font-size:.76rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; padding:.75rem 2rem; border-radius:50px; transition:all .2s; }
+    .btn-outline:hover { background:var(--rose); color:white; }
+
+    /* ─── Avis ─── */
+    .s-avis { background:var(--bg-mid); overflow:hidden; }
+    .avis-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; max-width:1000px; margin:0 auto 2.5rem; }
+    .avis-card { background:rgba(6,3,15,.6); border:1px solid var(--border); border-radius:8px; padding:1.6rem 1.4rem; }
+    .avis-stars { color:var(--gold); font-size:.82rem; margin-bottom:.7rem; }
+    .avis-txt { font-size:.82rem; color:var(--dim); font-style:italic; line-height:1.75; margin-bottom:1rem; }
+    .avis-name { font-size:.7rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--rose); }
+    .demo-tag { display:inline-block; background:rgba(255,200,0,.1); border:1px solid rgba(255,200,0,.35); color:#D4A020; font-size:.55rem; letter-spacing:.12em; text-transform:uppercase; padding:1px 5px; margin-left:5px; border-radius:3px; vertical-align:middle; }
+
+    /* ─── Footer ─── */
+    footer { background:#030208; border-top:1px solid var(--border); padding:3.5rem 2rem 2rem; }
+    .footer-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:3rem; margin-bottom:2rem; }
+    .f-logo { font-family:'Playfair Display',serif; font-style:italic; font-size:1.5rem; color:var(--white); margin-bottom:.65rem; }
+    .f-desc { font-size:.8rem; color:var(--dim); line-height:1.75; max-width:290px; margin-bottom:1.25rem; }
+    .f-social { display:flex; gap:.6rem; }
+    .f-social a { width:34px;height:34px; border:1px solid var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--dim); text-decoration:none; font-size:.85rem; transition:all .2s; }
+    .f-social a:hover { border-color:var(--rose); color:var(--rose); }
+    .f-col h4 { font-size:.67rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:.9rem; }
+    .f-col ul { list-style:none; }
+    .f-col li { margin-bottom:.45rem; }
+    .f-col a { color:var(--dim); text-decoration:none; font-size:.8rem; transition:color .2s; }
+    .f-col a:hover { color:var(--rose); }
+    .f-bottom { max-width:1200px; margin:0 auto; border-top:1px solid rgba(255,255,255,.04); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; font-size:.7rem; color:var(--dim); }
+    .maps-link { color:var(--rose); text-decoration:none; }
+    .maps-link:hover { text-decoration:underline; }
+
+    /* ═══════════════════════════════════════════════════════════════════
+       COUCHE DYNAMISME — Proto 2
+    ═══════════════════════════════════════════════════════════════════ */
+
+    /* ── Canvas particules globales (mix-blend screen) ── */
+    #bgCanvas {
+      position:fixed; inset:0; width:100%; height:100%;
+      pointer-events:none; z-index:2; mix-blend-mode:screen;
+    }
+
+    /* ── Curseur rose ── */
+    #cursorGlow {
+      position:fixed; width:340px; height:340px; border-radius:50%;
+      background:radial-gradient(circle, rgba(255,94,138,.08) 0%, transparent 65%);
+      pointer-events:none; z-index:3; mix-blend-mode:screen;
+      left:0; top:0; margin-left:-170px; margin-top:-170px;
+      will-change:left,top;
+    }
+
+    /* ── Scroll reveal ── */
+    .pre-rv {
+      opacity:0;
+      transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+    }
+    .pre-rv[data-rv="up"]    { transform:translateY(30px); }
+    .pre-rv[data-rv="left"]  { transform:translateX(-36px); }
+    .pre-rv[data-rv="right"] { transform:translateX(36px); }
+    .pre-rv.in { opacity:1 !important; transform:none !important; }
+
+    /* ── Shimmer sweep au hover ── */
+    .benef-card, .step-row, .avis-card, .yt-card { position:relative; overflow:hidden; }
+    .benef-card::after, .step-row::after, .avis-card::after, .yt-card::after {
+      content:''; position:absolute; top:0; left:-72%;
+      width:56%; height:100%;
+      background:linear-gradient(105deg, transparent, rgba(255,94,138,.1) 50%, transparent);
+      transform:skewX(-20deg); pointer-events:none;
+      transition:left .5s ease;
+    }
+    .benef-card:hover::after, .step-row:hover::after,
+    .avis-card:hover::after, .yt-card:hover::after { left:132%; }
+
+    /* ── Benef orb hover ── */
+    .benef-orb { transition:all .32s ease; }
+    .benef-card:hover .benef-orb {
+      background:rgba(255,94,138,.22); border-color:rgba(255,94,138,.55);
+      box-shadow:0 0 22px rgba(255,94,138,.4); transform:scale(1.14) rotate(14deg);
+    }
+
+    /* ── Step num glow hover ── */
+    .step-num { transition:all .25s ease; }
+    .step-row:hover .step-num {
+      box-shadow:0 0 26px rgba(192,50,104,.9), 0 0 50px rgba(255,94,138,.3);
+      transform:scale(1.12);
+    }
+
+    /* ── Avis cards flottantes ── */
+    .avis-card { animation:acFloat 8s ease-in-out infinite; }
+    .avis-card:nth-child(2) { animation-delay:-2.8s; animation-duration:10s; }
+    .avis-card:nth-child(3) { animation-delay:-5.2s; animation-duration:7.3s; }
+    @keyframes acFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+
+    /* ── Avis stars twinkle ── */
+    .avis-stars { animation:stTwink 3s ease-in-out infinite; }
+    .avis-card:nth-child(2) .avis-stars { animation-delay:-1.1s; }
+    .avis-card:nth-child(3) .avis-stars { animation-delay:-2s; }
+    @keyframes stTwink { 0%,100%{text-shadow:none;opacity:1} 50%{text-shadow:0 0 8px rgba(232,191,80,.7);opacity:.7} }
+
+    /* ── YouTube icon pulse ── */
+    .yt-ico { animation:ytPulse 2.2s ease-in-out infinite; }
+    @keyframes ytPulse {
+      0%,100%{box-shadow:0 6px 24px rgba(255,0,0,.3)}
+      50%{box-shadow:0 6px 46px rgba(255,0,0,.72), 0 0 62px rgba(255,0,0,.22)}
+    }
+
+    /* ── Nav CTA glow permanent ── */
+    .nav-cta { animation:navGlow 2.8s ease-in-out infinite; }
+    @keyframes navGlow {
+      0%,100%{box-shadow:0 4px 20px rgba(192,50,104,.4)}
+      50%{box-shadow:0 4px 40px rgba(255,94,138,.78), 0 0 55px rgba(255,94,138,.22)}
+    }
+
+    /* ── CTA bouton light sweep ── */
+    .btn-rose { position:relative; overflow:hidden; }
+    .btn-rose::after {
+      content:''; position:absolute; top:-50%; left:-60%;
+      width:40%; height:200%;
+      background:rgba(255,255,255,.18); transform:skewX(-20deg);
+      pointer-events:none; transition:left .45s ease;
+    }
+    .btn-rose:hover::after { left:145%; }
+
+    /* ── Séparateurs animés ── */
+    .sep::before, .sep::after {
+      content:''; flex:1; height:1px;
+      background:linear-gradient(90deg, transparent 0%, rgba(255,94,138,.6) 50%, transparent 100%);
+      background-size:200% 1px;
+      animation:sepFlow 3.5s linear infinite;
+    }
+    .sep::after { animation-direction:reverse; animation-delay:-.8s; }
+    @keyframes sepFlow { 0%{background-position:100% 0} 100%{background-position:-100% 0} }
+
+    /* ── Callout border respire ── */
+    .callout { animation:callGlow 4s ease-in-out infinite; }
+    @keyframes callGlow {
+      0%,100%{border-left-color:var(--rose);box-shadow:none}
+      50%{border-left-color:var(--rose-neon);box-shadow:-5px 0 18px rgba(255,61,120,.35)}
+    }
+
+    /* ── Hero tag badge ── */
+    .hero-tag { animation:tagPulse 3.2s ease-in-out infinite; }
+    @keyframes tagPulse {
+      0%,100%{box-shadow:0 0 0 rgba(255,94,138,0)}
+      50%{box-shadow:0 0 20px rgba(255,94,138,.28), inset 0 0 12px rgba(255,94,138,.06)}
+    }
+
+    /* ── Photo frame top shimmer ── */
+    .photo-frame::before {
+      z-index:3;
+      background:linear-gradient(90deg,transparent,var(--rose),var(--gold-light),var(--rose),transparent);
+      background-size:400% 2px;
+      animation:topShim 3s linear infinite;
+    }
+    @keyframes topShim { 0%{background-position:0 0} 100%{background-position:400% 0} }
+
+    /* ── Tarif pill shimmer ── */
+    .tarif-pill { animation:tarGlow 4s ease-in-out infinite; }
+    @keyframes tarGlow {
+      0%,100%{box-shadow:none}
+      50%{box-shadow:0 0 18px rgba(232,191,80,.32)}
+    }
+
+    /* ── Ambient glow dans les sections ── */
+    .s-methode::before, .s-bienfaits::before, .s-resa::before, .s-avis::before {
+      content:''; position:absolute; inset:0; pointer-events:none; z-index:0;
+      background:radial-gradient(ellipse 70% 50% at 50% 50%, rgba(255,94,138,.04) 0%, transparent 75%);
+      animation:secAmb 12s ease-in-out infinite;
+    }
+    .s-bienfaits::before { animation-delay:-3s; }
+    .s-resa::before      { animation-delay:-6.5s; }
+    .s-avis::before      { animation-delay:-9s; }
+    @keyframes secAmb { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.2)} }
+
+    /* ── Halo ring dots plus lumineux ── */
+    .h1::after { animation:dotGlow 2s ease-in-out infinite; }
+    @keyframes dotGlow { 0%,100%{box-shadow:0 0 12px var(--rose),0 0 24px rgba(255,94,138,.5)} 50%{box-shadow:0 0 20px var(--rose),0 0 40px rgba(255,94,138,.7),0 0 60px rgba(255,94,138,.2)} }
+  </style>
+  <link rel="shortcut icon" href="favicon.png" type="image/png">
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav>
+  <div class="nav-logo"><span class="nav-star">✿</span> Anna Blanc</div>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Accueil</a></li>
+    <li><a href="#">Qui suis-je</a></li>
+    <li><a href="#">La Méthode</a></li>
+    <li><a href="#">YouTube</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#resa" class="nav-cta">Réserver</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════ HERO ══════════════════════════════ -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="neb neb-1"></div>
+  <div class="neb neb-2"></div>
+  <div class="neb neb-3"></div>
+
+  <div class="hero-inner">
+    <!-- GAUCHE : contenu -->
+    <div>
+      <div class="hero-tag">✿ &nbsp;Thérapeute certifiée · Hypnose HRE</div>
+      <h1>
+        Explorez vos vies,<br>
+        libérez votre <em>âme,</em><br>
+        <em>transformez</em><br>
+        votre présent
+      </h1>
+      <p class="hero-sub">
+        Avec la méthode HRE (Hypnose Régressive Ésotérique), je vous accompagne dans une exploration profonde et bienveillante de votre inconscient pour libérer ce qui vous retient — de vie en vie.
+      </p>
+      <div class="btns">
+        <a href="#resa" class="btn-rose">✿ &nbsp;Réserver une séance</a>
+        <a href="#methode" class="btn-ghost">Découvrir la méthode</a>
+      </div>
+    </div>
+
+    <!-- DROITE : photo avec halos -->
+    <div class="photo-zone">
+      <div class="photo-halo">
+        <div class="halo-ring h1"></div>
+        <div class="halo-ring h2"></div>
+        <div class="halo-ring h3"></div>
+        <div class="photo-glow"></div>
+        <div class="photo-frame">
+          <img src="anna-blanc.png" alt="Anna Blanc — Praticienne HRE"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;z-index:1;">
+          <div class="photo-caption">
+            <div class="photo-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+            <div class="photo-name">Anna Blanc</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:.68rem;color:var(--dim);letter-spacing:.2em;text-transform:uppercase;margin-top:1rem;">Praticienne HRE certifiée</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════ MÉTHODE ═════════════════════════════ -->
+<section class="s-methode" id="methode">
+  <div class="container">
+    <div class="eyebrow-wrap"><div class="eyebrow">✿ La Méthode HRE</div></div>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Qu'est-ce que l'<em>Hypnose Régressive Ésotérique</em> ?</h2>
+    <p class="section-lead">Une approche unique qui explore l'être dans toutes ses dimensions, sans limite de temps ni d'espace.</p>
+    <div class="methode-wrap">
+      <div class="methode-text">
+        <p>L'HRE est une approche thérapeutique fondée par <strong>Calogéro Grifasi</strong> qui permet d'accéder aux zones cachées de l'inconscient profond, au-delà des frontières du temps et de l'espace.</p>
+        <p>Sa particularité : grâce à un <strong>support télépathique</strong>, vous n'entrez pas vous-même en hypnose. Une tierce personne entre en transe à votre place et accède aux informations de votre inconscient.</p>
+        <div class="callout">« Vous restez pleinement conscient, lucide et acteur de votre transformation tout en bénéficiant des révélations de l'hypnose profonde. »</div>
+      </div>
+      <div class="steps-col">
+        <div class="step-row"><div class="step-num">1</div><div><h4>Échange préliminaire</h4><p>Nous définissons votre intention de séance. Première consultation de 15 min offerte.</p></div></div>
+        <div class="step-row"><div class="step-num">2</div><div><h4>L'exploration hypnotique</h4><p>Via le support télépathique, votre inconscient révèle les origines profondes de vos blocages.</p></div></div>
+        <div class="step-row"><div class="step-num">3</div><div><h4>Intégration & libération</h4><p>Des processus de libération sont effectués pour une transformation durable dans votre vie.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════ BIENFAITS ════════════════════════════ -->
+<section class="s-bienfaits">
+  <div class="container">
+    <div class="eyebrow-wrap"><div class="eyebrow">✿ Pour qui ?</div></div>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Ce que l'HRE peut <em>transformer</em></h2>
+    <p class="section-lead">La méthode s'adresse à toute personne souhaitant comprendre et libérer ce qui l'empêche de s'épanouir.</p>
+    <div class="benef-grid">
+      <div class="benef-card"><div class="benef-orb">🌙</div><h4>Blocages émotionnels</h4><p>Peurs inexpliquées, angoisses profondes, tristesse persistante sans cause apparente dans cette vie.</p></div>
+      <div class="benef-card"><div class="benef-orb">🔄</div><h4>Schémas répétitifs</h4><p>Relations difficiles, échecs récurrents, situations qui se répètent malgré vos efforts conscients.</p></div>
+      <div class="benef-card"><div class="benef-orb">🌊</div><h4>Phobies & traumatismes</h4><p>Peurs irrationnelles, phobies inexpliquées, traumas enfouis qui impactent votre quotidien.</p></div>
+      <div class="benef-card"><div class="benef-orb">⭐</div><h4>Quête de sens</h4><p>Comprendre votre chemin de vie, votre mission d'âme et le sens profond de vos expériences.</p></div>
+      <div class="benef-card"><div class="benef-orb">🔗</div><h4>Liens karmiques</h4><p>Libérer les liens karmiques ou intergénérationnels qui influencent votre vie actuelle.</p></div>
+      <div class="benef-card"><div class="benef-orb">🌸</div><h4>Confiance & alignement</h4><p>Retrouver confiance en vous et vous aligner avec votre être profond pour vivre pleinement.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ RÉSERVATION ════════════════════════════ -->
+<section class="s-resa" id="resa">
+  <canvas class="sec-canvas" id="resaC2"></canvas>
+  <div class="container">
+    <div class="eyebrow-wrap"><div class="eyebrow">✿ Prendre rendez-vous</div></div>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Réservez votre <em>séance</em></h2>
+    <div class="resa-wrap">
+      <div class="resa-info">
+        <h3>Une séance, un tournant</h3>
+        <div class="tarif-pill">Séances individuelles · Tarif sur demande</div>
+        <p>Chaque séance HRE est unique et adaptée à votre questionnement. En présentiel ou en visioconférence depuis votre domicile.</p>
+        <ul class="resa-bullets">
+          <li>Durée : 1h30 à 2h par séance</li>
+          <li>En ligne (Teams / Zoom) ou en présentiel</li>
+          <li>Première consultation offerte (15 min)</li>
+          <li>Suivi post-séance inclus</li>
+        </ul>
+        <a href="#" class="btn-rose">✿ &nbsp;Prendre rendez-vous</a>
+      </div>
+      <div>
+        <div class="cal">
+          <div class="cal-head"><button>‹</button><span>Octobre 2026</span><button>›</button></div>
+          <div class="cal-dow"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+          <div class="cal-grid">
+            <div class="d"></div><div class="d"></div><div class="d"></div>
+            <div class="d ok">1</div><div class="d">2</div><div class="d">3</div><div class="d">4</div>
+            <div class="d ok">5</div><div class="d ok">6</div><div class="d">7</div>
+            <div class="d ok">8</div><div class="d">9</div><div class="d">10</div><div class="d">11</div>
+            <div class="d ok">12</div><div class="d ok">13</div><div class="d">14</div>
+            <div class="d ok">15</div><div class="d">16</div><div class="d">17</div><div class="d">18</div>
+            <div class="d ok sel">19</div><div class="d ok">20</div><div class="d">21</div>
+            <div class="d">22</div><div class="d ok">23</div><div class="d ok">24</div><div class="d">25</div>
+            <div class="d ok">26</div><div class="d">27</div><div class="d">28</div>
+            <div class="d ok">29</div><div class="d ok">30</div><div class="d ok">31</div>
+          </div>
+          <div class="cal-note">Calendrier synchronisé Google Calendar · Prototype</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ YOUTUBE ════════════════════════════════ -->
+<section class="s-yt">
+  <div class="container">
+    <div class="eyebrow-wrap"><div class="eyebrow">✿ Sur YouTube</div></div>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Rejoignez-moi sur <em>YouTube</em></h2>
+    <div class="yt-card">
+      <div class="yt-ico">▶</div>
+      <h3>La chaîne d'Anna Blanc</h3>
+      <p>Vidéos sur l'hypnose HRE, témoignages de séances, méditations guidées et explications de la méthode Calogéro Grifasi pour votre chemin de vie.</p>
+      <a href="#" class="btn-outline">Voir la chaîne YouTube ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ AVIS GOOGLE ════════════════════════════ -->
+<section class="s-avis">
+  <canvas class="sec-canvas" id="avisC2"></canvas>
+  <div class="container">
+    <div class="eyebrow-wrap"><div class="eyebrow">✿ Témoignages</div></div>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Ce que disent mes <em>clients</em></h2>
+    <p class="section-lead">Avis Google <span class="demo-tag">🧪 DEMO — À remplacer par de vrais avis</span></p>
+    <div class="avis-grid">
+      <div class="avis-card"><div class="avis-stars">★★★★★</div><p class="avis-txt">« Une expérience bouleversante et profondément transformatrice. Anna m'a accompagnée avec une bienveillance extraordinaire. J'ai enfin compris l'origine de mes angoisses récurrentes. »</p><div class="avis-name">Marie L. <span class="demo-tag">🧪 demo</span></div></div>
+      <div class="avis-card"><div class="avis-stars">★★★★★</div><p class="avis-txt">« Je suis arrivé sceptique et je suis reparti transformé. La méthode HRE est d'une précision incroyable. Des réponses que je cherchais depuis 10 ans sont apparues en une seule séance. »</p><div class="avis-name">Thomas P. <span class="demo-tag">🧪 demo</span></div></div>
+      <div class="avis-card"><div class="avis-stars">★★★★★</div><p class="avis-txt">« Anna est une praticienne exceptionnelle, à l'écoute et très professionnelle. La séance a libéré des blocages que je portais depuis l'enfance. Je recommande vivement. »</p><div class="avis-name">Sophie M. <span class="demo-tag">🧪 demo</span></div></div>
+    </div>
+    <div style="text-align:center;"><a href="#" class="btn-outline">Voir tous les avis Google ↗</a></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ FOOTER ═════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="f-logo">Anna Blanc</div>
+      <p class="f-desc">Thérapeute certifiée en Hypnose Régressive Ésotérique, méthode Calogéro Grifasi. Accompagnement individuel en présentiel et en ligne.</p>
+      <div class="f-social"><a href="#">▶</a><a href="#">◉</a><a href="#">f</a></div>
+    </div>
+    <div class="f-col"><h4>Navigation</h4><ul><li><a href="#">Accueil</a></li><li><a href="#">Qui suis-je</a></li><li><a href="#">La Méthode HRE</a></li><li><a href="#">Réserver</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="f-col"><h4>Contact</h4><ul><li><a href="#">contact@annablanc.fr <span class="demo-tag">demo</span></a></li><li><a href="#">+33 6 XX XX XX XX <span class="demo-tag">demo</span></a></li><li><a href="#" class="maps-link">📍 Voir sur Google Maps ↗</a></li></ul></div>
+  </div>
+  <div class="f-bottom"><span>© 2026 Anna Blanc — Hypnose HRE · Tous droits réservés</span><span>Mentions légales · Politique de confidentialité</span></div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════
+   PROTO 2 — DYNAMISME GLOBAL
+════════════════════════════════════════════════════════════════════ */
+(function(){
+
+  /* ─── Curseur glow ─── */
+  var gl = document.createElement('div'); gl.id='cursorGlow';
+  document.body.appendChild(gl);
+  var tx=innerWidth/2, ty=innerHeight/2, cx=tx, cy=ty;
+  document.addEventListener('mousemove',function(e){tx=e.clientX;ty=e.clientY;});
+  (function lp(){cx+=(tx-cx)*.1;cy+=(ty-cy)*.1;gl.style.left=cx+'px';gl.style.top=cy+'px';requestAnimationFrame(lp);})();
+
+  /* ─── Canvas particules flottantes ─── */
+  var bc=document.createElement('canvas'); bc.id='bgCanvas';
+  document.body.insertBefore(bc, document.body.firstChild);
+  var bx=bc.getContext('2d'), bW, bH;
+  function bR(){bW=bc.width=innerWidth;bH=bc.height=innerHeight;}
+  bR(); window.addEventListener('resize',bR);
+
+  function mkP(){
+    return {x:Math.random()*bW, y:bH+Math.random()*120,
+      vx:(Math.random()-.5)*.18, vy:-(0.22+Math.random()*.52),
+      r:.4+Math.random()*1.5, a:0, mA:.1+Math.random()*.22,
+      life:0, mL:200+Math.random()*400, gold:Math.random()>.76};
+  }
+  var pts=[];
+  for(var i=0;i<60;i++){var p=mkP();p.y=Math.random()*bH;p.life=Math.random()*p.mL;pts.push(p);}
+
+  (function bgL(){
+    bx.clearRect(0,0,bW,bH);
+    for(var i=0;i<pts.length;i++){
+      var p=pts[i]; p.x+=p.vx; p.y+=p.vy; p.life++;
+      var q=p.life/p.mL;
+      p.a=q<.2?(q/.2)*p.mA:q>.8?((1-q)/.2)*p.mA:p.mA;
+      if(p.life>=p.mL||p.y<-8){pts[i]=mkP();continue;}
+      bx.beginPath();bx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      bx.fillStyle='rgba('+(p.gold?'232,191,80':'255,94,138')+','+p.a.toFixed(2)+')';
+      bx.fill();
+    }
+    requestAnimationFrame(bgL);
+  })();
+
+  /* ─── Scroll reveal ─── */
+  var revMap=[
+    ['.eyebrow-wrap','up',0],['.sep','up',0],['.section-h2','up',0],['.section-lead','up',0],
+    ['.callout','up',0],['.methode-text','left',0],['.steps-col','right',0],
+    ['.resa-info','left',0],['.cal','right',80],['.yt-card','up',0],
+    ['.tarif-pill','up',0],
+  ];
+  revMap.forEach(function(m){
+    document.querySelectorAll(m[0]).forEach(function(el){
+      el.dataset.rv=m[1]; el.classList.add('pre-rv');
+      if(m[2]) el._rvDelay=m[2];
+    });
+  });
+  document.querySelectorAll('.benef-card').forEach(function(el,i){
+    el.dataset.rv='up'; el._rvDelay=i*100; el.classList.add('pre-rv');
+  });
+  document.querySelectorAll('.step-row').forEach(function(el,i){
+    el.dataset.rv='left'; el._rvDelay=i*110; el.classList.add('pre-rv');
+  });
+  document.querySelectorAll('.avis-card').forEach(function(el,i){
+    el.dataset.rv='up'; el._rvDelay=i*130; el.classList.add('pre-rv');
+  });
+
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting)return;
+      var d=e.target._rvDelay||0;
+      setTimeout(function(){e.target.classList.add('in');},d);
+      io.unobserve(e.target);
+    });
+  },{threshold:.1});
+  document.querySelectorAll('.pre-rv').forEach(function(el){io.observe(el);});
+
+})();
+/* ══════════════════════════════════════════════════════════════════ */
+
+const canvas = document.getElementById('heroCanvas');
+const ctx    = canvas.getContext('2d');
+function resize() { canvas.width = canvas.parentElement.offsetWidth; canvas.height = canvas.parentElement.offsetHeight; }
+resize(); window.addEventListener('resize', resize);
+
+/* 3 couches d'étoiles */
+function makeLayer(n, rMin, rMax, vx, goldRatio, pinkRatio) {
+  return Array.from({length:n}, () => ({
+    x: Math.random() * 4000, y: Math.random() * 2000,
+    r: rMin + Math.random() * (rMax - rMin),
+    a: Math.random(), da: (Math.random()-.5)*.006,
+    vx: vx * (.8 + Math.random()*.4),
+    gold: Math.random() < goldRatio, pink: Math.random() < pinkRatio,
+  }));
+}
+const L1 = makeLayer(200, .2, .7,  0,    .04, .08);
+const L2 = makeLayer(100, .7, 1.4, .04,  .12, .15);
+const L3 = makeLayer( 45, 1.4,2.4, .08,  .22, .22);
+
+function drawLayer(layer, px, py, pf) {
+  for (const s of layer) {
+    s.x += s.vx; if (s.x > canvas.width) s.x = 0;
+    s.a += s.da; if (s.a < .05 || s.a > .95) s.da *= -1;
+    const a = Math.max(.05, Math.min(.95, s.a));
+    const h = Math.round(a*255).toString(16).padStart(2,'0');
+    const col = s.gold ? '#E8BF50' : s.pink ? '#FF9EC4' : '#FDF0F7';
+    ctx.beginPath();
+    ctx.arc(
+      ((s.x + px * pf) % canvas.width + canvas.width) % canvas.width,
+      ((s.y + py * pf) % canvas.height + canvas.height) % canvas.height,
+      s.r, 0, Math.PI*2
+    );
+    ctx.fillStyle = col + h; ctx.fill();
+  }
+}
+
+/* Étoiles filantes (roses + blanches) */
+const shoots = []; let nextShoot = Date.now() + 1500;
+function spawnShoot() {
+  const pink = Math.random() > .5;
+  shoots.push({ x: canvas.width*(.3+Math.random()*.6), y: Math.random()*canvas.height*.45, vx:-(8+Math.random()*9), vy:3+Math.random()*5, len:100+Math.random()*140, life:0, maxLife:55+Math.random()*35, pink });
+  nextShoot = Date.now() + 2000 + Math.random()*5000;
+}
+function drawShoot(s) {
+  const a = s.life<12?s.life/12:s.life>s.maxLife-12?(s.maxLife-s.life)/12:1;
+  const spd = Math.sqrt(s.vx*s.vx+s.vy*s.vy);
+  const tx = s.x-s.vx*s.len/spd, ty = s.y-s.vy*s.len/spd;
+  const g = ctx.createLinearGradient(s.x,s.y,tx,ty);
+  const col = s.pink ? `rgba(255,94,138,${a})` : `rgba(255,255,255,${a})`;
+  g.addColorStop(0, col); g.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.beginPath(); ctx.strokeStyle=g; ctx.lineWidth=1.8;
+  ctx.moveTo(s.x,s.y); ctx.lineTo(tx,ty); ctx.stroke();
+  ctx.beginPath(); ctx.arc(s.x,s.y,2,0,Math.PI*2);
+  ctx.fillStyle=s.pink?`rgba(255,160,190,${a})`:`rgba(255,255,255,${a*.9})`; ctx.fill();
+}
+
+let mx=0,my=0;
+document.querySelector('.hero').addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mx=(e.clientX-r.left)/r.width-.5;my=(e.clientY-r.top)/r.height-.5;});
+
+function tick() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  drawLayer(L1,mx,my,10); drawLayer(L2,mx,my,25); drawLayer(L3,mx,my,45);
+  if (Date.now()>nextShoot) spawnShoot();
+  for (let i=shoots.length-1;i>=0;i--) {
+    const s=shoots[i]; s.x+=s.vx; s.y+=s.vy; s.life++;
+    drawShoot(s); if(s.life>=s.maxLife) shoots.splice(i,1);
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* ════════════════════════════════════════════════════════════════════
+   PROTO 2 — CANVASES SECTIONS (resa + avis)
+   Même système étoiles que le héros, couleurs proto 2
+════════════════════════════════════════════════════════════════════ */
+(function(){
+  ['resaC2','avisC2'].forEach(function(id){
+    var c = document.getElementById(id);
+    if(!c) return;
+    var x = c.getContext('2d');
+
+    function resize(){
+      var sec = c.parentElement;
+      c.width  = sec.offsetWidth;
+      c.height = sec.offsetHeight;
+    }
+    resize();
+    var ro = new ResizeObserver(resize);
+    ro.observe(c.parentElement);
+
+    /* ─── Couches d'étoiles ─── */
+    function mkLayer(n, rMin, rMax, vx, goldR, pinkR){
+      var arr = [];
+      for(var i=0;i<n;i++){
+        arr.push({
+          x: Math.random()*4000, y: Math.random()*2000,
+          r: rMin+Math.random()*(rMax-rMin),
+          a: Math.random(), da: (Math.random()-.5)*.006,
+          vx: vx*(.8+Math.random()*.4),
+          gold: Math.random()<goldR, pink: Math.random()<pinkR
+        });
+      }
+      return arr;
+    }
+    var l1 = mkLayer(200,.2,.7, 0,   .04,.08);
+    var l2 = mkLayer(100,.7,1.4,.04, .12,.15);
+    var l3 = mkLayer( 45,1.4,2.4,.08,.22,.22);
+
+    function drawLayer(layer){
+      for(var i=0;i<layer.length;i++){
+        var s=layer[i];
+        s.x+=s.vx; if(s.x>c.width) s.x=0;
+        s.a+=s.da; if(s.a<.05||s.a>.95) s.da*=-1;
+        var a=Math.max(.05,Math.min(.95,s.a));
+        var h=Math.round(a*255).toString(16).padStart(2,'0');
+        var col=s.gold?'#E8BF50':s.pink?'#FF9EC4':'#FDF0F7';
+        x.beginPath();
+        x.arc(s.x%c.width, s.y%c.height, s.r, 0, Math.PI*2);
+        x.fillStyle=col+h; x.fill();
+      }
+    }
+
+    /* ─── Étoiles filantes ─── */
+    var shoots=[], nextShoot=Date.now()+2000;
+    function spawnShoot(){
+      var pink=Math.random()>.5;
+      shoots.push({
+        x: c.width*(.3+Math.random()*.5), y: Math.random()*c.height*.5,
+        vx:-(7+Math.random()*8), vy:2.5+Math.random()*4,
+        len:90+Math.random()*120, life:0, maxLife:50+Math.random()*30, pink:pink
+      });
+      nextShoot=Date.now()+3000+Math.random()*6000;
+    }
+    function drawShoot(s){
+      var a=s.life<12?s.life/12:s.life>s.maxLife-12?(s.maxLife-s.life)/12:1;
+      var spd=Math.sqrt(s.vx*s.vx+s.vy*s.vy);
+      var tx=s.x-s.vx*s.len/spd, ty=s.y-s.vy*s.len/spd;
+      var g=x.createLinearGradient(s.x,s.y,tx,ty);
+      var col=s.pink?'rgba(255,94,138,'+a+')':'rgba(255,255,255,'+a+')';
+      g.addColorStop(0,col); g.addColorStop(1,'rgba(255,255,255,0)');
+      x.beginPath(); x.strokeStyle=g; x.lineWidth=1.6;
+      x.moveTo(s.x,s.y); x.lineTo(tx,ty); x.stroke();
+      x.beginPath(); x.arc(s.x,s.y,1.8,0,Math.PI*2);
+      x.fillStyle=s.pink?'rgba(255,160,190,'+a+')':'rgba(255,255,255,'+(a*.9)+')';
+      x.fill();
+    }
+
+    /* ─── Boucle ─── */
+    (function loop(){
+      x.clearRect(0,0,c.width,c.height);
+      drawLayer(l1); drawLayer(l2); drawLayer(l3);
+      if(Date.now()>nextShoot) spawnShoot();
+      for(var i=shoots.length-1;i>=0;i--){
+        var s=shoots[i]; s.x+=s.vx; s.y+=s.vy; s.life++;
+        drawShoot(s); if(s.life>=s.maxLife) shoots.splice(i,1);
+      }
+      requestAnimationFrame(loop);
+    })();
+  });
+})();
+</script>
+</body>
+</html>

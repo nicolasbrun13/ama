@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anna Blanc — Hypnose HRE · Prototype 1 : Étoiles Mystiques</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Raleway:wght@300;400;500;600;700&display=swap">
+  <style>
+    :root {
+      --night:      #09071A;
+      --night-mid:  #120F2E;
+      --night-soft: #1C1840;
+      --rose:       #E8849C;
+      --rose-deep:  #C4567A;
+      --rose-pale:  #FFE0EC;
+      --gold:       #C9A840;
+      --gold-light: #F0D578;
+      --white:      #F5F0FF;
+      --dim:        rgba(245,240,255,0.60);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Raleway',sans-serif; background:var(--night); color:var(--white); overflow-x:hidden; }
+
+    /* ─── Nav ─── */
+    nav {
+      position:sticky; top:0; z-index:200;
+      background:rgba(9,7,26,0.90); backdrop-filter:blur(16px);
+      border-bottom:1px solid rgba(232,132,156,0.18);
+      padding:0 2rem;
+      display:flex; align-items:center; justify-content:space-between; height:66px;
+    }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.55rem; color:var(--rose-pale); letter-spacing:0.06em; display:flex; align-items:center; gap:.5rem; }
+    .nav-logo-star { color:var(--gold); font-style:normal; font-size:.85rem; }
+    .nav-links { display:flex; list-style:none; gap:0; align-items:center; }
+    .nav-links a { color:rgba(245,240,255,.65); text-decoration:none; font-size:.76rem; font-weight:500; letter-spacing:.12em; text-transform:uppercase; padding:.5rem .9rem; transition:color .2s; }
+    .nav-links a:hover { color:var(--rose); }
+    .nav-links a.active { color:var(--white); }
+    .nav-cta { background:var(--rose-deep) !important; color:white !important; border-radius:2px; padding:.5rem 1.3rem !important; }
+
+    /* ══════════════════════════════════════════════════════════
+       HERO — SECTION DYNAMIQUE
+    ══════════════════════════════════════════════════════════ */
+    .hero {
+      position:relative; overflow:hidden;
+      min-height:100vh;
+      display:flex; align-items:center;
+      padding:7rem 2rem 5rem;
+      background:var(--night);
+    }
+
+    /* Canvas étoiles (toute la hero) */
+    #heroCanvas {
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      z-index:0; pointer-events:none;
+    }
+
+    /* Nébuleuses CSS */
+    .neb {
+      position:absolute; border-radius:50%;
+      filter:blur(90px); pointer-events:none; z-index:1;
+    }
+    .neb-1 {
+      width:700px; height:700px;
+      background:radial-gradient(circle,rgba(196,86,122,.18) 0%,transparent 65%);
+      top:-280px; right:-180px;
+      animation:nebDrift1 14s ease-in-out infinite;
+    }
+    .neb-2 {
+      width:500px; height:500px;
+      background:radial-gradient(circle,rgba(201,168,64,.09) 0%,transparent 65%);
+      bottom:-150px; left:2%;
+      animation:nebDrift2 18s ease-in-out infinite;
+    }
+    .neb-3 {
+      width:350px; height:350px;
+      background:radial-gradient(circle,rgba(100,60,200,.12) 0%,transparent 65%);
+      top:30%; left:35%;
+      animation:nebDrift3 20s ease-in-out infinite;
+    }
+    @keyframes nebDrift1 { 0%,100%{transform:translate(0,0) scale(1);opacity:.7} 50%{transform:translate(-50px,35px) scale(1.2);opacity:1} }
+    @keyframes nebDrift2 { 0%,100%{transform:translate(0,0) scale(1);opacity:.5} 50%{transform:translate(40px,-25px) scale(.88);opacity:.85} }
+    @keyframes nebDrift3 { 0%,100%{transform:translate(0,0) scale(1);opacity:.3} 50%{transform:translate(-20px,20px) scale(1.1);opacity:.6} }
+
+    /* Contenu hero */
+    .hero-inner {
+      position:relative; z-index:2;
+      max-width:1200px; margin:0 auto; width:100%;
+      display:grid; grid-template-columns:1fr 380px;
+      gap:4rem; align-items:center;
+    }
+    .hero-eyebrow { font-size:.7rem; font-weight:700; letter-spacing:.38em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem; display:flex; align-items:center; gap:.5rem; }
+    .hero h1 {
+      font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic;
+      font-size:clamp(2.8rem,5.5vw,4.8rem);
+      line-height:1.08; color:var(--white); margin-bottom:1.5rem;
+    }
+    .hero h1 em { font-style:normal; color:var(--rose); }
+    .hero-sub { font-size:.98rem; font-weight:300; color:var(--dim); line-height:1.88; max-width:520px; margin-bottom:2.5rem; }
+    .btn-primary {
+      display:inline-flex; align-items:center; gap:.65rem;
+      background:linear-gradient(135deg,var(--rose-deep),#902050);
+      color:white; text-decoration:none;
+      font-size:.8rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+      padding:1.05rem 2.4rem; border-radius:2px;
+      box-shadow:0 8px 36px rgba(196,86,122,.45);
+      transition:all .3s;
+    }
+    .btn-primary:hover { transform:translateY(-3px); box-shadow:0 14px 48px rgba(196,86,122,.6); }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:.5rem;
+      background:rgba(201,168,64,.1); border:1px solid rgba(201,168,64,.28);
+      color:var(--gold-light); font-size:.7rem; letter-spacing:.18em;
+      text-transform:uppercase; padding:.45rem 1rem; margin-top:1.2rem;
+    }
+
+    /* Photo avec anneaux orbitaux */
+    .orbit-wrap {
+      position:relative; display:flex;
+      align-items:center; justify-content:center;
+      width:340px; height:440px;
+    }
+    .orbit-ring {
+      position:absolute; border-radius:50%;
+      pointer-events:none;
+    }
+    .orb1 { width:420px;height:420px; border:1px solid rgba(232,132,156,.1); animation:orbitA 22s linear infinite; }
+    .orb2 { width:360px;height:360px; border:1px dashed rgba(201,168,64,.08); animation:orbitA 14s linear infinite reverse; }
+    .orb3 { width:480px;height:480px; border:1px solid rgba(100,60,220,.07); animation:orbitA 32s linear infinite; }
+    /* points lumineux sur les anneaux */
+    .orb1::after,.orb2::after {
+      content:''; position:absolute; top:-3px; left:50%;
+      width:6px; height:6px; border-radius:50%; margin-left:-3px;
+    }
+    .orb1::after { background:var(--rose); box-shadow:0 0 8px var(--rose); }
+    .orb2::after { background:var(--gold); box-shadow:0 0 6px var(--gold); }
+    @keyframes orbitA { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+    .photo-frame {
+      position:relative; z-index:2;
+      width:260px; height:340px; border-radius:4px;
+      background:linear-gradient(160deg,var(--night-soft),#0E0B24);
+      border:1px solid rgba(232,132,156,.3);
+      box-shadow:0 24px 80px rgba(0,0,0,.7), 0 0 60px rgba(196,86,122,.12);
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.75rem;
+      overflow:hidden;
+    }
+    .photo-frame::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:2px;
+      background:linear-gradient(90deg,transparent,var(--rose),transparent);
+    }
+    .photo-frame::after {
+      content:''; position:absolute; bottom:-80px; left:-80px;
+      width:240px; height:240px; border-radius:50%;
+      background:radial-gradient(circle,rgba(196,86,122,.1),transparent 70%);
+    }
+    .photo-icon { font-size:2.5rem; opacity:.25; }
+    .photo-label { font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:var(--dim); }
+    .photo-stars { display:flex; gap:4px; }
+    .photo-stars span { color:var(--gold); font-size:.75rem; }
+
+    /* ─── Sections ─── */
+    section { position:relative; z-index:1; padding:6rem 2rem; }
+    .container { max-width:1200px; margin:0 auto; }
+    .eyebrow { font-size:.68rem; font-weight:700; letter-spacing:.38em; text-transform:uppercase; color:var(--gold); margin-bottom:.9rem; text-align:center; }
+    .section-h2 { font-family:'Cormorant Garamond',serif; font-weight:300; font-style:italic; font-size:clamp(1.8rem,3.2vw,2.8rem); color:var(--white); text-align:center; line-height:1.2; margin-bottom:.9rem; }
+    .section-lead { text-align:center; color:var(--dim); font-size:.92rem; line-height:1.85; max-width:600px; margin:0 auto 3.5rem; }
+    .sep { display:flex; align-items:center; gap:.75rem; max-width:140px; margin:0 auto 1.5rem; }
+    .sep::before,.sep::after { content:''; flex:1; height:1px; background:rgba(232,132,156,.2); }
+    .sep span { color:var(--gold); font-size:.65rem; }
+
+    /* ─── Méthode ─── */
+    .s-methode { background:var(--night-mid); }
+    .methode-intro { display:grid; grid-template-columns:1fr 1fr; gap:3rem; max-width:900px; margin:0 auto 3.5rem; align-items:start; }
+    .methode-intro p { font-size:.9rem; color:var(--dim); line-height:1.88; }
+    .methode-intro p strong { color:var(--rose); font-weight:600; }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:1.25rem; }
+    .step { background:rgba(28,24,64,.65); border:1px solid rgba(232,132,156,.12); border-top:2px solid var(--rose-deep); padding:1.75rem 1.4rem; transition:transform .3s,border-color .3s; }
+    .step:hover { transform:translateY(-4px); border-top-color:var(--rose); }
+    .step-num { font-family:'Cormorant Garamond',serif; font-size:2.5rem; font-style:italic; color:rgba(232,132,156,.2); line-height:1; margin-bottom:.75rem; }
+    .step h3 { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-style:italic; color:var(--rose-pale); margin-bottom:.6rem; }
+    .step p { font-size:.82rem; color:var(--dim); line-height:1.7; }
+
+    /* ─── Bienfaits ─── */
+    .s-bienfaits { background:var(--night-soft); }
+    .benef-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; max-width:1000px; margin:0 auto; }
+    .benef-item { padding:1.5rem 1.25rem; background:rgba(9,7,26,.5); border-left:3px solid var(--rose); display:flex; gap:.9rem; align-items:flex-start; }
+    .benef-icon { color:var(--gold); font-size:1rem; flex-shrink:0; margin-top:2px; }
+    .benef-item h4 { font-size:.86rem; font-weight:600; color:var(--white); margin-bottom:.25rem; }
+    .benef-item p { font-size:.78rem; color:var(--dim); line-height:1.65; }
+
+    /* ─── Canvas sections ─── */
+    .sec-canvas { position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+    .s-resa > .container, .s-avis > .container { position:relative; z-index:1; }
+
+    /* ─── Réservation ─── */
+    .s-resa { background:linear-gradient(150deg,var(--night-mid),#160D30); overflow:hidden; }
+    .resa-wrap { display:grid; grid-template-columns:1fr 320px; gap:3.5rem; max-width:860px; margin:0 auto; align-items:start; }
+    .resa-info h3 { font-family:'Cormorant Garamond',serif; font-size:1.7rem; font-style:italic; color:var(--white); margin-bottom:1rem; }
+    .resa-info p { font-size:.86rem; color:var(--dim); line-height:1.85; margin-bottom:1rem; }
+    .resa-bullets { list-style:none; margin-bottom:1.75rem; }
+    .resa-bullets li { font-size:.82rem; color:var(--dim); padding:.4rem 0; border-bottom:1px solid rgba(255,255,255,.05); display:flex; gap:.6rem; align-items:center; }
+    .resa-bullets li::before { content:'✦'; color:var(--rose); font-size:.55rem; }
+    .tarif-box { display:inline-block; background:rgba(201,168,64,.1); border:1px solid rgba(201,168,64,.3); color:var(--gold-light); font-size:.75rem; letter-spacing:.12em; text-transform:uppercase; padding:.5rem 1.2rem; margin-bottom:1.5rem; }
+
+    /* Calendrier */
+    .cal { background:rgba(9,7,26,.7); border:1px solid rgba(232,132,156,.2); padding:1.4rem; border-radius:3px; }
+    .cal-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; }
+    .cal-head span { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--rose-pale); }
+    .cal-head button { background:none; border:1px solid rgba(232,132,156,.25); color:var(--rose); width:26px; height:26px; cursor:pointer; font-size:.75rem; }
+    .cal-dow { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:3px; }
+    .cal-dow span { text-align:center; font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); padding:3px 0; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+    .d { text-align:center; padding:5px 3px; font-size:.75rem; cursor:pointer; border-radius:2px; color:rgba(245,240,255,.28); }
+    .d.ok { color:var(--white); background:rgba(232,132,156,.1); }
+    .d.ok:hover { background:var(--rose-deep); color:white; }
+    .d.sel { background:var(--rose-deep) !important; color:white; }
+    .cal-note { font-size:.6rem; color:var(--dim); margin-top:.75rem; text-align:center; }
+
+    /* ─── YouTube ─── */
+    .s-yt { background:var(--night); text-align:center; }
+    .yt-wrap { max-width:560px; margin:0 auto; background:rgba(28,24,64,.8); border:1px solid rgba(232,132,156,.18); padding:3rem 2.5rem; display:flex; flex-direction:column; align-items:center; gap:1.4rem; }
+    .yt-ico { width:58px; height:58px; border-radius:12px; background:#FF0000; display:flex; align-items:center; justify-content:center; font-size:1.6rem; color:white; }
+    .yt-wrap h3 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-style:italic; color:var(--white); }
+    .yt-wrap p { color:var(--dim); font-size:.86rem; line-height:1.75; max-width:380px; text-align:center; }
+    .btn-outline { display:inline-block; border:1px solid var(--rose); color:var(--rose); text-decoration:none; font-size:.75rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; padding:.75rem 2rem; transition:all .2s; }
+    .btn-outline:hover { background:var(--rose); color:white; }
+
+    /* ─── Avis ─── */
+    .s-avis { background:var(--night-mid); overflow:hidden; }
+    .avis-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; max-width:1000px; margin:0 auto 2.5rem; }
+    .avis-card { background:rgba(9,7,26,.6); border:1px solid rgba(232,132,156,.1); padding:1.6rem 1.4rem; }
+    .avis-stars { color:var(--gold); font-size:.82rem; margin-bottom:.7rem; }
+    .avis-txt { font-size:.82rem; color:var(--dim); font-style:italic; line-height:1.75; margin-bottom:1rem; }
+    .avis-name { font-size:.7rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--rose); }
+    .demo-tag { display:inline-block; background:rgba(255,200,0,.12); border:1px solid rgba(255,200,0,.35); color:#FFD700; font-size:.55rem; letter-spacing:.14em; text-transform:uppercase; padding:1px 5px; margin-left:5px; vertical-align:middle; }
+
+    /* ─── Footer ─── */
+    footer { background:#060410; border-top:1px solid rgba(232,132,156,.12); padding:3.5rem 2rem 2rem; }
+    .footer-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:3rem; margin-bottom:2rem; }
+    .f-logo { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.5rem; color:var(--rose-pale); margin-bottom:.65rem; }
+    .f-desc { font-size:.8rem; color:var(--dim); line-height:1.75; max-width:290px; margin-bottom:1.25rem; }
+    .f-social { display:flex; gap:.6rem; }
+    .f-social a { width:32px; height:32px; border:1px solid rgba(232,132,156,.2); display:flex; align-items:center; justify-content:center; color:var(--dim); text-decoration:none; font-size:.85rem; transition:all .2s; }
+    .f-social a:hover { border-color:var(--rose); color:var(--rose); }
+    .f-col h4 { font-size:.67rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); margin-bottom:.9rem; }
+    .f-col ul { list-style:none; }
+    .f-col li { margin-bottom:.45rem; }
+    .f-col a { color:var(--dim); text-decoration:none; font-size:.8rem; transition:color .2s; }
+    .f-col a:hover { color:var(--rose); }
+    .f-bottom { max-width:1200px; margin:0 auto; border-top:1px solid rgba(255,255,255,.04); padding-top:1.5rem; display:flex; justify-content:space-between; align-items:center; font-size:.7rem; color:var(--dim); }
+    .maps-link { color:var(--rose); text-decoration:none; }
+    .maps-link:hover { text-decoration:underline; }
+  </style>
+  <link rel="shortcut icon" href="favicon.png" type="image/png">
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav>
+  <div class="nav-logo"><span class="nav-logo-star">✦</span> Anna Blanc</div>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Accueil</a></li>
+    <li><a href="#">Qui suis-je</a></li>
+    <li><a href="#">La Méthode</a></li>
+    <li><a href="#">YouTube</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#resa" class="nav-cta">Réserver</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════ HERO ══════════════════════════════ -->
+<section class="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="neb neb-1"></div>
+  <div class="neb neb-2"></div>
+  <div class="neb neb-3"></div>
+
+  <div class="hero-inner">
+    <!-- CONTENU GAUCHE -->
+    <div>
+      <p class="hero-eyebrow"><span style="color:var(--rose)">★</span> &nbsp;Thérapeute certifiée en Hypnose Régressive Ésotérique</p>
+      <h1>
+        Libérez vos<br>
+        <em>blocages profonds</em><br>
+        et révélez votre<br>
+        <em>lumière intérieure</em>
+      </h1>
+      <p class="hero-sub">
+        Grâce à la méthode HRE (Hypnose Régressive Ésotérique), je vous guide dans une exploration profonde de votre inconscient — au-delà du temps et de l'espace — pour transformer ce qui vous empêche d'avancer.
+      </p>
+      <a href="#resa" class="btn-primary">✦&nbsp; Réserver une séance</a>
+      <div><div class="hero-badge">✦&nbsp; Méthode Calogéro Grifasi</div></div>
+    </div>
+
+    <!-- PHOTO + ANNEAUX -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:1rem;">
+      <div class="orbit-wrap">
+        <div class="orbit-ring orb1"></div>
+        <div class="orbit-ring orb2"></div>
+        <div class="orbit-ring orb3"></div>
+        <div class="photo-frame">
+          <img src="anna-blanc.png" alt="Anna Blanc — Praticienne HRE"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+        </div>
+      </div>
+      <div class="photo-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <p style="font-size:.68rem;color:var(--dim);letter-spacing:.2em;text-transform:uppercase;">Anna Blanc · Praticienne HRE</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════════════════════════════ MÉTHODE ═════════════════════════════ -->
+<section class="s-methode">
+  <div class="container">
+    <p class="eyebrow">✦ &nbsp;La Méthode</p>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Qu'est-ce que l'Hypnose Régressive Ésotérique ?</h2>
+    <p class="section-lead">L'HRE explore l'être dans toutes ses dimensions, sans limite de temps ni d'espace. Fondée par Calogéro Grifasi, elle permet une transformation véritable et durable.</p>
+    <div class="methode-intro">
+      <div><p>L'HRE repose sur une particularité remarquable : grâce à un <strong>« support télépathique »</strong>, vous n'entrez pas vous-même en hypnose. Une personne entre en transe à votre place et accède aux informations de votre inconscient profond.</p></div>
+      <div><p>Vous restez <strong>pleinement conscient, lucide et acteur</strong> de votre transformation, tout en bénéficiant de la profondeur d'une exploration hypnotique avancée. Séances en ligne ou en présentiel.</p></div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><h3>Échange préliminaire</h3><p>Nous définissons ensemble votre intention de séance. Première consultation de 15 min offerte.</p></div>
+      <div class="step"><div class="step-num">02</div><h3>L'exploration hypnotique</h3><p>Via le support télépathique, votre inconscient révèle les origines profondes de vos blocages. Vous restez conscient.</p></div>
+      <div class="step"><div class="step-num">03</div><h3>Intégration & libération</h3><p>Des processus de libération, de pardon ou de réparation sont effectués pour une transformation durable.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════ BIENFAITS ════════════════════════════ -->
+<section class="s-bienfaits">
+  <div class="container">
+    <p class="eyebrow">✦ &nbsp;Pour qui ?</p>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Ce que l'HRE peut transformer</h2>
+    <p class="section-lead">La méthode s'adresse à toute personne souhaitant comprendre et libérer ce qui l'empêche de s'épanouir pleinement.</p>
+    <div class="benef-grid">
+      <div class="benef-item"><span class="benef-icon">✦</span><div><h4>Blocages émotionnels</h4><p>Peurs inexpliquées, angoisses profondes, tristesse persistante sans cause identifiable dans cette vie.</p></div></div>
+      <div class="benef-item"><span class="benef-icon">✦</span><div><h4>Schémas répétitifs</h4><p>Relations difficiles, échecs récurrents, situations qui se répètent malgré vos efforts conscients.</p></div></div>
+      <div class="benef-item"><span class="benef-icon">✦</span><div><h4>Phobies & traumatismes</h4><p>Peurs irrationnelles, phobies inexpliquées, traumas enfouis qui impactent votre quotidien.</p></div></div>
+      <div class="benef-item"><span class="benef-icon">✦</span><div><h4>Quête de sens</h4><p>Comprendre votre chemin de vie, votre mission d'âme et donner un sens profond à vos expériences.</p></div></div>
+      <div class="benef-item"><span class="benef-icon">✦</span><div><h4>Liens karmiques</h4><p>Comprendre et libérer les liens karmiques ou intergénérationnels qui influencent votre vie actuelle.</p></div></div>
+      <div class="benef-item"><span class="benef-icon">✦</span><div><h4>Confiance & alignement</h4><p>Retrouver confiance en vous, vous aligner avec votre être profond et vivre pleinement votre vie.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ RÉSERVATION ════════════════════════════ -->
+<section class="s-resa" id="resa">
+  <canvas class="sec-canvas" id="resaC1"></canvas>
+  <div class="container">
+    <p class="eyebrow">✦ &nbsp;Prendre rendez-vous</p>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Réservez votre séance</h2>
+    <div class="resa-wrap">
+      <div class="resa-info">
+        <h3>Une séance, un tournant</h3>
+        <div class="tarif-box">Séances individuelles · Tarif sur demande</div>
+        <p>Chaque séance HRE est unique et adaptée à votre questionnement du moment. En présentiel ou en visioconférence depuis votre domicile.</p>
+        <ul class="resa-bullets">
+          <li>Durée : 1h30 à 2h par séance</li>
+          <li>En ligne (Teams / Zoom) ou en présentiel</li>
+          <li>Première consultation offerte (15 min)</li>
+          <li>Suivi post-séance inclus</li>
+        </ul>
+        <a href="#" class="btn-primary" style="font-size:.76rem;">✦&nbsp; Prendre rendez-vous</a>
+      </div>
+      <div>
+        <div class="cal">
+          <div class="cal-head"><button>‹</button><span>Octobre 2026</span><button>›</button></div>
+          <div class="cal-dow"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+          <div class="cal-grid">
+            <div class="d"></div><div class="d"></div><div class="d"></div>
+            <div class="d ok">1</div><div class="d">2</div><div class="d">3</div><div class="d">4</div>
+            <div class="d ok">5</div><div class="d ok">6</div><div class="d">7</div>
+            <div class="d ok">8</div><div class="d">9</div><div class="d">10</div><div class="d">11</div>
+            <div class="d ok">12</div><div class="d ok">13</div><div class="d">14</div>
+            <div class="d ok">15</div><div class="d">16</div><div class="d">17</div><div class="d">18</div>
+            <div class="d ok sel">19</div><div class="d ok">20</div><div class="d">21</div>
+            <div class="d">22</div><div class="d ok">23</div><div class="d ok">24</div><div class="d">25</div>
+            <div class="d ok">26</div><div class="d">27</div><div class="d">28</div>
+            <div class="d ok">29</div><div class="d ok">30</div><div class="d ok">31</div>
+          </div>
+          <div class="cal-note">Calendrier synchronisé Google Calendar · Prototype</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ YOUTUBE ════════════════════════════════ -->
+<section class="s-yt">
+  <div class="container">
+    <p class="eyebrow">✦ &nbsp;Sur YouTube</p>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Rejoignez-moi sur YouTube</h2>
+    <div class="yt-wrap">
+      <div class="yt-ico">▶</div>
+      <h3>La chaîne d'Anna Blanc</h3>
+      <p>Vidéos sur l'hypnose HRE, témoignages, méditations guidées et explications de la méthode Calogéro Grifasi pour votre chemin de vie.</p>
+      <a href="#" class="btn-outline">Voir la chaîne YouTube ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ AVIS GOOGLE ════════════════════════════ -->
+<section class="s-avis">
+  <canvas class="sec-canvas" id="avisC1"></canvas>
+  <div class="container">
+    <p class="eyebrow">✦ &nbsp;Témoignages</p>
+    <div class="sep"><span>★</span></div>
+    <h2 class="section-h2">Ce que disent mes clients</h2>
+    <p class="section-lead">Avis Google <span class="demo-tag">🧪 DEMO — À remplacer par de vrais avis</span></p>
+    <div class="avis-grid">
+      <div class="avis-card"><div class="avis-stars">★★★★★</div><p class="avis-txt">« Une expérience bouleversante et profondément transformatrice. Anna m'a accompagnée avec une bienveillance extraordinaire. J'ai enfin compris l'origine de mes angoisses récurrentes. »</p><div class="avis-name">Marie L. <span class="demo-tag">🧪 demo</span></div></div>
+      <div class="avis-card"><div class="avis-stars">★★★★★</div><p class="avis-txt">« Je suis arrivé sceptique et je suis reparti transformé. La méthode HRE est d'une précision incroyable. Des réponses que je cherchais depuis 10 ans sont apparues en une seule séance. »</p><div class="avis-name">Thomas P. <span class="demo-tag">🧪 demo</span></div></div>
+      <div class="avis-card"><div class="avis-stars">★★★★★</div><p class="avis-txt">« Anna est une praticienne exceptionnelle, à l'écoute et très professionnelle. La séance a libéré des blocages que je portais depuis l'enfance. Je recommande vivement. »</p><div class="avis-name">Sophie M. <span class="demo-tag">🧪 demo</span></div></div>
+    </div>
+    <div style="text-align:center;"><a href="#" class="btn-outline">Voir tous les avis Google ↗</a></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════ FOOTER ═════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="f-logo">Anna Blanc</div>
+      <p class="f-desc">Thérapeute certifiée en Hypnose Régressive Ésotérique, méthode Calogéro Grifasi. Accompagnement individuel en présentiel et en ligne.</p>
+      <div class="f-social"><a href="#">▶</a><a href="#">◉</a><a href="#">f</a></div>
+    </div>
+    <div class="f-col"><h4>Navigation</h4><ul><li><a href="#">Accueil</a></li><li><a href="#">Qui suis-je</a></li><li><a href="#">La Méthode HRE</a></li><li><a href="#">Réserver</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="f-col"><h4>Contact</h4><ul><li><a href="#">contact@annablanc.fr <span class="demo-tag">demo</span></a></li><li><a href="#">+33 6 XX XX XX XX <span class="demo-tag">demo</span></a></li><li><a href="#" class="maps-link">📍 Voir sur Google Maps ↗</a></li></ul></div>
+  </div>
+  <div class="f-bottom"><span>© 2026 Anna Blanc — Hypnose HRE · Tous droits réservés</span><span>Mentions légales · Politique de confidentialité</span></div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   HERO CANVAS — étoiles 3 couches + étoiles filantes
+══════════════════════════════════════════════════════ */
+const canvas = document.getElementById('heroCanvas');
+const ctx    = canvas.getContext('2d');
+
+function resize() {
+  canvas.width  = canvas.parentElement.offsetWidth;
+  canvas.height = canvas.parentElement.offsetHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+/* ─ Génère les étoiles en 3 couches ─ */
+function makeLayer(count, rMin, rMax, speedX, speedY, goldRatio) {
+  const arr = [];
+  for (let i = 0; i < count; i++) {
+    arr.push({
+      x:     Math.random() * 4000,
+      y:     Math.random() * 2000,
+      r:     rMin + Math.random() * (rMax - rMin),
+      a:     Math.random(),
+      da:    (Math.random() - 0.5) * 0.006,
+      vx:    speedX * (0.8 + Math.random() * 0.4),
+      vy:    speedY * (0.8 + Math.random() * 0.4),
+      gold:  Math.random() < goldRatio,
+    });
+  }
+  return arr;
+}
+const L1 = makeLayer(180, 0.2, 0.7,  0,    0,   0.05);
+const L2 = makeLayer(100, 0.7, 1.4,  0.04, 0,   0.12);
+const L3 = makeLayer( 50, 1.4, 2.4,  0.08, 0,   0.25);
+
+/* ─ Étoiles filantes ─ */
+const shoots = [];
+let nextShoot = Date.now() + 1200;
+
+function spawnShoot() {
+  shoots.push({
+    x:       canvas.width * (0.25 + Math.random() * 0.6),
+    y:       Math.random() * canvas.height * 0.45,
+    vx:      -(9 + Math.random() * 8),
+    vy:       3 + Math.random() * 5,
+    len:     90 + Math.random() * 140,
+    life:    0,
+    maxLife: 55 + Math.random() * 35,
+    gold:    Math.random() > 0.72,
+  });
+  nextShoot = Date.now() + 2500 + Math.random() * 5000;
+}
+
+function drawShoot(s) {
+  const a   = s.life < 12 ? s.life / 12 :
+              s.life > s.maxLife - 12 ? (s.maxLife - s.life) / 12 : 1;
+  const spd = Math.sqrt(s.vx * s.vx + s.vy * s.vy);
+  const tx  = s.x - s.vx * s.len / spd;
+  const ty  = s.y - s.vy * s.len / spd;
+  const g   = ctx.createLinearGradient(s.x, s.y, tx, ty);
+  const col = s.gold ? `rgba(240,213,120,${a})` : `rgba(255,255,255,${a})`;
+  g.addColorStop(0, col);
+  g.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.beginPath(); ctx.strokeStyle = g; ctx.lineWidth = 1.8;
+  ctx.moveTo(s.x, s.y); ctx.lineTo(tx, ty); ctx.stroke();
+  ctx.beginPath(); ctx.arc(s.x, s.y, 2.2, 0, Math.PI * 2);
+  ctx.fillStyle = s.gold ? `rgba(240,213,120,${a})` : `rgba(255,255,255,${a * 0.9})`;
+  ctx.fill();
+}
+
+/* ─ Parallaxe souris ─ */
+let mx = 0, my = 0;
+document.querySelector('.hero').addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mx = (e.clientX - r.left) / r.width  - 0.5;
+  my = (e.clientY - r.top ) / r.height - 0.5;
+});
+
+function drawLayer(layer, parallaxFactor) {
+  const offX = mx * parallaxFactor;
+  const offY = my * parallaxFactor;
+  for (const s of layer) {
+    s.x += s.vx;
+    if (s.x > canvas.width)  s.x = 0;
+    if (s.x < 0) s.x = canvas.width;
+    s.a += s.da;
+    if (s.a < 0.05 || s.a > 0.95) s.da *= -1;
+    const a   = Math.max(0.05, Math.min(0.95, s.a));
+    const hex = Math.round(a * 255).toString(16).padStart(2, '0');
+    ctx.beginPath();
+    ctx.arc(
+      ((s.x + offX * parallaxFactor) % canvas.width + canvas.width) % canvas.width,
+      ((s.y + offY * parallaxFactor) % canvas.height + canvas.height) % canvas.height,
+      s.r, 0, Math.PI * 2
+    );
+    ctx.fillStyle = (s.gold ? '#C9A840' : '#F5F0FF') + hex;
+    ctx.fill();
+  }
+}
+
+function tick() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawLayer(L1, 12);
+  drawLayer(L2, 28);
+  drawLayer(L3, 48);
+
+  /* shooting stars */
+  if (Date.now() > nextShoot) spawnShoot();
+  for (let i = shoots.length - 1; i >= 0; i--) {
+    const s = shoots[i];
+    s.x += s.vx; s.y += s.vy; s.life++;
+    drawShoot(s);
+    if (s.life >= s.maxLife) shoots.splice(i, 1);
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* ══ SECTION CANVASES — mêmes étoiles que le héros, sans parallaxe ══ */
+(function(){
+  ['resaC1','avisC1'].forEach(function(id){
+    var c = document.getElementById(id);
+    if (!c) return;
+    var x = c.getContext('2d');
+    function resize(){ c.width = c.parentElement.clientWidth||800; c.height = c.parentElement.clientHeight||400; }
+    resize();
+    if(window.ResizeObserver) new ResizeObserver(resize).observe(c.parentElement);
+    else window.addEventListener('resize',resize);
+
+    function mkLayer(n,rMin,rMax,spd,gold){
+      var a=[];
+      for(var i=0;i<n;i++) a.push({
+        x:Math.random()*c.width, y:Math.random()*c.height,
+        r:rMin+Math.random()*(rMax-rMin),
+        a:Math.random(), da:(Math.random()-.5)*.006,
+        vx:spd*(.8+Math.random()*.4),
+        gold:Math.random()<gold
+      });
+      return a;
+    }
+    var l1=mkLayer(180,.2,.7, 0,   .05);
+    var l2=mkLayer(100,.7,1.4,.04, .12);
+    var l3=mkLayer( 50,1.4,2.4,.08,.25);
+    var sh=[]; var nxt=Date.now()+1800;
+
+    function spawn(){
+      sh.push({x:c.width*(.2+Math.random()*.7),y:Math.random()*c.height*.5,
+        vx:-(8+Math.random()*9),vy:3+Math.random()*5,
+        len:90+Math.random()*140,life:0,mL:55+Math.random()*35,
+        gold:Math.random()>.72});
+      nxt=Date.now()+3000+Math.random()*6000;
+    }
+    function drawSh(s){
+      var a=s.life<12?s.life/12:s.life>s.mL-12?(s.mL-s.life)/12:1;
+      var spd=Math.sqrt(s.vx*s.vx+s.vy*s.vy);
+      var tx=s.x-s.vx*s.len/spd, ty=s.y-s.vy*s.len/spd;
+      var g=x.createLinearGradient(s.x,s.y,tx,ty);
+      g.addColorStop(0,s.gold?'rgba(240,213,120,'+a+')':'rgba(255,255,255,'+a+')');
+      g.addColorStop(1,'rgba(255,255,255,0)');
+      x.beginPath();x.strokeStyle=g;x.lineWidth=1.8;x.moveTo(s.x,s.y);x.lineTo(tx,ty);x.stroke();
+    }
+    function drawL(layer){
+      for(var i=0;i<layer.length;i++){
+        var s=layer[i];
+        s.x+=s.vx; if(s.x>c.width)s.x=0; if(s.x<0)s.x=c.width;
+        s.a+=s.da; if(s.a<.05||s.a>.95)s.da*=-1;
+        var a=Math.max(.05,Math.min(.95,s.a));
+        var h=Math.round(a*255).toString(16).padStart(2,'0');
+        x.beginPath();x.arc(s.x%c.width,s.y%c.height,s.r,0,Math.PI*2);
+        x.fillStyle=(s.gold?'#C9A840':'#F5F0FF')+h;x.fill();
+      }
+    }
+    (function loop(){
+      x.clearRect(0,0,c.width,c.height);
+      drawL(l1);drawL(l2);drawL(l3);
+      if(Date.now()>nxt)spawn();
+      for(var i=sh.length-1;i>=0;i--){
+        var s=sh[i];s.x+=s.vx;s.y+=s.vy;s.life++;
+        drawSh(s);if(s.life>=s.mL)sh.splice(i,1);
+      }
+      requestAnimationFrame(loop);
+    })();
+  });
+})();
+</script>
+</body>
+</html>
