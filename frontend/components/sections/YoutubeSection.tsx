@@ -62,9 +62,6 @@ export default function YoutubeSection() {
                   fontSize: '1.5rem',
                   boxShadow: '0 4px 24px rgba(200,88,122,.45)',
                 }}>▶</div>
-                <p style={{ color: 'rgba(253,240,247,.85)', fontSize: '.78rem', letterSpacing: '.1em', margin: 0 }}>
-                  Visiter la chaîne NagAma
-                </p>
               </div>
             </div>
           </a>

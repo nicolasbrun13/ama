@@ -159,7 +159,7 @@ export default function AvisSection() {
                     <div style={{ width: '28px', height: '1px', background: 'linear-gradient(90deg, var(--rose), rgba(200,88,122,0))' }} />
 
                     {/* Text */}
-                    <p style={{ fontSize: '.82rem', fontStyle: 'italic', color: 'var(--dim)', lineHeight: 1.82, margin: 0, flex: 1 }}>
+                    <p style={{ fontSize: '.82rem', fontStyle: 'italic', color: 'var(--white)', lineHeight: 1.82, margin: 0, flex: 1 }}>
                       &ldquo;{a.text}&rdquo;
                     </p>
 
