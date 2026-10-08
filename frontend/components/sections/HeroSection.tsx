@@ -78,39 +78,44 @@ export default function HeroSection() {
     };
   }, []);
 
-  /* ── Scroll → halo rings expand ── */
+  /* ── Scroll → halo rings expand + fade ── */
   useEffect(() => {
-    const section   = sectionRef.current;
-    const rings     = haloRingsRef.current;
+    const section = sectionRef.current;
+    const rings   = haloRingsRef.current;
     if (!section || !rings) return;
 
     let rafId: number;
-    let scale     = 1;   // current displayed scale
-    let target    = 1;   // target scale
+    let scale = 1, targetScale = 1;
+    let opac  = 1, targetOpac  = 1;
     let animating = false;
 
     function animate() {
-      // Lerp towards target — 10 % per frame → silky smooth
-      scale += (target - scale) * 0.1;
+      scale += (targetScale - scale) * 0.1;
+      opac  += (targetOpac  - opac)  * 0.1;
       rings!.style.transform = `scale(${scale.toFixed(5)})`;
+      rings!.style.opacity   = opac.toFixed(5);
 
-      if (Math.abs(target - scale) > 0.0005) {
+      const doneS = Math.abs(targetScale - scale) < 0.0005;
+      const doneO = Math.abs(targetOpac  - opac)  < 0.0005;
+
+      if (!doneS || !doneO) {
         rafId = requestAnimationFrame(animate);
       } else {
-        rings!.style.transform = `scale(${target.toFixed(5)})`;
+        rings!.style.transform = `scale(${targetScale.toFixed(5)})`;
+        rings!.style.opacity   = targetOpac.toFixed(5);
         animating = false;
       }
     }
 
     function onScroll() {
-      const rect     = section.getBoundingClientRect();
-      // scrolled = how many px the hero top has moved above the viewport top
+      const rect     = section!.getBoundingClientRect();
       const scrolled = Math.max(0, -rect.top);
-      // progress 0→1 over the first 70 % of the hero height (so expansion completes before hero fully off-screen)
-      const progress = Math.min(1, scrolled / (rect.height * 0.70));
-      // ease-out quad: quick start, gradual finish
+      // Cover the full 5 wheel-notches: progress over 110 % of hero height
+      const progress = Math.min(1, scrolled / (rect.height * 1.1));
+      // ease-out quad
       const eased    = 1 - Math.pow(1 - progress, 2);
-      target = 1 + eased * 0.72;   // max scale ≈ 1.72× at full progress
+      targetScale = 1 + eased * 2.0;        // 1× → 3× (was 1.72×)
+      targetOpac  = 1 - eased * 0.88;       // 1 → 0.12 (almost invisible at max)
 
       if (!animating) {
         animating = true;
@@ -119,7 +124,7 @@ export default function HeroSection() {
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll(); // set initial state (in case page is already scrolled)
+    onScroll();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
@@ -178,7 +183,7 @@ export default function HeroSection() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 transformOrigin: 'center center',
-                willChange: 'transform',
+                willChange: 'transform, opacity',
               }}
             >
               <div className="halo-ring h1" />

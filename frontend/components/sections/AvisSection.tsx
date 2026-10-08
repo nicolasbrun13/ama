@@ -4,21 +4,21 @@ import VideoBackground from '@/components/animations/VideoBackground';
 const avis = [
   {
     stars: 5,
-    text: 'Une expérience profonde et transformatrice. Après des années de thérapies classiques, l\'HRE avec Ama a libéré quelque chose que je n\'arrivais pas à atteindre. Je me sens légère.',
-    author: 'Sophie M.',
-    tag: 'Schémas répétitifs',
-  },
-  {
-    stars: 5,
-    text: 'Je suis venu avec beaucoup de scepticisme. Mais la séance a été bouleversante de précision. Ama est d\'une présence et d\'une bienveillance remarquables.',
-    author: 'Thomas D.',
+    text: 'Excellente psychologue. Elle m\'a beaucoup aidé à m\'affirmer et avoir plus confiance en moi. Elle est très douce et agréable. Je la recommande à 100%',
+    author: 'Adélaïde A.',
     tag: 'Confiance en soi',
   },
   {
     stars: 5,
-    text: 'En quelques heures, j\'ai compris l\'origine de ma phobie qui me hantait depuis l\'enfance. C\'est comme si un chapitre douloureux se fermait enfin.',
-    author: 'Marie-Claire L.',
-    tag: 'Phobie profonde',
+    text: 'Suite à un burn-out, j\'ai consulté Anne-Marie Blanc et j\'en suis très satisfaite. Elle utilise la méthode TCC qui s\'est avérée très efficace. J\'ai également fait une séance d\'hypnose régressive qui m\'a beaucoup aidée à progresser.',
+    author: 'Karine P.',
+    tag: 'Burn-out',
+  },
+  {
+    stars: 5,
+    text: 'Très bonne psychologue, à l\'écoute et accueillante. J\'ai également fait des séances d\'hypnose régressive ésotérique avec de bons résultats.',
+    author: 'Farida Z.',
+    tag: 'Hypnose Régressive',
   },
 ];
 
