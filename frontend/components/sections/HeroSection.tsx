@@ -193,7 +193,7 @@ export default function HeroSection() {
 
             {/* Photo — stays at its fixed size regardless of scroll */}
             <div className="photo-glow" />
-            <div className="photo-frame">
+            <Link href="/qui-suis-je" className="photo-frame" aria-label="En savoir plus sur Ama">
               <Image
                 src="/anna-blanc.png"
                 alt="Ama — Anne-Marie Blanc, Praticienne HRE"
@@ -207,9 +207,9 @@ export default function HeroSection() {
                     <span key={i} style={{ color:'var(--gold)', fontSize:'.7rem' }}>{s}</span>
                   ))}
                 </div>
-                <div style={{ fontFamily:'"Playfair Display",serif', fontStyle:'italic', fontSize:'.88rem', color:'rgba(253,240,247,.85)' }}>Ama</div>
+                <div style={{ fontFamily:'"Playfair Display",serif', fontStyle:'italic', fontSize:'1.75rem', color:'rgba(253,240,247,.92)' }}>Ama</div>
               </div>
-            </div>
+            </Link>
           </div>
           <p className="hero-badge" style={{ fontSize:'.68rem', color:'var(--dim)', letterSpacing:'.2em', textTransform:'uppercase' as const }}>Praticienne HRE certifiée</p>
         </div>
@@ -264,7 +264,8 @@ export default function HeroSection() {
 
         .photo-glow { position:absolute; width:220px;height:220px; border-radius:50%; background:radial-gradient(circle,rgba(200,88,122,.2),transparent 70%); filter:blur(30px); animation:glowPulse 3s ease-in-out infinite; }
         @keyframes glowPulse { 0%,100%{opacity:.6;transform:scale(.9)} 50%{opacity:1;transform:scale(1.1)} }
-        .photo-frame { position:relative; z-index:2; width:240px;height:320px; border-radius:120px 120px 100px 100px; border:1px solid rgba(200,88,122,.3); box-shadow:0 24px 80px rgba(0,0,0,.8),0 0 60px rgba(200,88,122,.1); overflow:hidden; }
+        .photo-frame { position:relative; z-index:2; width:240px;height:320px; border-radius:120px 120px 100px 100px; border:1px solid rgba(200,88,122,.3); box-shadow:0 24px 80px rgba(0,0,0,.8),0 0 60px rgba(200,88,122,.1); overflow:hidden; cursor:pointer; display:block; transition:box-shadow .3s; }
+        .photo-frame:hover { box-shadow:0 28px 90px rgba(0,0,0,.85),0 0 80px rgba(200,88,122,.22); }
         .photo-frame::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; z-index:3; border-radius:100px 100px 0 0; background:linear-gradient(90deg,transparent,var(--rose),var(--gold-light),var(--rose),transparent); background-size:400% 2px; animation:topShim 3s linear infinite; }
         .photo-frame::after { content:''; position:absolute; bottom:0;left:0;right:0; height:110px; z-index:2; background:linear-gradient(0deg,rgba(6,3,15,.92) 0%,transparent 100%); border-radius:0 0 100px 100px; pointer-events:none; }
         @keyframes topShim { 0%{background-position:0 0} 100%{background-position:400% 0} }
