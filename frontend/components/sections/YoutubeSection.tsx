@@ -1,5 +1,8 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import ScrollReveal from '@/components/animations/ScrollReveal';
+
+const CHANNEL = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
 
 export default function YoutubeSection() {
   return (
@@ -19,36 +22,52 @@ export default function YoutubeSection() {
         </ScrollReveal>
 
         <ScrollReveal direction="up" delay={100}>
-          <div style={{
-            background: 'rgba(12,6,32,.7)', border: '1px solid rgba(200,88,122,.18)',
-            borderRadius: '12px', overflow: 'hidden', maxWidth: '720px', margin: '0 auto 2.5rem',
-          }}>
-            <div style={{
-              position: 'relative', paddingBottom: '56.25%', background: '#000',
-            }}>
-              <div style={{
-                position: 'absolute', inset: 0, display: 'flex',
-                alignItems: 'center', justifyContent: 'center',
+          <a
+            href={CHANNEL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'block',
+              background: 'rgba(12,6,32,.7)',
+              border: '1px solid rgba(200,88,122,.18)',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              maxWidth: '720px',
+              margin: '0 auto 2.5rem',
+              textDecoration: 'none',
+            }}
+            className="yt-home-card"
+          >
+            <div style={{ position: 'relative', paddingBottom: '52%' }}>
+              <Image
+                src="/youtube-channel.png"
+                alt="Chaîne YouTube NagAma — Hypnose HRE"
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'center top' }}
+                sizes="(max-width: 900px) 100vw, 720px"
+              />
+              {/* hover overlay */}
+              <div className="yt-home-overlay" style={{
+                position: 'absolute', inset: 0,
+                background: 'rgba(6,3,15,.48)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexDirection: 'column', gap: '1rem',
-                background: 'linear-gradient(135deg, rgba(6,3,15,.9) 0%, rgba(18,8,48,.9) 100%)',
+                transition: 'background .25s',
               }}>
                 <div style={{
-                  width: '72px', height: '72px', background: 'rgba(200,88,122,.15)',
-                  border: '1px solid rgba(200,88,122,.3)', borderRadius: '50%',
+                  width: '68px', height: '68px',
+                  background: 'rgba(200,88,122,.85)',
+                  borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.8rem', cursor: 'pointer',
+                  fontSize: '1.5rem',
+                  boxShadow: '0 4px 24px rgba(200,88,122,.45)',
                 }}>▶</div>
-                <p style={{ color: 'var(--dim)', fontSize: '.8rem', letterSpacing: '.1em' }}>
-                  Chaîne YouTube d&apos;Ama — Hypnose HRE
+                <p style={{ color: 'rgba(253,240,247,.85)', fontSize: '.78rem', letterSpacing: '.1em', margin: 0 }}>
+                  Visiter la chaîne NagAma
                 </p>
               </div>
             </div>
-            <div style={{ padding: '1.25rem 1.5rem' }}>
-              <p style={{ fontSize: '.82rem', color: 'var(--dim)', lineHeight: 1.7 }}>
-                Retrouvez des témoignages de clients, des explications approfondies sur la méthode HRE et des vidéos d&apos;exploration de l&apos;inconscient.
-              </p>
-            </div>
-          </div>
+          </a>
         </ScrollReveal>
 
         <div style={{ textAlign: 'center' }}>
@@ -62,6 +81,10 @@ export default function YoutubeSection() {
           </Link>
         </div>
       </div>
+
+      <style>{`
+        .yt-home-card:hover .yt-home-overlay { background: rgba(6,3,15,.28) !important; }
+      `}</style>
     </section>
   );
 }

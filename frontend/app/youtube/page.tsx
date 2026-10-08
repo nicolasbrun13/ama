@@ -147,7 +147,7 @@ export default function YouTubePage() {
           <p style={{
             fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '580px', margin: '0 auto',
           }}>
-            Témoignages de clients, explications de la méthode HRE et explorations de l&apos;inconscient.
+            Séances de clients, explications de la méthode HRE et explorations de l&apos;inconscient.
           </p>
         </div>
       </section>
