@@ -63,11 +63,8 @@ export default function Footer() {
               <li style={{ marginBottom:'.45rem' }}>
                 <a href="mailto:anne.marie.blanc@gmail.com" style={{ color:'var(--dim)', textDecoration:'none', fontSize:'.8rem' }}>anne.marie.blanc@gmail.com</a>
               </li>
-              <li style={{ marginBottom:'.45rem' }}>
-                <a href="tel:+33667299096" style={{ color:'var(--dim)', textDecoration:'none', fontSize:'.8rem' }}>+33 6 67 29 90 96</a>
-              </li>
               <li>
-                <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" style={{ color:'var(--rose)', textDecoration:'none', fontSize:'.8rem' }}>📍 Libourne (33) ↗</a>
+                <a href="tel:+33667299096" style={{ color:'var(--dim)', textDecoration:'none', fontSize:'.8rem' }}>+33 6 67 29 90 96</a>
               </li>
             </ul>
 
