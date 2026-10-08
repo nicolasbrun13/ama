@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import VideoBackground from '@/components/animations/VideoBackground';
 
 type FormData = {
   prenom: string;
@@ -99,17 +100,12 @@ export default function ReserverPage() {
     <main>
       {/* Sub-hero */}
       <section style={{
-        position: 'relative', background: 'var(--bg)',
+        position: 'relative',
         padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
         minHeight: '360px',
       }}>
-        <div style={{
-          position: 'absolute', width: '600px', height: '600px', borderRadius: '50%',
-          filter: 'blur(120px)',
-          background: 'radial-gradient(circle, rgba(200,88,122,.12) 0%, transparent 60%)',
-          top: '-200px', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none',
-        }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '700px', margin: '0 auto' }}>
+        <VideoBackground overlay="rgba(6,3,15,.82)" />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
