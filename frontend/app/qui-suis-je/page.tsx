@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
+import VideoBackground from '@/components/animations/VideoBackground';
 
 export const metadata: Metadata = {
   title: 'Qui suis-je — Ama · Hypnose HRE',
@@ -30,16 +31,12 @@ export default function QuiSuisJe() {
     <main>
       {/* Sub-hero */}
       <section style={{
-        position: 'relative', background: 'var(--bg)',
-        padding: '8rem 2rem 5rem', textAlign: 'center', overflow: 'hidden',
+        position: 'relative',
+        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
+        minHeight: '360px', display: 'flex', alignItems: 'center',
       }}>
-        <div style={{
-          position: 'absolute', width: '600px', height: '600px', borderRadius: '50%',
-          filter: 'blur(120px)',
-          background: 'radial-gradient(circle, rgba(200,88,122,.12) 0%, transparent 60%)',
-          top: '-200px', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none',
-        }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto' }}>
+        <VideoBackground videoSrc="https://assets.mixkit.co/videos/30073/30073-1080.mp4" overlay="rgba(6,3,15,.72)" />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '800px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
@@ -66,73 +63,75 @@ export default function QuiSuisJe() {
 
       {/* Main content */}
       <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
-        <div style={{
-          maxWidth: '1100px', margin: '0 auto',
-          display: 'grid', gridTemplateColumns: '280px 1fr',
-          gap: '4rem', alignItems: 'start',
-        }} className="qsj-grid">
-          {/* Photo */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-            <div style={{
-              position: 'relative', width: '280px', height: '380px',
-              borderRadius: '140px 140px 100px 100px',
-              border: '1px solid rgba(200,88,122,.3)',
-              boxShadow: '0 24px 80px rgba(0,0,0,.7), 0 0 60px rgba(200,88,122,.08)',
-              overflow: 'hidden',
-            }}>
-              <Image
-                src="/anna-blanc.png"
-                alt="Anne-Marie Blanc — Praticienne HRE"
-                fill
-                style={{ objectFit: 'cover', objectPosition: 'center top' }}
-              />
+        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+
+          {/* Rangée : photo à gauche + 3 premiers paragraphes à droite */}
+          <div className="qsj-flex" style={{ display: 'flex', gap: '4rem', alignItems: 'flex-start', marginBottom: '1.1rem' }}>
+
+            {/* Photo */}
+            <div className="qsj-photo" style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{
+                position: 'relative', width: '280px', height: '380px',
+                borderRadius: '140px 140px 100px 100px',
+                border: '1px solid rgba(200,88,122,.3)',
+                boxShadow: '0 24px 80px rgba(0,0,0,.7), 0 0 60px rgba(200,88,122,.08)',
+                overflow: 'hidden',
+              }}>
+                <Image
+                  src="/anna-blanc.png"
+                  alt="Anne-Marie Blanc, Praticienne HRE"
+                  fill
+                  style={{ objectFit: 'cover', objectPosition: 'center top' }}
+                />
+              </div>
+              <p style={{
+                fontSize: '.68rem', color: 'var(--dim)', letterSpacing: '.2em',
+                textTransform: 'uppercase' as const, textAlign: 'center',
+                marginTop: '2rem',
+              }}>
+                Praticienne HRE certifiée
+              </p>
             </div>
-            <p style={{
-              fontSize: '.68rem', color: 'var(--dim)', letterSpacing: '.2em',
-              textTransform: 'uppercase' as const, textAlign: 'center',
-            }}>
-              Praticienne HRE certifiée
-            </p>
+
+            {/* Paragraphes 1 à 3 — restent à droite de la photo */}
+            <div style={{ flex: 1 }}>
+              <h2 style={{
+                fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
+                fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', color: 'var(--white)',
+                marginBottom: '1.75rem', lineHeight: 1.25,
+              }}>
+                Mon chemin vers l&apos;HRE
+              </h2>
+
+              <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '1.1rem' }}>
+                Psychologue de formation, j&apos;ai toujours été attirée par l&apos;hypnose sans réellement passer à une formation concrète. Jusqu&apos;au jour où je suis tombée sur une session d&apos;<span style={{ color: 'var(--rose)', fontStyle: 'italic' }}>hypnose régressive ésotérique</span>. Mon attention a immédiatement été retenue, l&apos;envie de découvrir son fonctionnement, sa mécanique, toute particulière, inhérente au <span style={{ color: 'var(--rose)' }}>monde subtil</span>, certes bien loin des techniques habituellement utilisées, mais permettant une compréhension de thèmes toujours restés en attente dans mon esprit.
+              </p>
+              <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '1.1rem' }}>
+                Expérimentant d&apos;innombrables chemins de curiosités dans le but de mieux comprendre ce monde et le sens de l&apos;existence, mes pas m&apos;ont guidée vers l&apos;étude des religions, des traditions anciennes, le tantra, le yoga, le reiki, le chamanisme, la médiumnité, les constellations familiales, la cartomancie, la numérologie, l&apos;utilisation du pendule… Finalement, ma curiosité <strong style={{ color: 'var(--white)', fontWeight: 600 }}>n&apos;était jamais vraiment assouvie</strong> : les réponses me semblaient insuffisantes et me poussaient à continuer vers une meilleure compréhension du soi et du fonctionnement de ce monde.
+              </p>
+              <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: 0 }}>
+                Au fil des mois d&apos;écoute de sessions réalisées par des équipes d&apos;<span style={{ color: 'var(--rose)' }}>opérateurs</span> et de <span style={{ color: 'var(--rose)' }}>supports télépathes</span>, le puzzle de compréhension s&apos;est formé. Ce processus d&apos;intégration était nécessaire face à ce tsunami d&apos;informations que mon cartésianisme avait des difficultés à dépasser. Pourtant, au fond de moi, une part d&apos;intuition avait toujours eu la sensation que nous étions <strong style={{ color: 'var(--white)', fontWeight: 600 }}>plus qu&apos;un corps physique</strong> et qu&apos;une <strong style={{ color: 'var(--white)', fontWeight: 600 }}>partie énergétique</strong> devait exister.
+              </p>
+            </div>
           </div>
 
-          {/* Text */}
-          <div>
-            <h2 style={{
-              fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-              fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', color: 'var(--white)',
-              marginBottom: '1.75rem', lineHeight: 1.25,
-            }}>
-              Mon chemin vers l&apos;HRE
-            </h2>
+          {/* Paragraphes 4 et 5 + callout — pleine largeur sous la photo */}
+          <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '1.1rem' }}>
+            Une fois ma compréhension plus solide, j&apos;ai décidé de réserver ma session. Quelques semaines d&apos;attente, pendant lesquelles l&apos;excitation et <strong style={{ color: 'var(--white)', fontWeight: 600 }}>la peur</strong> se mêlaient. La peur est restée présente jusqu&apos;au jour de ma session et m&apos;a finalement définitivement quittée une fois ce travail réalisé. Si bien que la décision de me former à cette technique a été très rapide. Le mois suivant, j&apos;étais déjà dans une dynamique d&apos;apprentissage. Dans un premier temps comme support télépathe, puis très rapidement, j&apos;ai compris que je me sentais plus à l&apos;aise en tant qu&apos;<span style={{ color: 'var(--rose)' }}>opérateur</span>.
+          </p>
+          <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '2rem' }}>
+            À ce processus de formation s&apos;est combinée la rencontre avec mon support télépathe, <span style={{ color: 'var(--rose)' }}>Nag</span>, avec qui nous nous sommes entraînées durant une année à explorer des thèmes variés en <em style={{ color: 'var(--rose)' }}>état de conscience modifiée</em>. Cette période restera dans ma mémoire comme un <strong style={{ color: 'var(--white)', fontWeight: 600 }}>temps suspendu</strong> où mes questionnements existentiels pouvaient enfin trouver réponses.
+          </p>
 
-            <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '1.1rem' }}>
-              Depuis toujours attirée par les dimensions invisibles de l&apos;existence, j&apos;ai découvert
-              la méthode HRE de Calogéro Grifasi après des années de recherche personnelle.
-              Cette rencontre a transformé ma vie.
-            </p>
-            <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '1.1rem' }}>
-              Certifiée praticienne HRE, j&apos;accompagne aujourd&apos;hui mes clients dans une exploration
-              profonde de leur inconscient, au-delà du temps et de l&apos;espace, pour libérer ce qui
-              les retient véritablement.
-            </p>
-            <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '2rem' }}>
-              Chaque séance est une aventure unique. Ma mission : vous offrir un espace de confiance
-              et de bienveillance pour que vous puissiez vous reconnecter à votre essence profonde.{' '}
-              <span style={{ color: 'rgba(253,240,247,.3)', fontSize: '.8rem', fontStyle: 'italic' }}>
-                [À compléter]
-              </span>
-            </p>
-
-            {/* Callout quote */}
-            <div className="callout-glow" style={{
-              background: 'rgba(200,88,122,.06)',
-              borderLeft: '3px solid var(--rose)',
-              padding: '1.25rem 1.5rem',
-              fontSize: '.9rem', fontStyle: 'italic',
-              color: 'var(--dim)', lineHeight: 1.75,
-            }}>
-              « Tu n&apos;es pas le problème — c&apos;est ce que tu ne vois pas encore. »
-            </div>
+          {/* Callout quote */}
+          <div className="callout-glow" style={{
+            background: 'rgba(200,88,122,.06)',
+            borderLeft: '3px solid var(--rose)',
+            padding: '1.25rem 1.5rem',
+            fontSize: '.9rem', fontStyle: 'italic',
+            color: 'var(--dim)', lineHeight: 1.75,
+          }}>
+            « Ma curiosité n&apos;était jamais vraiment assouvie. Jusqu&apos;au jour où l&apos;HRE a mis des mots sur ce que j&apos;avais toujours pressenti. »
           </div>
         </div>
       </section>
@@ -196,7 +195,7 @@ export default function QuiSuisJe() {
           <p style={{ color: 'var(--dim)', fontSize: '.9rem', lineHeight: 1.8, marginBottom: '2rem' }}>
             Réservez votre première séance ou une consultation offerte de 15 minutes pour découvrir la méthode.
           </p>
-          <Link href="/reserver" style={{
+          <Link href="/reserver" className="btn-cta-rose" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.6rem',
             background: 'linear-gradient(135deg, #A03460, #6A1030)',
             color: 'white', textDecoration: 'none',
@@ -211,7 +210,8 @@ export default function QuiSuisJe() {
 
       <style>{`
         @media (max-width: 767px) {
-          .qsj-grid { grid-template-columns: 1fr !important; }
+          .qsj-flex { flex-direction: column !important; }
+          .qsj-photo { align-self: center !important; }
           .values-grid { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 640px) and (max-width: 900px) {

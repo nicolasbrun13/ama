@@ -1,11 +1,14 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
+const DEFAULT_VIDEO = 'https://assets.mixkit.co/videos/1610/1610-1080.mp4';
+
 interface Props {
   overlay?: string;
+  videoSrc?: string;
 }
 
-export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)' }: Props) {
+export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc = DEFAULT_VIDEO }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -90,8 +93,8 @@ export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)' }: Props)
 
   return (
     <div className="vid-bg" style={{ '--vid-overlay': overlay } as React.CSSProperties}>
-      <video autoPlay muted loop playsInline>
-        <source src="https://assets.mixkit.co/videos/1610/1610-1080.mp4" type="video/mp4" />
+      <video autoPlay muted loop playsInline suppressHydrationWarning>
+        <source src={videoSrc} type="video/mp4" suppressHydrationWarning />
       </video>
       <canvas ref={canvasRef} className="vid-canvas" />
     </div>

@@ -1,15 +1,6 @@
 'use client';
 import { useState } from 'react';
-
-const DemoTag = ({ label = 'demo' }: { label?: string }) => (
-  <span style={{
-    background: 'rgba(255,200,0,.1)', border: '1px solid rgba(255,200,0,.35)',
-    color: '#D4A020', fontSize: '.55rem', letterSpacing: '.12em', textTransform: 'uppercase' as const,
-    padding: '1px 5px', borderRadius: '3px', marginLeft: '4px', verticalAlign: 'middle',
-  }}>
-    🧪 {label}
-  </span>
-);
+import VideoBackground from '@/components/animations/VideoBackground';
 
 type FormData = {
   nom: string;
@@ -74,16 +65,12 @@ export default function ContactPage() {
     <main>
       {/* Sub-hero */}
       <section style={{
-        position: 'relative', background: 'var(--bg)',
-        padding: '8rem 2rem 5rem', textAlign: 'center', overflow: 'hidden',
+        position: 'relative',
+        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
+        minHeight: '360px', display: 'flex', alignItems: 'center',
       }}>
-        <div style={{
-          position: 'absolute', width: '600px', height: '600px', borderRadius: '50%',
-          filter: 'blur(120px)',
-          background: 'radial-gradient(circle, rgba(200,88,122,.12) 0%, transparent 60%)',
-          top: '-200px', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none',
-        }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '700px', margin: '0 auto' }}>
+        <VideoBackground videoSrc="https://assets.mixkit.co/videos/4034/4034-1080.mp4" overlay="rgba(6,3,15,.68)" />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
@@ -101,9 +88,9 @@ export default function ContactPage() {
             Contactez-moi
           </h1>
           <p style={{
-            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '500px', margin: '0 auto',
+            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '580px', margin: '0 auto',
           }}>
-            Une question sur la méthode, les tarifs ou le déroulement d&apos;une séance ? Je vous réponds sous 24 à 48h.
+            Une question sur la méthode ou les tarifs ? Je vous réponds sous 24 à 48h.
           </p>
         </div>
       </section>
@@ -129,17 +116,17 @@ export default function ContactPage() {
               {
                 icon: '📧',
                 label: 'Email',
-                value: <>contact@annablanc.fr<DemoTag /></>,
+                value: <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a>,
               },
               {
                 icon: '📞',
                 label: 'Téléphone',
-                value: <>+33 6 XX XX XX XX<DemoTag /></>,
+                value: <a href="tel:+33667299096" style={{ color: 'inherit', textDecoration: 'none' }}>+33 6 67 29 90 96</a>,
               },
               {
                 icon: '📍',
                 label: 'Localisation',
-                value: 'En ligne (France entière) + présentiel sur rendez-vous',
+                value: '134 Bis Rue de la Marne, 33500 Libourne · Séances en ligne (France entière)',
               },
               {
                 icon: '🕐',
@@ -236,6 +223,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={state === 'loading'}
+                  className={state !== 'loading' ? 'btn-cta-rose' : undefined}
                   style={{
                     background: state === 'loading' ? 'rgba(160,52,96,.5)' : 'linear-gradient(135deg, #A03460, #6A1030)',
                     color: 'white', border: 'none', cursor: state === 'loading' ? 'not-allowed' : 'pointer',
@@ -249,6 +237,38 @@ export default function ContactPage() {
                 </button>
               </form>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Google Maps */}
+      <section style={{ background: 'var(--bg)', padding: '5rem 0 5rem' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 2rem' }}>
+          <div style={{
+            borderRadius: '10px', overflow: 'hidden',
+            border: '1px solid rgba(200,88,122,.18)',
+            boxShadow: '0 8px 40px rgba(0,0,0,.45)',
+          }}>
+            <div style={{
+              padding: '.8rem 1.25rem',
+              background: 'rgba(18,8,48,.7)',
+              display: 'flex', alignItems: 'center', gap: '.6rem',
+              borderBottom: '1px solid rgba(200,88,122,.15)',
+            }}>
+              <span style={{ color: 'var(--rose)', fontSize: '.85rem' }}>📍</span>
+              <span style={{ fontSize: '.75rem', color: 'var(--dim)', letterSpacing: '.06em' }}>
+                134 Bis Rue de la Marne, 33500 Libourne
+              </span>
+            </div>
+            <iframe
+              src="https://maps.google.com/maps?q=134+Bis+Rue+de+la+Marne,+33500+Libourne,+France&output=embed&hl=fr&z=15"
+              width="100%"
+              height="320"
+              style={{ border: 0, display: 'block' }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Localisation du cabinet"
+            />
           </div>
         </div>
       </section>

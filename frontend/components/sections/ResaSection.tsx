@@ -44,7 +44,7 @@ export default function ResaSection() {
                   </li>
                 ))}
               </ul>
-              <Link href="/reserver" style={{ display:'inline-flex', alignItems:'center', gap:'.6rem', background:'linear-gradient(135deg,#A03460,#6A1030)', color:'white', textDecoration:'none', fontSize:'.8rem', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', padding:'1rem 2.2rem', borderRadius:'50px', boxShadow:'0 8px 36px rgba(200,88,122,.38)' }}>
+              <Link href="/reserver" className="btn-cta-rose" style={{ display:'inline-flex', alignItems:'center', gap:'.6rem', background:'linear-gradient(135deg,#A03460,#6A1030)', color:'white', textDecoration:'none', fontSize:'.8rem', fontWeight:700, letterSpacing:'.14em', textTransform:'uppercase', padding:'1rem 2.2rem', borderRadius:'50px', boxShadow:'0 8px 36px rgba(200,88,122,.38)' }}>
                 ✿ &nbsp;Prendre rendez-vous
               </Link>
             </div>

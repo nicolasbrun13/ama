@@ -52,7 +52,7 @@ export default function YoutubeSection() {
         </ScrollReveal>
 
         <div style={{ textAlign: 'center' }}>
-          <Link href="/youtube" style={{
+          <Link href="/youtube" className="btn-cta-ghost" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.5rem',
             border: '1px solid rgba(200,88,122,.35)', color: 'var(--rose)', textDecoration: 'none',
             fontSize: '.8rem', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase',

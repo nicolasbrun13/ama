@@ -110,3 +110,64 @@ body {
   position: absolute; inset: 0; width: 100%; height: 100%;
   z-index: 1; pointer-events: none;
 }
+
+/* ============================================================
+   RESPONSIVE — Mobile
+   ============================================================ */
+
+@media (max-width: 767px) {
+  /* Section padding */
+  section[style*="padding: 6rem 2rem"] {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+  }
+  section[style*="padding: 5rem 2rem"] {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+  /* Typography */
+  .section-h2 { font-size: clamp(1.45rem, 5.5vw, 1.85rem) !important; }
+  .section-lead { font-size: .84rem !important; margin-bottom: 2rem !important; }
+  /* Eyebrow pills — avoid overflow */
+  .eyebrow-pill { font-size: .6rem !important; padding: .3rem .75rem !important; }
+}
+
+@media (max-width: 600px) {
+  /* Sides padding tighter on very small screens */
+  section[style*="padding: 6rem 2rem"]  { padding-left: 1.15rem !important; padding-right: 1.15rem !important; }
+  section[style*="padding: 5rem 2rem"]  { padding-left: 1.15rem !important; padding-right: 1.15rem !important; }
+  section[style*="padding: 8rem 2rem"]  { padding-left: 1.15rem !important; padding-right: 1.15rem !important; }
+}
+
+/* ============================================================
+   CTA BUTTONS — Animations hover globales
+   ============================================================ */
+
+/* Bouton rose gradient */
+.btn-cta-rose {
+  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+}
+.btn-cta-rose:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 14px 48px rgba(200,88,122,.56) !important;
+  filter: brightness(1.08);
+}
+.btn-cta-rose:active {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 8px 28px rgba(200,88,122,.42) !important;
+}
+
+/* Bouton contour (ghost) */
+.btn-cta-ghost {
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, color .22s ease, background .22s ease;
+}
+.btn-cta-ghost:hover {
+  transform: translateY(-3px) !important;
+  border-color: var(--rose) !important;
+  box-shadow: 0 6px 28px rgba(200,88,122,.22) !important;
+  color: var(--white) !important;
+  background: rgba(200,88,122,.06) !important;
+}
+.btn-cta-ghost:active {
+  transform: translateY(-1px) !important;
+}

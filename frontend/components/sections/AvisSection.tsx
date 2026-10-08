@@ -1,4 +1,5 @@
 import ScrollReveal from '@/components/animations/ScrollReveal';
+import VideoBackground from '@/components/animations/VideoBackground';
 
 const avis = [
   {
@@ -23,8 +24,9 @@ const avis = [
 
 export default function AvisSection() {
   return (
-    <section id="avis" style={{ position: 'relative', background: 'var(--bg)', padding: '6rem 2rem' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <section id="avis" style={{ position: 'relative', overflow: 'hidden', padding: '6rem 2rem' }}>
+      <VideoBackground overlay="rgba(6,3,15,.78)" />
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto' }}>
         <ScrollReveal direction="up">
           <div style={{ textAlign: 'center', marginBottom: '.75rem', display: 'flex', justifyContent: 'center' }}>
             <div className="eyebrow-pill">✿ Témoignages</div>

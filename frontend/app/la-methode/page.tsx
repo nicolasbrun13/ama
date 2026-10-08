@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import VideoBackground from '@/components/animations/VideoBackground';
+import FaqAccordion from '@/components/sections/FaqAccordion';
+import StepsPrism from '@/components/sections/StepsPrism';
 
 export const metadata: Metadata = {
   title: 'La Méthode HRE — Hypnose Régressive Ésotérique · Ama',
@@ -52,7 +55,7 @@ const steps = [
   {
     n: 4,
     title: 'Exploration et libération',
-    desc: "Votre inconscient révèle les origines profondes de vos blocages — parfois dans d'autres vies, d'autres dimensions temporelles. Des processus de libération sont ensuite effectués.",
+    desc: "Votre inconscient révèle les origines profondes de vos blocages, parfois dans d'autres vies, d'autres dimensions temporelles. Des processus de libération sont ensuite effectués.",
   },
   {
     n: 5,
@@ -93,22 +96,12 @@ export default function LaMethode() {
     <main>
       {/* Sub-hero */}
       <section style={{
-        position: 'relative', background: 'var(--bg)',
-        padding: '8rem 2rem 5rem', textAlign: 'center', overflow: 'hidden',
+        position: 'relative',
+        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
+        minHeight: '360px', display: 'flex', alignItems: 'center',
       }}>
-        <div style={{
-          position: 'absolute', width: '600px', height: '600px', borderRadius: '50%',
-          filter: 'blur(120px)',
-          background: 'radial-gradient(circle, rgba(200,88,122,.14) 0%, transparent 60%)',
-          top: '-200px', left: '50%', transform: 'translateX(-50%)', pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', width: '400px', height: '400px', borderRadius: '50%',
-          filter: 'blur(100px)',
-          background: 'radial-gradient(circle, rgba(232,191,80,.06) 0%, transparent 60%)',
-          bottom: '-100px', right: '15%', pointerEvents: 'none',
-        }} />
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto' }}>
+        <VideoBackground videoSrc="https://assets.mixkit.co/videos/30063/30063-1080.mp4" overlay="rgba(6,3,15,.75)" />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '800px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
@@ -261,29 +254,7 @@ export default function LaMethode() {
             </h2>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {steps.map((s, i) => (
-              <div key={i} style={{
-                display: 'flex', gap: '1.5rem', alignItems: 'flex-start',
-                background: 'rgba(18,8,48,.5)', border: '1px solid var(--border)',
-                borderRadius: '8px', padding: '1.5rem',
-              }}>
-                <div style={{
-                  width: '44px', height: '44px', flexShrink: 0,
-                  background: 'var(--rose-deep)', color: 'white', borderRadius: '50%',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '.88rem', fontWeight: 700,
-                  boxShadow: '0 4px 16px rgba(160,52,96,.4)',
-                }}>
-                  {s.n}
-                </div>
-                <div>
-                  <h4 style={{ fontSize: '.9rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.4rem' }}>{s.title}</h4>
-                  <p style={{ fontSize: '.82rem', color: 'var(--dim)', lineHeight: 1.7 }}>{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <StepsPrism steps={steps} />
         </div>
       </section>
 
@@ -308,25 +279,7 @@ export default function LaMethode() {
             </h2>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {faq.map((item, i) => (
-              <div key={i} style={{
-                background: 'rgba(6,3,15,.6)', border: '1px solid var(--border)',
-                borderRadius: '8px', padding: '1.5rem 1.75rem',
-              }}>
-                <h4 style={{
-                  fontSize: '.9rem', fontWeight: 700, color: 'var(--white)',
-                  marginBottom: '.75rem', display: 'flex', alignItems: 'flex-start', gap: '.5rem',
-                }}>
-                  <span style={{ color: 'var(--rose)', flexShrink: 0 }}>✿</span>
-                  {item.q}
-                </h4>
-                <p style={{ fontSize: '.82rem', color: 'var(--dim)', lineHeight: 1.75, paddingLeft: '1.3rem' }}>
-                  {item.a}
-                </p>
-              </div>
-            ))}
-          </div>
+          <FaqAccordion items={faq} />
         </div>
       </section>
 
@@ -343,7 +296,7 @@ export default function LaMethode() {
           <p style={{ color: 'var(--dim)', fontSize: '.9rem', lineHeight: 1.8, marginBottom: '2rem' }}>
             Première consultation de 15 minutes offerte pour échanger et répondre à toutes vos questions.
           </p>
-          <Link href="/reserver" style={{
+          <Link href="/reserver" className="btn-cta-rose" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.6rem',
             background: 'linear-gradient(135deg, #A03460, #6A1030)',
             color: 'white', textDecoration: 'none',

@@ -93,7 +93,8 @@ export default function ReserverPage() {
       {/* Sub-hero */}
       <section style={{
         position: 'relative', background: 'var(--bg)',
-        padding: '8rem 2rem 5rem', textAlign: 'center', overflow: 'hidden',
+        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
+        minHeight: '360px',
       }}>
         <div style={{
           position: 'absolute', width: '600px', height: '600px', borderRadius: '50%',
@@ -285,6 +286,7 @@ export default function ReserverPage() {
               <button
                 type="submit"
                 disabled={state === 'loading'}
+                className={state !== 'loading' ? 'btn-cta-rose' : undefined}
                 style={{
                   background: state === 'loading' ? 'rgba(160,52,96,.5)' : 'linear-gradient(135deg, #A03460, #6A1030)',
                   color: 'white', border: 'none', cursor: state === 'loading' ? 'not-allowed' : 'pointer',

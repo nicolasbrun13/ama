@@ -20,7 +20,7 @@ export default function MethodeSection() {
           <p className="section-lead">Une approche unique qui explore l&apos;être dans toutes ses dimensions, sans limite de temps ni d&apos;espace.</p>
         </ScrollReveal>
 
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3.5rem', maxWidth:'940px', margin:'0 auto 3rem', alignItems:'start' }}>
+        <div className="methode-2col" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3.5rem', maxWidth:'940px', margin:'0 auto 3rem', alignItems:'start' }}>
           <ScrollReveal direction="left">
             <div>
               <p style={{ fontSize:'.9rem', color:'var(--dim)', lineHeight:1.88, marginBottom:'1rem' }}>
@@ -54,7 +54,7 @@ export default function MethodeSection() {
         </div>
 
         <div style={{ textAlign:'center' }}>
-          <Link href="/la-methode" style={{ display:'inline-flex', alignItems:'center', gap:'.5rem', border:'1px solid rgba(200,88,122,.35)', color:'var(--rose)', textDecoration:'none', fontSize:'.8rem', fontWeight:700, letterSpacing:'.12em', textTransform:'uppercase', padding:'.85rem 2rem', borderRadius:'50px', transition:'all .25s' }}>
+          <Link href="/la-methode" className="btn-cta-ghost" style={{ display:'inline-flex', alignItems:'center', gap:'.5rem', border:'1px solid rgba(200,88,122,.35)', color:'var(--rose)', textDecoration:'none', fontSize:'.8rem', fontWeight:700, letterSpacing:'.12em', textTransform:'uppercase', padding:'.85rem 2rem', borderRadius:'50px', transition:'all .25s' }}>
             En savoir plus sur la méthode →
           </Link>
         </div>
@@ -69,7 +69,7 @@ export default function MethodeSection() {
         .step-row:hover { border-color:rgba(200,88,122,.3); box-shadow:0 4px 24px rgba(200,88,122,.1); }
         .step-num { width:38px;height:38px;flex-shrink:0; background:var(--rose-deep); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:700; box-shadow:0 4px 16px rgba(160,52,96,.4); transition:all .25s; }
         .step-row:hover .step-num { box-shadow:0 0 22px rgba(200,88,122,.5); transform:scale(1.1); }
-        @media(max-width:767px){ div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns:1fr !important; } }
+        @media(max-width:767px){ .methode-2col { grid-template-columns:1fr !important; gap:2rem !important; } }
       `}</style>
     </section>
   );
