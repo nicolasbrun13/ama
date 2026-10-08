@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type FormData = {
   prenom: string;
@@ -25,6 +25,13 @@ export default function ReserverPage() {
   });
   const [state, setState] = useState<FormState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+
+  // Pré-remplit la date si ?date= est passé depuis le calendrier
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const d = params.get('date');
+    if (d) setForm(prev => ({ ...prev, dateVoulue: d }));
+  }, []);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
