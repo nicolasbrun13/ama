@@ -4,6 +4,18 @@ import VideoBackground from '@/components/animations/VideoBackground';
 const avis = [
   {
     stars: 5,
+    text: 'Ravi d\'avoir choisi cette professionnelle ! Je suis sorti de mon burn-out grâce aux méthodes douces qu\'elle utilise, notamment la relaxation et les TCC. C\'est une personne très à l\'écoute et très agréable. Je garde en tête ces outils qui me permettront d\'avancer. Je la recommande sans hésitation.',
+    author: 'Loic P.',
+    tag: 'Burn-out',
+  },
+  {
+    stars: 5,
+    text: 'Très bonne professionnelle de santé, à l\'écoute active, je la recommande vivement.',
+    author: 'Julie L.',
+    tag: 'Écoute active',
+  },
+  {
+    stars: 5,
     text: 'Excellente psychologue. Elle m\'a beaucoup aidé à m\'affirmer et avoir plus confiance en moi. Elle est très douce et agréable. Je la recommande à 100%',
     author: 'Adélaïde A.',
     tag: 'Confiance en soi',
@@ -12,7 +24,7 @@ const avis = [
     stars: 5,
     text: 'Suite à un burn-out, j\'ai consulté Anne-Marie Blanc et j\'en suis très satisfaite. Elle utilise la méthode TCC qui s\'est avérée très efficace. J\'ai également fait une séance d\'hypnose régressive qui m\'a beaucoup aidée à progresser.',
     author: 'Karine P.',
-    tag: 'Burn-out',
+    tag: 'TCC & Hypnose',
   },
   {
     stars: 5,
@@ -40,7 +52,7 @@ export default function AvisSection() {
           </p>
         </ScrollReveal>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem' }} className="avis-grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem', maxWidth: '1100px', margin: '0 auto' }} className="avis-grid">
           {avis.map((a, i) => (
             <ScrollReveal key={i} direction="up" delay={i * 100}>
               <div className="card-float" style={{

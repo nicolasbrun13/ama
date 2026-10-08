@@ -11,13 +11,14 @@ const CHANNEL = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
 const YT_WATCH = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 const YT_THUMB = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
-type Video = { id: string; title: string; date: string; tag?: string };
+type Video = { id: string; title: string; date: string; tag?: string; customThumb?: string };
 
 const featured: Video = {
   id: 'UzQzHmQs6EA',
   title: 'Meryam — Séance HRE',
   date: '18 sept. 2026',
   tag: 'Témoignage',
+  customThumb: '/youtube-featured.png',
 };
 
 const contentVideos: Video[] = [
@@ -60,7 +61,7 @@ function VideoCard({ video, featured: isFeatured = false }: { video: Video; feat
       {/* Thumbnail */}
       <div style={{ position: 'relative', paddingBottom: '56.25%', background: 'rgba(6,3,15,.9)' }}>
         <Image
-          src={YT_THUMB(video.id)}
+          src={video.customThumb ?? YT_THUMB(video.id)}
           alt={video.title}
           fill
           style={{ objectFit: 'cover' }}
@@ -144,25 +145,10 @@ export default function YouTubePage() {
             La chaîne YouTube
           </h1>
           <p style={{
-            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '580px', margin: '0 auto 1.75rem',
+            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '580px', margin: '0 auto',
           }}>
             Témoignages de clients, explications de la méthode HRE et explorations de l&apos;inconscient.
           </p>
-          <a
-            href={CHANNEL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-cta-ghost"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '.6rem',
-              border: '1px solid rgba(200,88,122,.35)', color: 'var(--rose)',
-              textDecoration: 'none', fontSize: '.78rem', fontWeight: 700,
-              letterSpacing: '.12em', textTransform: 'uppercase' as const,
-              padding: '.85rem 1.75rem', borderRadius: '50px',
-            }}
-          >
-            ▶ S&apos;abonner à la chaîne
-          </a>
         </div>
       </section>
 
