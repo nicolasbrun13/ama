@@ -195,7 +195,7 @@ export default function HeroSection() {
             <div className="photo-glow" />
             <Link href="/qui-suis-je" className="photo-frame" aria-label="En savoir plus sur Ama">
               <Image
-                src="/anna-blanc.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/anna-blanc.png`}
                 alt="Ama — Anne-Marie Blanc, Praticienne HRE"
                 fill
                 style={{ objectFit:'cover', objectPosition:'center top', zIndex:1, transform:'scaleX(-1)' }}

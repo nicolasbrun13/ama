@@ -78,7 +78,7 @@ export default function QuiSuisJe() {
                 overflow: 'hidden',
               }}>
                 <Image
-                  src="/anna-blanc.png"
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/anna-blanc.png`}
                   alt="Anne-Marie Blanc, Praticienne HRE"
                   fill
                   style={{ objectFit: 'cover', objectPosition: 'center top' }}

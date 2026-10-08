@@ -18,7 +18,7 @@ const featured: Video = {
   title: 'Meryam — Séance HRE',
   date: '18 sept. 2026',
   tag: 'Témoignage',
-  customThumb: '/youtube-featured.png',
+  customThumb: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/youtube-featured.png`,
 };
 
 const contentVideos: Video[] = [

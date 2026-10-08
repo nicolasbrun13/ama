@@ -40,7 +40,7 @@ export default function YoutubeSection() {
           >
             <div style={{ position: 'relative', paddingBottom: '52%' }}>
               <Image
-                src="/youtube-channel.png"
+                src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/youtube-channel.png`}
                 alt="Chaîne YouTube NagAma — Hypnose HRE"
                 fill
                 style={{ objectFit: 'cover', objectPosition: 'center top' }}
