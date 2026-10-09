@@ -1,30 +1,38 @@
-// Flower of Life — R=90, rosace centrée unique
-const R  = 90;
-const H  = R * Math.sqrt(3) / 2; // ~77.94
-const CX = 500;
+// Flower of Life — R=60 (petit modèle), deux centres gauche/droite
+const R  = 60;
+const H  = R * Math.sqrt(3) / 2; // ~51.96
 const CY = 260;
 
-const CIRCLES = [
-  { x: CX - R,     y: CY - 2*H },
-  { x: CX,         y: CY - 2*H },
-  { x: CX + R,     y: CY - 2*H },
-  { x: CX - 1.5*R, y: CY - H   },
-  { x: CX - 0.5*R, y: CY - H   },
-  { x: CX + 0.5*R, y: CY - H   },
-  { x: CX + 1.5*R, y: CY - H   },
-  { x: CX - 2*R,   y: CY       },
-  { x: CX - R,     y: CY       },
-  { x: CX,         y: CY       },
-  { x: CX + R,     y: CY       },
-  { x: CX + 2*R,   y: CY       },
-  { x: CX - 1.5*R, y: CY + H   },
-  { x: CX - 0.5*R, y: CY + H   },
-  { x: CX + 0.5*R, y: CY + H   },
-  { x: CX + 1.5*R, y: CY + H   },
-  { x: CX - R,     y: CY + 2*H },
-  { x: CX,         y: CY + 2*H },
-  { x: CX + R,     y: CY + 2*H },
-];
+function makeCircles(cx: number) {
+  return [
+    { x: cx - R,     y: CY - 2*H },
+    { x: cx,         y: CY - 2*H },
+    { x: cx + R,     y: CY - 2*H },
+    { x: cx - 1.5*R, y: CY - H   },
+    { x: cx - 0.5*R, y: CY - H   },
+    { x: cx + 0.5*R, y: CY - H   },
+    { x: cx + 1.5*R, y: CY - H   },
+    { x: cx - 2*R,   y: CY       },
+    { x: cx - R,     y: CY       },
+    { x: cx,         y: CY       },
+    { x: cx + R,     y: CY       },
+    { x: cx + 2*R,   y: CY       },
+    { x: cx - 1.5*R, y: CY + H   },
+    { x: cx - 0.5*R, y: CY + H   },
+    { x: cx + 0.5*R, y: CY + H   },
+    { x: cx + 1.5*R, y: CY + H   },
+    { x: cx - R,     y: CY + 2*H },
+    { x: cx,         y: CY + 2*H },
+    { x: cx + R,     y: CY + 2*H },
+  ];
+}
+
+// LEFT=180 → cercle le + à gauche en cx=60, r=60 → point gauche = x=0 ✓
+// RIGHT=820 → cercle le + à droite en cx=940, r=60 → point droit = x=1000 ✓
+const LEFT   = 180;
+const RIGHT  = 820;
+const L_CIRC = makeCircles(LEFT);
+const R_CIRC = makeCircles(RIGHT);
 
 export default function SacredGeometryBg() {
   return (
@@ -36,13 +44,27 @@ export default function SacredGeometryBg() {
           </clipPath>
         </defs>
 
+        {/* Rosace gauche */}
         <g clipPath="url(#sgClip)" opacity="0.10">
           <animateTransform
             attributeName="transform" attributeType="XML" type="rotate"
-            from={`0 ${CX} ${CY}`} to={`360 ${CX} ${CY}`}
+            from={`0 ${LEFT} ${CY}`} to={`360 ${LEFT} ${CY}`}
             dur="90s" repeatCount="indefinite"
           />
-          {CIRCLES.map((c,i) => (
+          {L_CIRC.map((c,i) => (
+            <circle key={i} cx={c.x} cy={c.y} r={R}
+              fill="none" stroke="rgba(200,88,122,1)" strokeWidth="0.8"/>
+          ))}
+        </g>
+
+        {/* Rosace droite */}
+        <g clipPath="url(#sgClip)" opacity="0.10">
+          <animateTransform
+            attributeName="transform" attributeType="XML" type="rotate"
+            from={`0 ${RIGHT} ${CY}`} to={`360 ${RIGHT} ${CY}`}
+            dur="90s" repeatCount="indefinite"
+          />
+          {R_CIRC.map((c,i) => (
             <circle key={i} cx={c.x} cy={c.y} r={R}
               fill="none" stroke="rgba(200,88,122,1)" strokeWidth="0.8"/>
           ))}
