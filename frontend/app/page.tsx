@@ -22,6 +22,12 @@ export default function Home() {
     <main>
       <HeroSection />
 
+      {/* Separator hero → contenu */}
+      <div style={{
+        height: '1px',
+        background: 'linear-gradient(to right, transparent 0%, rgba(200,88,122,.7) 25%, rgba(200,88,122,.7) 75%, transparent 100%)',
+      }} />
+
       {/* ── Rose A : #C8587A (actuel) ── */}
       <RoseLabel hex="#C8587A" name="actuel" />
       <MethodeSection />

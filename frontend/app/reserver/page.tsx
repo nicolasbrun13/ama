@@ -55,7 +55,7 @@ export default function ReserverPage() {
 
     try {
       const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
-      const endpoint = apiBase ? `${apiBase}/api/reservations` : '/api/reservations';
+      const endpoint = apiBase ? `${apiBase}/api/reservations` : `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/api/reservations`;
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -129,6 +129,12 @@ export default function ReserverPage() {
           </p>
         </div>
       </section>
+
+      {/* Separator */}
+      <div style={{
+        height: '1px',
+        background: 'linear-gradient(to right, transparent 0%, rgba(200,88,122,.7) 25%, rgba(200,88,122,.7) 75%, transparent 100%)',
+      }} />
 
       {/* How it works */}
       <section style={{ background: 'var(--bg-mid)', padding: '3.5rem 2rem' }}>

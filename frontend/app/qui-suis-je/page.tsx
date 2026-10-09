@@ -62,8 +62,15 @@ export default function QuiSuisJe() {
         </div>
       </section>
 
+      {/* Separator — ligne rose qui s'estompe sur les côtés */}
+      <div style={{
+        height: '1px',
+        background: 'linear-gradient(to right, transparent 0%, rgba(200,88,122,.7) 25%, rgba(200,88,122,.7) 75%, transparent 100%)',
+        margin: 0,
+      }} />
+
       {/* Main content */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem', borderTop: '3px solid #C8587A' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
           {/* Rangée : photo à gauche + 3 premiers paragraphes à droite */}
