@@ -149,7 +149,9 @@ export default function ResaSection() {
           </ScrollReveal>
 
           <ScrollReveal direction="right" delay={80}>
-            <CalMini />
+            <div style={{ marginTop: '3.5rem' }}>
+              <CalMini />
+            </div>
           </ScrollReveal>
         </div>
       </div>
