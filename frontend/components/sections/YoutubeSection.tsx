@@ -59,7 +59,7 @@ export default function YoutubeSection() {
                   background: 'rgba(200,88,122,.85)',
                   borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.5rem',
+                  fontSize: '1.5rem', color: '#000',
                   boxShadow: '0 4px 24px rgba(200,88,122,.45)',
                 }}>▶</div>
               </div>
