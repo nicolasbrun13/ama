@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import VideoBackground from '@/components/animations/VideoBackground';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import StepsPrism from '@/components/sections/StepsPrism';
+import ConstellationBg from '@/components/decorations/ConstellationBg';
 
 export const metadata: Metadata = {
   title: 'La Méthode HRE — Hypnose Régressive Ésotérique · Ama',
@@ -126,6 +127,8 @@ export default function LaMethode() {
         </div>
       </section>
 
+      <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent, #C8587A 25%, #C8587A 75%, transparent)' }} />
+
       {/* Section 1 — Qu'est-ce que l'HRE */}
       <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -191,8 +194,9 @@ export default function LaMethode() {
       </section>
 
       {/* Section 2 — Ce que l'HRE peut traiter */}
-      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem', position: 'relative' }}>
+        <ConstellationBg />
+        <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
@@ -259,8 +263,9 @@ export default function LaMethode() {
       </section>
 
       {/* Section 4 — FAQ */}
-      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem' }}>
-        <div style={{ maxWidth: '860px', margin: '0 auto' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem', position: 'relative' }}>
+        <ConstellationBg />
+        <div style={{ maxWidth: '860px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import VideoBackground from '@/components/animations/VideoBackground';
+import SacredGeometryBg from '@/components/decorations/SacredGeometryBg';
 
 export const metadata: Metadata = {
   title: 'YouTube — Ama · Hypnose HRE',
@@ -80,7 +81,7 @@ function VideoCard({ video, featured: isFeatured = false }: { video: Video; feat
             borderRadius: '50%',
             background: 'rgba(200,88,122,.85)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: isFeatured ? '1.4rem' : '1rem',
+            fontSize: isFeatured ? '1.4rem' : '1rem', color: '#000',
             boxShadow: '0 4px 20px rgba(200,88,122,.4)',
           }}>▶</div>
         </div>
@@ -152,6 +153,8 @@ export default function YouTubePage() {
         </div>
       </section>
 
+      <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent, #C8587A 25%, #C8587A 75%, transparent)' }} />
+
       {/* Featured video */}
       <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto' }}>
@@ -171,8 +174,9 @@ export default function YouTubePage() {
       </section>
 
       {/* Content videos */}
-      <section style={{ background: 'var(--bg-soft)', padding: '4rem 2rem' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '4rem 2rem', position: 'relative' }}>
+        <SacredGeometryBg />
+        <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',

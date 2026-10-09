@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { Metadata } from 'next';
 import VideoBackground from '@/components/animations/VideoBackground';
+import FloatingStars from '@/components/decorations/FloatingStars';
 
 export const metadata: Metadata = {
   title: 'Qui suis-je — Ama · Hypnose HRE',
@@ -61,6 +62,8 @@ export default function QuiSuisJe() {
         </div>
       </section>
 
+      <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent, #C8587A 25%, #C8587A 75%, transparent)' }} />
+
       {/* Main content */}
       <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -96,11 +99,11 @@ export default function QuiSuisJe() {
             {/* Paragraphes 1 à 3 — restent à droite de la photo */}
             <div style={{ flex: 1 }}>
               <h2 style={{
-                fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-                fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', color: 'var(--white)',
-                marginBottom: '1.75rem', lineHeight: 1.25,
+                fontFamily: '"Playfair Display", serif', fontWeight: 500,
+                fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--white)', lineHeight: 1.22,
+                marginBottom: '1.75rem',
               }}>
-                Mon chemin vers l&apos;HRE
+                Mon chemin vers <em style={{ fontStyle: 'italic', color: 'var(--rose)' }}>l&apos;HRE</em>
               </h2>
 
               <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.88, marginBottom: '1.1rem' }}>
@@ -137,8 +140,9 @@ export default function QuiSuisJe() {
       </section>
 
       {/* Values */}
-      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem', position: 'relative' }}>
+        <FloatingStars />
+        <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',

@@ -32,7 +32,7 @@ export default function ContactPage() {
     setErrorMsg('');
 
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -94,6 +94,8 @@ export default function ContactPage() {
           </p>
         </div>
       </section>
+
+      <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent, #C8587A 25%, #C8587A 75%, transparent)' }} />
 
       {/* Contact section */}
       <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
