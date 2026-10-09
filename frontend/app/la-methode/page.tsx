@@ -127,10 +127,8 @@ export default function LaMethode() {
         </div>
       </section>
 
-      <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent, #C8587A 25%, #C8587A 75%, transparent)' }} />
-
       {/* Section 1 — Qu'est-ce que l'HRE */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem', borderTop: '3px solid #C8587A' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <h2 style={{

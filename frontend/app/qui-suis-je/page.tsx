@@ -62,10 +62,8 @@ export default function QuiSuisJe() {
         </div>
       </section>
 
-      <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent, #C8587A 25%, #C8587A 75%, transparent)' }} />
-
       {/* Main content */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem', borderTop: '3px solid #C8587A' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
           {/* Rangée : photo à gauche + 3 premiers paragraphes à droite */}

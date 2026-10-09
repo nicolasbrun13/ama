@@ -95,10 +95,8 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <div style={{ height: '2px', background: 'linear-gradient(90deg, transparent, #C8587A 25%, #C8587A 75%, transparent)' }} />
-
       {/* Contact section */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem', borderTop: '3px solid #C8587A' }}>
         <div style={{
           maxWidth: '1000px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: '1fr 1.4fr',
