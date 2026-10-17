@@ -88,7 +88,7 @@ const faq = [
   },
   {
     q: "Les résultats sont-ils permanents ?",
-    a: "Certains résultats sont immédiats et permanents. D'autres se manifestent progressivement sur plusieurs jours ou semaines après la séance, le temps que l'inconscient intègre les transformations.",
+    a: "Certains résultats sont immédiats et permanents. D'autres se manifestent progressivement sur plusieurs jours ou semaines après la séance, le temps que la conscience stabilise et intègre les informations.",
   },
 ];
 
