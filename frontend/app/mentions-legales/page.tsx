@@ -12,7 +12,7 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
     <h2 style={{
       fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
       fontSize: '1.25rem', color: 'var(--white)',
-      borderBottom: '1px solid rgba(200,88,122,.2)',
+      borderBottom: '1px solid rgba(255,197,211,.2)',
       paddingBottom: '.65rem', marginBottom: '1.25rem',
     }}>
       {title}
@@ -46,7 +46,7 @@ export default function MentionsLegales() {
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
+            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',
             fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
             textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -85,12 +85,10 @@ export default function MentionsLegales() {
               <Li><strong style={{ color: 'var(--white)' }}>Nom professionnel :</strong> Ama</Li>
               <Li><strong style={{ color: 'var(--white)' }}>Titre :</strong> Psychologue et praticienne certifiée en Hypnose Régressive Ésotérique (HRE)</Li>
               <Li><strong style={{ color: 'var(--white)' }}>Numéro RPPS :</strong> 10009613695</Li>
-              <Li><strong style={{ color: 'var(--white)' }}>Adresse :</strong> 134 Bis Rue de la Marne, 33500 Libourne, France</Li>
-              <Li><strong style={{ color: 'var(--white)' }}>Téléphone :</strong> +33 6 67 29 90 96</Li>
               <Li><strong style={{ color: 'var(--white)' }}>Email :</strong> anne.marie.blanc@gmail.com</Li>
             </ul>
             <P>
-              Anne-Marie Blanc exerce en tant que praticienne libérale. Les séances sont proposées en présentiel à Libourne ainsi qu&apos;à distance pour la France entière et l&apos;international.
+              Anne-Marie Blanc exerce en tant que praticienne libérale. Les séances sont proposées à distance pour la France entière et l&apos;international.
             </P>
           </Section>
 
@@ -160,19 +158,17 @@ export default function MentionsLegales() {
               Les prestations proposées comprennent :
             </P>
             <ul style={{ listStyle: 'none', padding: '0 0 0 .5rem', marginBottom: '.75rem' }}>
-              <Li>Consultation préalable gratuite de 15 minutes (par téléphone ou visioconférence)</Li>
-              <Li>Séance d&apos;Hypnose Régressive Ésotérique individuelle (en présentiel ou à distance)</Li>
-              <Li>Suivi post-séance inclus (48 à 72 heures après la séance)</Li>
+              <Li>Séance d&apos;Hypnose Régressive Ésotérique individuelle à distance (via Zoom)</Li>
             </ul>
             <P>
-              La méthode HRE n&apos;est ni une consultation médicale ni une psychothérapie au sens réglementaire. Elle constitue un accompagnement complémentaire et ne remplace en aucun cas un traitement médical ou psychiatrique en cours.
+              L&apos;Hypnose Régressive Ésotérique ne constitue pas une médecine. Elle n&apos;est ni une consultation médicale ni une psychothérapie au sens réglementaire. Elle constitue un accompagnement complémentaire et ne remplace en aucun cas un traitement médical ou psychiatrique en cours.
             </P>
 
             <h3 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.65rem', marginTop: '1.25rem' }}>
               Tarifs
             </h3>
             <P>
-              Les tarifs en vigueur sont communiqués lors de la consultation préalable gratuite. Ils peuvent être consultés sur demande à l&apos;adresse : <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a>
+              Le tarif d&apos;une séance est de 150 €. Pour toute question : <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a>
             </P>
             <P>
               Conformément à l&apos;article 293 B du Code général des impôts, TVA non applicable.
@@ -189,7 +185,7 @@ export default function MentionsLegales() {
               Annulation et report
             </h3>
             <P>
-              Toute annulation doit être notifiée par e-mail ou par téléphone :
+              Toute annulation doit être notifiée par e-mail :
             </P>
             <ul style={{ listStyle: 'none', padding: '0 0 0 .5rem', marginBottom: '.75rem' }}>
               <Li>Plus de 48h avant la séance : remboursement intégral ou report sans frais</Li>
@@ -197,7 +193,7 @@ export default function MentionsLegales() {
               <Li>Moins de 24h avant ou absence sans préavis : la séance est due en totalité</Li>
             </ul>
             <P>
-              En cas d&apos;annulation par la praticienne, le Client sera remboursé intégralement ou pourra reporter la séance à une date de son choix.
+              En cas d&apos;annulation par la praticienne, le Client sera remboursé intégralement ou pourra reporter la séance à une date de son choix. En cas de force majeure dûment justifiée (maladie grave, accident, deuil), un remboursement ou un report pourra être accordé.
             </P>
 
             <h3 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.65rem', marginTop: '1.25rem' }}>
@@ -239,8 +235,6 @@ export default function MentionsLegales() {
             </P>
             <ul style={{ listStyle: 'none', padding: '0 0 0 .5rem' }}>
               <Li>Par e-mail : <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a></Li>
-              <Li>Par téléphone : +33 6 67 29 90 96</Li>
-              <Li>Par courrier : Anne-Marie Blanc, 134 Bis Rue de la Marne, 33500 Libourne</Li>
             </ul>
           </Section>
 

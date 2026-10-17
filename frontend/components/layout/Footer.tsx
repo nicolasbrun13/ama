@@ -22,7 +22,7 @@ export default function Footer() {
           <div>
             <div style={{ fontFamily:'"Playfair Display",serif', fontStyle:'italic', fontSize:'1.5rem', color:'var(--white)', marginBottom:'.65rem' }}>Ama</div>
             <p style={{ fontSize:'.8rem', color:'var(--dim)', lineHeight:1.75, maxWidth:'290px', marginBottom:'1.25rem' }}>
-              Thérapeute certifiée en Hypnose Régressive Ésotérique, méthode Calogéro Grifasi. Accompagnement individuel en présentiel et en ligne.
+              Thérapeute certifiée en Hypnose Régressive Ésotérique, méthode Calogéro Grifasi. Accompagnement individuel en ligne.
             </p>
             <div style={{ display:'flex', gap:'.6rem' }}>
               <a
@@ -59,26 +59,11 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 style={{ fontSize:'.67rem', fontWeight:700, letterSpacing:'.22em', textTransform:'uppercase', color:'var(--gold)', marginBottom:'.9rem' }}>Contact</h4>
-            <ul style={{ listStyle:'none', padding:0, marginBottom:'.85rem' }}>
-              <li style={{ marginBottom:'.45rem' }}>
+            <ul style={{ listStyle:'none', padding:0 }}>
+              <li>
                 <a href="mailto:anne.marie.blanc@gmail.com" style={{ color:'var(--dim)', textDecoration:'none', fontSize:'.8rem' }}>anne.marie.blanc@gmail.com</a>
               </li>
-              <li>
-                <a href="tel:+33667299096" style={{ color:'var(--dim)', textDecoration:'none', fontSize:'.8rem' }}>+33 6 67 29 90 96</a>
-              </li>
             </ul>
-
-            {/* Google Maps thumbnail */}
-            <div style={{ borderRadius:'6px', overflow:'hidden', border:'1px solid var(--border)', opacity:0.85 }}>
-              <iframe
-                src="https://maps.google.com/maps?q=Anne-Marie+Blanc+hypnose+Libourne&output=embed&hl=fr"
-                width="100%"
-                height="118"
-                style={{ border:'none', display:'block' }}
-                loading="lazy"
-                title="Localisation Ama — Libourne"
-              />
-            </div>
           </div>
         </div>
 

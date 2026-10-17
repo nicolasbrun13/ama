@@ -73,7 +73,7 @@ export default function ContactPage() {
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
+            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',
             fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
             textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -98,7 +98,7 @@ export default function ContactPage() {
       {/* Separator */}
       <div style={{
         height: '1px',
-        background: 'linear-gradient(to right, transparent 0%, rgba(200,88,122,.7) 25%, rgba(200,88,122,.7) 75%, transparent 100%)',
+        background: 'linear-gradient(to right, transparent 0%, rgba(255,197,211,.7) 25%, rgba(255,197,211,.7) 75%, transparent 100%)',
       }} />
 
       {/* Contact section */}
@@ -123,16 +123,6 @@ export default function ContactPage() {
                 icon: '📧',
                 label: 'Email',
                 value: <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'inherit', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a>,
-              },
-              {
-                icon: '📞',
-                label: 'Téléphone',
-                value: <a href="tel:+33667299096" style={{ color: 'inherit', textDecoration: 'none' }}>+33 6 67 29 90 96</a>,
-              },
-              {
-                icon: '📍',
-                label: 'Localisation',
-                value: '134 Bis Rue de la Marne, 33500 Libourne · Séances en ligne (France entière)',
               },
               {
                 icon: '🕐',
@@ -169,7 +159,7 @@ export default function ContactPage() {
 
             {state === 'success' ? (
               <div style={{
-                background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.25)',
+                background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.25)',
                 borderRadius: '8px', padding: '2rem', textAlign: 'center',
               }}>
                 <div style={{ fontSize: '2rem', marginBottom: '.75rem' }}>✿</div>
@@ -218,7 +208,7 @@ export default function ContactPage() {
 
                 {state === 'error' && (
                   <div style={{
-                    background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.3)',
+                    background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.3)',
                     borderRadius: '6px', padding: '.75rem 1rem',
                     fontSize: '.82rem', color: 'var(--rose)',
                   }}>
@@ -247,41 +237,9 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Google Maps */}
-      <section style={{ background: 'var(--bg)', padding: '5rem 0 5rem' }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '0 2rem' }}>
-          <div style={{
-            borderRadius: '10px', overflow: 'hidden',
-            border: '1px solid rgba(200,88,122,.18)',
-            boxShadow: '0 8px 40px rgba(0,0,0,.45)',
-          }}>
-            <div style={{
-              padding: '.8rem 1.25rem',
-              background: 'rgba(18,8,48,.7)',
-              display: 'flex', alignItems: 'center', gap: '.6rem',
-              borderBottom: '1px solid rgba(200,88,122,.15)',
-            }}>
-              <span style={{ color: 'var(--rose)', fontSize: '.85rem' }}>📍</span>
-              <span style={{ fontSize: '.75rem', color: 'var(--dim)', letterSpacing: '.06em' }}>
-                134 Bis Rue de la Marne, 33500 Libourne
-              </span>
-            </div>
-            <iframe
-              src="https://maps.google.com/maps?q=134+Bis+Rue+de+la+Marne,+33500+Libourne,+France&output=embed&hl=fr&z=15"
-              width="100%"
-              height="320"
-              style={{ border: 0, display: 'block' }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Localisation du cabinet"
-            />
-          </div>
-        </div>
-      </section>
-
       <style>{`
         input::placeholder, textarea::placeholder { color: rgba(253,240,247,.25); }
-        input:focus, textarea:focus, select:focus { border-color: rgba(200,88,122,.5) !important; }
+        input:focus, textarea:focus, select:focus { border-color: rgba(255,197,211,.5) !important; }
         select option { background: #0C0620; color: #FDF0F7; }
         @media (max-width: 767px) { .contact-grid { grid-template-columns: 1fr !important; } }
       `}</style>
