@@ -1,88 +1,62 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import VideoBackground from '@/components/animations/VideoBackground';
+import type { ReservationPayload } from '@/components/payment/PaypalButton';
+
+const PaypalButton = dynamic(() => import('@/components/payment/PaypalButton'), { ssr: false });
 
 type FormData = {
   prenom: string;
   nom: string;
   email: string;
   telephone: string;
-  typeSeance: 'online' | 'presentiel' | '';
   dateVoulue: string;
-  heureVoulue: string;
   message: string;
 };
 
-type FormState = 'idle' | 'loading' | 'success' | 'error';
-
-const timeSlots = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
+type PageState = 'form' | 'payment' | 'success';
 
 const today = new Date().toISOString().split('T')[0];
 
 export default function ReserverPage() {
   const [form, setForm] = useState<FormData>({
-    prenom: '', nom: '', email: '', telephone: '',
-    typeSeance: '', dateVoulue: '', heureVoulue: '', message: '',
+    prenom: '', nom: '', email: '', telephone: '', dateVoulue: '', message: '',
   });
-  const [state, setState] = useState<FormState>('idle');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [pageState, setPageState] = useState<PageState>('form');
+  const [formError, setFormError] = useState('');
+  const [payError, setPayError] = useState('');
 
-  // Pré-remplit la date si ?date= est passé depuis le calendrier
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const d = params.get('date');
     if (d) setForm(prev => ({ ...prev, dateVoulue: d }));
   }, []);
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
-  async function handleSubmit(e: React.FormEvent) {
+  function handleProceedToPayment(e: React.FormEvent) {
     e.preventDefault();
-
-    if (!form.prenom.trim() || !form.nom.trim() || !form.email.trim() ||
-        !form.typeSeance || !form.dateVoulue || !form.heureVoulue) {
-      setErrorMsg('Merci de remplir tous les champs obligatoires (*).');
-      setState('error');
+    if (!form.prenom.trim() || !form.nom.trim() || !form.email.trim() || !form.dateVoulue) {
+      setFormError('Merci de remplir tous les champs obligatoires (*).');
       return;
     }
-
-    setState('loading');
-    setErrorMsg('');
-
-    try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || '';
-      const endpoint = apiBase ? `${apiBase}/api/reservations` : `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/api/reservations`;
-
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: form.prenom,
-          lastName: form.nom,
-          email: form.email,
-          phone: form.telephone || undefined,
-          sessionType: form.typeSeance,
-          desiredDate: form.dateVoulue,
-          desiredTime: form.heureVoulue,
-          message: form.message || undefined,
-        }),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.message || 'Erreur lors de l\'envoi');
-      }
-
-      setState('success');
-    } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : 'Impossible de contacter le serveur. Veuillez réessayer.');
-      setState('error');
-    }
+    setFormError('');
+    setPayError('');
+    setPageState('payment');
   }
+
+  const reservationData: ReservationPayload = {
+    firstName: form.prenom,
+    lastName: form.nom,
+    email: form.email,
+    phone: form.telephone || undefined,
+    date: form.dateVoulue,
+    time: '13:30',
+    message: form.message || undefined,
+  };
 
   const inputStyle: React.CSSProperties = {
     width: '100%', background: 'rgba(6,3,15,.6)', border: '1px solid var(--border)',
@@ -100,15 +74,13 @@ export default function ReserverPage() {
     <main>
       {/* Sub-hero */}
       <section style={{
-        position: 'relative',
-        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
-        minHeight: '360px',
+        position: 'relative', padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden', minHeight: '360px',
       }}>
         <VideoBackground overlay="rgba(6,3,15,.82)" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
+            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',
             fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
             textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -122,10 +94,8 @@ export default function ReserverPage() {
           }}>
             Réserver une séance
           </h1>
-          <p style={{
-            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '500px', margin: '0 auto',
-          }}>
-            Première consultation de 15 minutes offerte pour échanger avant votre première séance.
+          <p style={{ fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '500px', margin: '0 auto' }}>
+            Séances en ligne via Zoom, chaque vendredi à 13h30. Tarif : 150 €.
           </p>
         </div>
       </section>
@@ -133,19 +103,17 @@ export default function ReserverPage() {
       {/* Separator */}
       <div style={{
         height: '1px',
-        background: 'linear-gradient(to right, transparent 0%, rgba(200,88,122,.7) 25%, rgba(200,88,122,.7) 75%, transparent 100%)',
+        background: 'linear-gradient(to right, transparent 0%, rgba(255,197,211,.7) 25%, rgba(255,197,211,.7) 75%, transparent 100%)',
       }} />
 
-      {/* How it works */}
+      {/* Steps */}
       <section style={{ background: 'var(--bg-mid)', padding: '3.5rem 2rem' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto' }}>
-          <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem',
-          }} className="steps-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem' }} className="steps-grid">
             {[
-              { n: 1, title: 'Remplissez le formulaire', desc: '2 minutes — simple et sans engagement' },
-              { n: 2, title: 'Confirmation par email', desc: 'Vous recevez un accusé de réception immédiat' },
-              { n: 3, title: 'Ama vous contacte', desc: 'Confirmation des détails et du créneau définitif' },
+              { n: 1, title: 'Remplissez le formulaire', desc: 'Vos coordonnées et la date souhaitée (vendredi à 13h30)' },
+              { n: 2, title: 'Paiement sécurisé PayPal', desc: '150 € par carte bancaire ou en 4 fois sans frais' },
+              { n: 3, title: 'Confirmation instantanée', desc: 'Un email avec le fichier .ics est envoyé immédiatement' },
             ].map((s) => (
               <div key={s.n} style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
@@ -169,12 +137,14 @@ export default function ReserverPage() {
         </div>
       </section>
 
-      {/* Booking form */}
+      {/* Main section */}
       <section style={{ background: 'var(--bg-soft)', padding: '4rem 2rem 5rem' }}>
         <div style={{ maxWidth: '680px', margin: '0 auto' }}>
-          {state === 'success' ? (
+
+          {/* SUCCESS */}
+          {pageState === 'success' && (
             <div style={{
-              background: 'rgba(200,88,122,.07)', border: '1px solid rgba(200,88,122,.25)',
+              background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.25)',
               borderRadius: '12px', padding: '3rem 2rem', textAlign: 'center',
             }}>
               <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>✿</div>
@@ -182,23 +152,97 @@ export default function ReserverPage() {
                 fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
                 fontSize: '1.7rem', color: 'var(--white)', marginBottom: '1rem',
               }}>
-                Demande envoyée !
+                Séance confirmée !
               </h2>
               <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '440px', margin: '0 auto' }}>
-                Merci pour votre demande. Vous allez recevoir un email de confirmation.
-                Ama vous contactera bientôt pour confirmer les détails de votre séance.
+                Votre paiement a bien été reçu. Vous allez recevoir un email de confirmation avec le fichier .ics pour ajouter la séance à votre agenda.
+              </p>
+              <p style={{ fontSize: '.8rem', color: 'rgba(253,240,247,.35)', marginTop: '1.5rem' }}>
+                {form.dateVoulue} à 13h30 · Via Zoom
               </p>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          )}
+
+          {/* PAYMENT */}
+          {pageState === 'payment' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              <h2 style={{
+                fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
+                fontSize: '1.6rem', color: 'var(--white)', textAlign: 'center',
+              }}>
+                Paiement de la séance
+              </h2>
+
+              {/* Récapitulatif */}
+              <div style={{
+                background: 'rgba(255,197,211,.06)', border: '1px solid rgba(255,197,211,.18)',
+                borderRadius: '8px', padding: '1.25rem 1.5rem',
+              }}>
+                <p style={{ fontSize: '.72rem', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--rose)', marginBottom: '.75rem' }}>
+                  Récapitulatif
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.88rem' }}>
+                    <span style={{ color: 'var(--dim)' }}>Client</span>
+                    <span style={{ color: 'var(--white)', fontWeight: 600 }}>{form.prenom} {form.nom}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.88rem' }}>
+                    <span style={{ color: 'var(--dim)' }}>Date</span>
+                    <span style={{ color: 'var(--white)', fontWeight: 600 }}>{form.dateVoulue} à 13h30</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.88rem' }}>
+                    <span style={{ color: 'var(--dim)' }}>Mode</span>
+                    <span style={{ color: 'var(--white)' }}>Zoom</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '.95rem', marginTop: '.4rem', paddingTop: '.75rem', borderTop: '1px solid rgba(255,197,211,.12)' }}>
+                    <span style={{ color: 'var(--white)', fontWeight: 700 }}>Total</span>
+                    <span style={{ color: 'var(--rose)', fontWeight: 700 }}>150,00 €</span>
+                  </div>
+                </div>
+              </div>
+
+              {payError && (
+                <div style={{
+                  background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.3)',
+                  borderRadius: '6px', padding: '.75rem 1rem',
+                  fontSize: '.82rem', color: 'var(--rose)',
+                }}>
+                  {payError}
+                </div>
+              )}
+
+              <Suspense fallback={<div style={{ textAlign: 'center', color: 'var(--dim)', fontSize: '.85rem' }}>Chargement du paiement…</div>}>
+                <PaypalButton
+                  reservationData={reservationData}
+                  onSuccess={() => setPageState('success')}
+                  onError={(msg) => setPayError(msg)}
+                />
+              </Suspense>
+
+              <button
+                onClick={() => { setPageState('form'); setPayError(''); }}
+                style={{
+                  background: 'none', border: 'none', color: 'rgba(253,240,247,.35)',
+                  fontSize: '.78rem', cursor: 'pointer', textDecoration: 'underline',
+                  textAlign: 'center', fontFamily: 'Nunito, sans-serif',
+                }}
+              >
+                ← Modifier mes informations
+              </button>
+            </div>
+          )}
+
+          {/* FORM */}
+          {pageState === 'form' && (
+            <form onSubmit={handleProceedToPayment} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <h2 style={{
                 fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
                 fontSize: '1.6rem', color: 'var(--white)', marginBottom: '.25rem', textAlign: 'center',
               }}>
-                Votre demande de réservation
+                Votre réservation
               </h2>
 
-              {/* First + Last name */}
+              {/* Prénom + Nom */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }} className="name-grid">
                 <div>
                   <label style={labelStyle}>Prénom *</label>
@@ -219,56 +263,31 @@ export default function ReserverPage() {
                   placeholder="votre@email.fr" style={inputStyle} required />
               </div>
 
-              {/* Phone */}
+              {/* Téléphone */}
               <div>
                 <label style={labelStyle}>Téléphone (optionnel)</label>
                 <input name="telephone" type="tel" value={form.telephone} onChange={handleChange}
                   placeholder="+33 6 XX XX XX XX" style={inputStyle} />
               </div>
 
-              {/* Session type */}
-              <div>
-                <label style={labelStyle}>Type de séance *</label>
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                  {[
-                    { value: 'online', label: 'En ligne (Zoom / Teams)' },
-                    { value: 'presentiel', label: 'Présentiel' },
-                  ].map(opt => (
-                    <label key={opt.value} style={{
-                      display: 'flex', alignItems: 'center', gap: '.6rem',
-                      cursor: 'pointer', fontSize: '.88rem',
-                      color: form.typeSeance === opt.value ? 'var(--white)' : 'var(--dim)',
-                      background: form.typeSeance === opt.value ? 'rgba(200,88,122,.1)' : 'transparent',
-                      border: `1px solid ${form.typeSeance === opt.value ? 'rgba(200,88,122,.4)' : 'var(--border)'}`,
-                      borderRadius: '6px', padding: '.75rem 1.1rem', transition: 'all .2s',
-                    }}>
-                      <input
-                        type="radio" name="typeSeance" value={opt.value}
-                        checked={form.typeSeance === opt.value} onChange={handleChange}
-                        style={{ accentColor: 'var(--rose)' }}
-                      />
-                      {opt.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* Date + Time */}
+              {/* Date + heure fixe */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }} className="dt-grid">
                 <div>
-                  <label style={labelStyle}>Date souhaitée *</label>
+                  <label style={labelStyle}>
+                    Date souhaitée *{' '}
+                    <span style={{ fontSize: '.65rem', opacity: .6, textTransform: 'none', letterSpacing: 0 }}>(vendredi)</span>
+                  </label>
                   <input name="dateVoulue" type="date" value={form.dateVoulue} onChange={handleChange}
                     min={today} style={{ ...inputStyle, colorScheme: 'dark' }} required />
                 </div>
                 <div>
-                  <label style={labelStyle}>Heure souhaitée *</label>
-                  <select name="heureVoulue" value={form.heureVoulue} onChange={handleChange}
-                    style={inputStyle} required>
-                    <option value="">Choisir un créneau</option>
-                    {timeSlots.map(t => (
-                      <option key={t} value={t}>{t}</option>
-                    ))}
-                  </select>
+                  <label style={labelStyle}>Heure</label>
+                  <div style={{
+                    ...inputStyle, display: 'flex', alignItems: 'center',
+                    background: 'rgba(6,3,15,.3)', color: 'rgba(253,240,247,.45)',
+                  }}>
+                    13h30 · créneau unique
+                  </div>
                 </div>
               </div>
 
@@ -282,23 +301,22 @@ export default function ReserverPage() {
                 />
               </div>
 
-              {state === 'error' && (
+              {formError && (
                 <div style={{
-                  background: 'rgba(200,88,122,.07)', border: '1px solid rgba(200,88,122,.3)',
+                  background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.3)',
                   borderRadius: '6px', padding: '.75rem 1rem',
                   fontSize: '.82rem', color: 'var(--rose)',
                 }}>
-                  {errorMsg || 'Une erreur est survenue. Veuillez réessayer.'}
+                  {formError}
                 </div>
               )}
 
               <button
                 type="submit"
-                disabled={state === 'loading'}
-                className={state !== 'loading' ? 'btn-cta-rose' : undefined}
+                className="btn-cta-rose"
                 style={{
-                  background: state === 'loading' ? 'rgba(160,52,96,.5)' : 'linear-gradient(135deg, #A03460, #6A1030)',
-                  color: 'white', border: 'none', cursor: state === 'loading' ? 'not-allowed' : 'pointer',
+                  background: 'linear-gradient(135deg, #A03460, #6A1030)',
+                  color: 'white', border: 'none', cursor: 'pointer',
                   fontSize: '.88rem', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase' as const,
                   padding: '1.1rem 2.5rem', borderRadius: '50px',
                   boxShadow: '0 8px 32px rgba(160,52,96,.4)',
@@ -306,44 +324,21 @@ export default function ReserverPage() {
                   alignSelf: 'center',
                 }}
               >
-                {state === 'loading' ? 'Envoi en cours…' : '✿ Envoyer ma demande'}
+                ✿ Procéder au paiement
               </button>
             </form>
           )}
-        </div>
-      </section>
 
-      {/* Reassurance */}
-      <section style={{ background: 'var(--bg-mid)', padding: '4rem 2rem' }}>
-        <div style={{ maxWidth: '860px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem' }} className="reassurance-grid">
-            {[
-              { icon: '🔒', title: 'Confidentialité totale', desc: 'Vos informations ne sont jamais partagées ni vendues à des tiers.' },
-              { icon: '✨', title: 'Sans engagement', desc: 'Aucun abonnement ni engagement à long terme. Chaque séance est indépendante.' },
-              { icon: '🎁', title: 'Consultation offerte', desc: '15 minutes gratuites pour échanger et vous assurer que la méthode vous convient.' },
-            ].map((r, i) => (
-              <div key={i} style={{
-                background: 'rgba(18,8,48,.4)', border: '1px solid var(--border)',
-                borderRadius: '8px', padding: '1.5rem', textAlign: 'center',
-              }}>
-                <div style={{ fontSize: '1.5rem', marginBottom: '.75rem' }}>{r.icon}</div>
-                <h4 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.4rem' }}>{r.title}</h4>
-                <p style={{ fontSize: '.78rem', color: 'var(--dim)', lineHeight: 1.65 }}>{r.desc}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
       <style>{`
         input::placeholder, textarea::placeholder { color: rgba(253,240,247,.25); }
-        input:focus, textarea:focus, select:focus { border-color: rgba(200,88,122,.5) !important; }
-        select option { background: #0C0620; color: #FDF0F7; }
+        input:focus, textarea:focus { border-color: rgba(255,197,211,.5) !important; }
         @media (max-width: 600px) {
           .name-grid { grid-template-columns: 1fr !important; }
           .dt-grid { grid-template-columns: 1fr !important; }
           .steps-grid { grid-template-columns: 1fr !important; }
-          .reassurance-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </main>

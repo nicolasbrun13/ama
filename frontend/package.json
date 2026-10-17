@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3202",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@paypal/react-paypal-js": "^10.6.0",
     "@types/nodemailer": "^8.0.2",
     "framer-motion": "^14.0.0",
     "next": "16.3.8",

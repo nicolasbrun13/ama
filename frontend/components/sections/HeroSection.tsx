@@ -154,13 +154,12 @@ export default function HeroSection() {
         <div>
           <div className="hero-tag">✿ &nbsp;Thérapeute certifiée · Hypnose HRE</div>
           <h1 style={{ fontFamily:'"Playfair Display",serif', fontWeight:500, fontSize:'clamp(2.1rem,3.8vw,3.6rem)', lineHeight:1.18, color:'var(--white)', marginBottom:'1.5rem' }}>
-            Explorez vos vies,<br />
-            libérez votre <em style={{ fontStyle:'italic', color:'var(--rose)' }}>âme,</em><br />
-            <em style={{ fontStyle:'italic', color:'var(--rose)' }}>transformez</em><br />
-            votre présent
+            <em style={{ fontStyle:'italic', color:'var(--rose)' }}>Transformez</em> votre présent,<br />
+            vers une expansion de <em style={{ fontStyle:'italic', color:'var(--rose)' }}>conscience</em><br />
+            par l'exploration du soi
           </h1>
           <p style={{ fontSize:'.97rem', fontWeight:300, color:'var(--dim)', lineHeight:1.9, maxWidth:'500px', marginBottom:'2.5rem' }}>
-            Avec la méthode HRE (Hypnose Régressive Ésotérique), je vous accompagne dans une exploration profonde et bienveillante de votre inconscient pour libérer ce qui vous retient, de vie en vie.
+            Avec la méthode HRE (Hypnose Régressive Ésotérique), je vous accompagne dans une exploration profonde et bienveillante de votre espace énergétique pour libérer ce qui vous retient, de vie en vie.
           </p>
           <div className="hero-cta-row" style={{ display:'flex', gap:'1rem', flexWrap:'wrap' }}>
             <Link href="/reserver" className="btn-rose-link">✿ &nbsp;Réserver une séance</Link>
@@ -198,7 +197,7 @@ export default function HeroSection() {
                 src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/anna-blanc.png`}
                 alt="Ama — Anne-Marie Blanc, Praticienne HRE"
                 fill
-                style={{ objectFit:'cover', objectPosition:'center top', zIndex:1, transform:'scaleX(-1)' }}
+                style={{ objectFit:'cover', objectPosition:'center top', zIndex:1 }}
                 priority
               />
               <div className="photo-caption">
@@ -236,36 +235,36 @@ export default function HeroSection() {
           .btn-rose-link, .btn-ghost-link { width:100%; justify-content:center !important; box-sizing:border-box; padding-left:1rem !important; padding-right:1rem !important; }
         }
 
-        .hero-tag { display:inline-flex; align-items:center; gap:.5rem; background:rgba(200,88,122,.1); border:1px solid rgba(200,88,122,.25); border-radius:50px; padding:.4rem 1.1rem; font-size:.68rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--rose); margin-bottom:1.5rem; animation:tagPulse 3.2s ease-in-out infinite; }
-        @keyframes tagPulse { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 20px rgba(200,88,122,.2)} }
+        .hero-tag { display:inline-flex; align-items:center; gap:.5rem; background:rgba(255,197,211,.1); border:1px solid rgba(255,197,211,.25); border-radius:50px; padding:.4rem 1.1rem; font-size:.68rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--rose); margin-bottom:1.5rem; animation:tagPulse 3.2s ease-in-out infinite; }
+        @keyframes tagPulse { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 20px rgba(255,197,211,.2)} }
 
-        .btn-rose-link { display:inline-flex; align-items:center; gap:.6rem; background:linear-gradient(135deg,#A03460,#6A1030); color:white; text-decoration:none; font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1rem 2.2rem; border-radius:50px; box-shadow:0 8px 36px rgba(200,88,122,.38); transition:all .3s; position:relative; overflow:hidden; }
-        .btn-rose-link:hover { transform:translateY(-3px); box-shadow:0 14px 48px rgba(200,88,122,.56); }
-        .btn-ghost-link { display:inline-flex; align-items:center; gap:.6rem; border:1px solid rgba(200,88,122,.35); color:var(--rose); text-decoration:none; font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1rem 2.2rem; border-radius:50px; transition:all .25s; }
-        .btn-ghost-link:hover { transform:translateY(-3px); background:rgba(200,88,122,.06); border-color:var(--rose); box-shadow:0 6px 28px rgba(200,88,122,.22); color:var(--white); }
+        .btn-rose-link { display:inline-flex; align-items:center; gap:.6rem; background:linear-gradient(135deg,#A03460,#6A1030); color:white; text-decoration:none; font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1rem 2.2rem; border-radius:50px; box-shadow:0 8px 36px rgba(255,197,211,.38); transition:all .3s; position:relative; overflow:hidden; }
+        .btn-rose-link:hover { transform:translateY(-3px); box-shadow:0 14px 48px rgba(255,197,211,.56); }
+        .btn-ghost-link { display:inline-flex; align-items:center; gap:.6rem; border:1px solid rgba(255,197,211,.35); color:var(--rose); text-decoration:none; font-size:.8rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; padding:1rem 2.2rem; border-radius:50px; transition:all .25s; }
+        .btn-ghost-link:hover { transform:translateY(-3px); background:rgba(255,197,211,.06); border-color:var(--rose); box-shadow:0 6px 28px rgba(255,197,211,.22); color:var(--white); }
 
         .neb { position:absolute; border-radius:50%; filter:blur(100px); pointer-events:none; z-index:1; }
-        .neb-1 { width:750px;height:750px; background:radial-gradient(circle,rgba(200,88,122,.16) 0%,transparent 60%); top:-300px;right:-200px; animation:nbA 16s ease-in-out infinite; }
+        .neb-1 { width:750px;height:750px; background:radial-gradient(circle,rgba(255,197,211,.16) 0%,transparent 60%); top:-300px;right:-200px; animation:nbA 16s ease-in-out infinite; }
         .neb-2 { width:500px;height:500px; background:radial-gradient(circle,rgba(160,52,96,.1) 0%,transparent 65%); bottom:-150px;left:-100px; animation:nbB 20s ease-in-out infinite; }
         .neb-3 { width:400px;height:400px; background:radial-gradient(circle,rgba(232,191,80,.05) 0%,transparent 65%); top:20%;left:30%; animation:nbC 24s ease-in-out infinite; }
         @keyframes nbA { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-60px,40px) scale(1.18)} }
         @keyframes nbB { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(40px,-30px) scale(.9)} }
         @keyframes nbC { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-25px,25px) scale(1.12)} }
 
-        .halo-ring { position:absolute; border-radius:50%; pointer-events:none; border:1px solid rgba(200,88,122,.38); animation:haloSpin linear infinite; }
+        .halo-ring { position:absolute; border-radius:50%; pointer-events:none; border:1px solid rgba(255,197,211,.38); animation:haloSpin linear infinite; }
         .halo-ring.h1 { width:400px;height:400px; animation-duration:25s; }
         .halo-ring.h2 { width:340px;height:340px; animation-duration:18s; animation-direction:reverse; border-style:dashed; opacity:.85; }
         .halo-ring.h3 { width:460px;height:460px; animation-duration:40s; border-color:rgba(232,191,80,.2); }
         .hero-right { align-self:stretch; }
         .hero-badge { position:absolute; bottom:0; left:50%; transform:translateX(-50%); white-space:nowrap; padding-bottom:.25rem; }
-        .halo-ring.h1::after { content:''; position:absolute; top:-4px; left:50%; width:8px;height:8px; border-radius:50%; margin-left:-4px; background:var(--rose); box-shadow:0 0 12px var(--rose),0 0 24px rgba(200,88,122,.5); animation:dotGlow 2s ease-in-out infinite; }
+        .halo-ring.h1::after { content:''; position:absolute; top:-4px; left:50%; width:8px;height:8px; border-radius:50%; margin-left:-4px; background:var(--rose); box-shadow:0 0 12px var(--rose),0 0 24px rgba(255,197,211,.5); animation:dotGlow 2s ease-in-out infinite; }
         @keyframes haloSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-        @keyframes dotGlow { 0%,100%{box-shadow:0 0 12px var(--rose),0 0 24px rgba(200,88,122,.5)} 50%{box-shadow:0 0 20px var(--rose),0 0 40px rgba(200,88,122,.6)} }
+        @keyframes dotGlow { 0%,100%{box-shadow:0 0 12px var(--rose),0 0 24px rgba(255,197,211,.5)} 50%{box-shadow:0 0 20px var(--rose),0 0 40px rgba(255,197,211,.6)} }
 
-        .photo-glow { position:absolute; width:220px;height:220px; border-radius:50%; background:radial-gradient(circle,rgba(200,88,122,.2),transparent 70%); filter:blur(30px); animation:glowPulse 3s ease-in-out infinite; }
+        .photo-glow { position:absolute; width:220px;height:220px; border-radius:50%; background:radial-gradient(circle,rgba(255,197,211,.2),transparent 70%); filter:blur(30px); animation:glowPulse 3s ease-in-out infinite; }
         @keyframes glowPulse { 0%,100%{opacity:.6;transform:scale(.9)} 50%{opacity:1;transform:scale(1.1)} }
-        .photo-frame { position:relative; z-index:2; width:240px;height:320px; border-radius:120px 120px 100px 100px; border:1px solid rgba(200,88,122,.3); box-shadow:0 24px 80px rgba(0,0,0,.8),0 0 60px rgba(200,88,122,.1); overflow:hidden; cursor:pointer; display:block; transition:box-shadow .3s; }
-        .photo-frame:hover { box-shadow:0 28px 90px rgba(0,0,0,.85),0 0 80px rgba(200,88,122,.22); }
+        .photo-frame { position:relative; z-index:2; width:240px;height:320px; border-radius:120px 120px 100px 100px; border:1px solid rgba(255,197,211,.3); box-shadow:0 24px 80px rgba(0,0,0,.8),0 0 60px rgba(255,197,211,.1); overflow:hidden; cursor:pointer; display:block; transition:box-shadow .3s; }
+        .photo-frame:hover { box-shadow:0 28px 90px rgba(0,0,0,.85),0 0 80px rgba(255,197,211,.22); }
         .photo-frame::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; z-index:3; border-radius:100px 100px 0 0; background:linear-gradient(90deg,transparent,var(--rose),var(--gold-light),var(--rose),transparent); background-size:400% 2px; animation:topShim 3s linear infinite; }
         .photo-frame::after { content:''; position:absolute; bottom:0;left:0;right:0; height:110px; z-index:2; background:linear-gradient(0deg,rgba(6,3,15,.92) 0%,transparent 100%); border-radius:0 0 100px 100px; pointer-events:none; }
         @keyframes topShim { 0%{background-position:0 0} 100%{background-position:400% 0} }

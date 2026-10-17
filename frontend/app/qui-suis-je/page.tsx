@@ -40,7 +40,7 @@ export default function QuiSuisJe() {
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '800px', margin: '0 auto', width: '100%' }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
+            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',
             fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
             textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -65,7 +65,7 @@ export default function QuiSuisJe() {
       {/* Separator — ligne rose qui s'estompe sur les côtés */}
       <div style={{
         height: '1px',
-        background: 'linear-gradient(to right, transparent 0%, rgba(200,88,122,.7) 25%, rgba(200,88,122,.7) 75%, transparent 100%)',
+        background: 'linear-gradient(to right, transparent 0%, rgba(255,197,211,.7) 25%, rgba(255,197,211,.7) 75%, transparent 100%)',
         margin: 0,
       }} />
 
@@ -81,8 +81,8 @@ export default function QuiSuisJe() {
               <div style={{
                 position: 'relative', width: '280px', height: '380px',
                 borderRadius: '140px 140px 100px 100px',
-                border: '1px solid rgba(200,88,122,.3)',
-                boxShadow: '0 24px 80px rgba(0,0,0,.7), 0 0 60px rgba(200,88,122,.08)',
+                border: '1px solid rgba(255,197,211,.3)',
+                boxShadow: '0 24px 80px rgba(0,0,0,.7), 0 0 60px rgba(255,197,211,.08)',
                 overflow: 'hidden',
               }}>
                 <Image
@@ -133,7 +133,7 @@ export default function QuiSuisJe() {
 
           {/* Callout quote */}
           <div className="callout-glow" style={{
-            background: 'rgba(200,88,122,.06)',
+            background: 'rgba(255,197,211,.06)',
             borderLeft: '3px solid var(--rose)',
             padding: '1.25rem 1.5rem',
             fontSize: '.9rem', fontStyle: 'italic',
@@ -151,7 +151,7 @@ export default function QuiSuisJe() {
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.12)',
+              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
               borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.25rem',
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
               textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -175,7 +175,7 @@ export default function QuiSuisJe() {
               }}>
                 <div style={{
                   width: '60px', height: '60px', margin: '0 auto 1.25rem',
-                  background: 'rgba(200,88,122,.08)', border: '1px solid var(--border)',
+                  background: 'rgba(255,197,211,.08)', border: '1px solid var(--border)',
                   borderRadius: '50%', display: 'flex', alignItems: 'center',
                   justifyContent: 'center', fontSize: '1.6rem',
                 }}>
@@ -202,7 +202,7 @@ export default function QuiSuisJe() {
             Prêt(e) à explorer ?
           </h2>
           <p style={{ color: 'var(--dim)', fontSize: '.9rem', lineHeight: 1.8, marginBottom: '2rem' }}>
-            Réservez votre première séance ou une consultation offerte de 15 minutes pour découvrir la méthode.
+            Réservez votre séance ou découvrez la méthode en détail.
           </p>
           <Link href="/reserver" className="btn-cta-rose" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.6rem',
@@ -210,7 +210,7 @@ export default function QuiSuisJe() {
             color: 'white', textDecoration: 'none',
             fontSize: '.82rem', fontWeight: 700, letterSpacing: '.14em', textTransform: 'uppercase' as const,
             padding: '1rem 2.4rem', borderRadius: '50px',
-            boxShadow: '0 8px 36px rgba(200,88,122,.38)',
+            boxShadow: '0 8px 36px rgba(255,197,211,.38)',
           }}>
             ✿ Réserver une séance
           </Link>
