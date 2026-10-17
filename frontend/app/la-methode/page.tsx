@@ -68,7 +68,7 @@ const steps = [
 const faq = [
   {
     q: "Est-ce que je dois croire en la méthode pour qu'elle fonctionne ?",
-    a: "Non. La méthode fonctionne indépendamment de vos croyances. L'inconscient n'a pas besoin de votre foi consciente pour opérer. Beaucoup de clients sceptiques ont vécu des transformations profondes.",
+    a: "Oui. Tout dépend de l'intégration du pourquoi et du comment nous devons agir pour et par nous-même.",
   },
   {
     q: "Est-ce dangereux ?",
@@ -76,7 +76,7 @@ const faq = [
   },
   {
     q: "Combien de séances sont nécessaires ?",
-    a: "C'est très variable selon les personnes et les problématiques. Certains obtiennent des résultats dès la première séance. D'autres choisissent de faire plusieurs séances pour approfondir le travail.",
+    a: "C'est très variable selon les personnes et les problématiques. D'autres obtiennent des résultats dès la première séance. D'autres choisissent de faire plusieurs séances pour approfondir le travail en fonction de leur vécu.",
   },
   {
     q: "Peut-on faire la séance en ligne ?",
