@@ -84,7 +84,7 @@ const faq = [
   },
   {
     q: "C'est quoi le support télépathique ?",
-    a: "Un opérateur formé entre en état hypnotique à votre place via une connexion télépathique. Cette personne perçoit les informations de votre inconscient et les communique. C'est la particularité fondamentale de la méthode HRE.",
+    a: "Un opérateur formé entre en hypnose et communique avec votre partie subliminale via une connexion télépathique. Cette personne perçoit les informations de votre conscience et les communique. C'est la particularité fondamentale de la méthode HRE.",
   },
   {
     q: "Les résultats sont-ils permanents ?",
