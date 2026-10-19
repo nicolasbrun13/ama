@@ -19,16 +19,15 @@
 ```bash
 # Frontend
 cd "E:/AGENCE IA/annablanc/frontend" && npm run dev
-# → http://localhost:3202/ama  ← basePath: '/ama' dans next.config.ts
-#   http://localhost:3202/ → 404 normal
+# → http://localhost:3202/
 
 # Backend
 cd "E:/AGENCE IA/annablanc/backend" && npm run start:dev
 # → http://localhost:3203
 ```
 
-> **basePath** : le frontend Next.js est configuré avec `basePath: '/ama'`.
-> Toutes les URLs commencent par `/ama`. Ne jamais donner `localhost:3202/` seul.
+> **basePath supprimé** : le site est à la racine `/` en local et en prod.
+> URL locale : `http://localhost:3202/`
 
 ## Structure
 

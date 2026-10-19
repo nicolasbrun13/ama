@@ -19,7 +19,6 @@ const SUCCESS     = '#27AE60';
 const BORDER_SOFT = 'rgba(139,109,200,.15)';
 
 const CONTACT_EMAIL = 'contact@amablanc-hre.fr';
-const AMA_PHOTO_URL = 'https://amablanc-hre.fr/anna-blanc.jpg';
 
 // ─── Helpers HTML ─────────────────────────────────────────────────────────────
 function emailWrapper(content: string): string {
@@ -29,12 +28,7 @@ function emailWrapper(content: string): string {
 
         <!-- Header -->
         <div style="background:linear-gradient(135deg,${VIOLET},${VIOLET_DARK});padding:2rem;text-align:center;">
-          <img
-            src="${AMA_PHOTO_URL}"
-            alt="Ama — Anne-Marie Blanc"
-            width="80" height="80"
-            style="border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.35);display:block;margin:0 auto .75rem;"
-          />
+          <p style="font-size:2.5rem;margin:0 0 .5rem;line-height:1;">🌸</p>
           <h1 style="color:#FFFFFF;font-family:Georgia,serif;font-style:italic;font-size:1.4rem;margin:0 0 .2rem;line-height:1.2;">Ama</h1>
           <p style="color:rgba(255,255,255,.75);font-size:.75rem;margin:0;letter-spacing:.06em;text-transform:uppercase;">Hypnose Régressive Ésotérique</p>
         </div>

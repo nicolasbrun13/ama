@@ -35,7 +35,6 @@ const TEXT        = '#1E0A3C';
 const SUBTEXT     = '#6B5B8A';
 const SUCCESS     = '#27AE60';
 const CONTACT     = 'contact@amablanc-hre.fr';
-const AMA_PHOTO   = 'https://amablanc-hre.fr/anna-blanc.jpg';
 
 const transporter = nodemailer.createTransport({
   host:   process.env.SMTP_HOST   || 'ssl0.ovh.net',
@@ -52,8 +51,7 @@ function wrap(content: string): string {
     <div style="background:${VIOLET_BG};padding:2rem 1rem;font-family:'Nunito',Arial,sans-serif;">
       <div style="max-width:600px;margin:0 auto;background:#FFFFFF;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(139,109,200,.15);">
         <div style="background:linear-gradient(135deg,${VIOLET},${VIOLET_DARK});padding:2rem;text-align:center;">
-          <img src="${AMA_PHOTO}" alt="Ama" width="80" height="80"
-            style="border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.35);display:block;margin:0 auto .75rem;" />
+          <p style="font-size:2.5rem;margin:0 0 .5rem;line-height:1;">🌸</p>
           <h1 style="color:#fff;font-family:Georgia,serif;font-style:italic;font-size:1.4rem;margin:0 0 .2rem;">Ama</h1>
           <p style="color:rgba(255,255,255,.75);font-size:.75rem;margin:0;letter-spacing:.06em;text-transform:uppercase;">Hypnose Régressive Ésotérique</p>
         </div>
