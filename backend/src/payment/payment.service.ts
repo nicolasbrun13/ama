@@ -139,10 +139,16 @@ export class PaymentService {
 
     const captureID = capture.purchase_units[0].payments.captures[0].id;
 
-    /* Créer la réservation et envoyer les emails */
-    await reservationsService.create(reservationDto);
-    await emailService.sendConfirmationToAma(reservationDto);
-    await emailService.sendConfirmationToClient(reservationDto);
+    // Enregistrer la réservation sans envoyer les emails immédiatement
+    await reservationsService.create(reservationDto, true);
+
+    // Envoyer les emails de confirmation avec un délai de 2 minutes
+    setTimeout(() => {
+      Promise.all([
+        emailService.sendConfirmationToAma(reservationDto),
+        emailService.sendConfirmationToClient(reservationDto),
+      ]).catch((err: unknown) => console.error('Email error after PayPal capture:', err));
+    }, 2 * 60 * 1000);
 
     return { success: true, captureID };
   }

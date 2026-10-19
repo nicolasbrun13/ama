@@ -6,6 +6,7 @@ export interface StoredReservation extends CreateReservationDto {
   id: string;
   createdAt: Date;
   reminderSent: boolean;
+  invoiceSent: boolean;
 }
 
 @Injectable()
@@ -14,21 +15,23 @@ export class ReservationsService {
 
   constructor(private readonly emailService: EmailService) {}
 
-  async create(dto: CreateReservationDto): Promise<StoredReservation> {
+  async create(dto: CreateReservationDto, skipEmails = false): Promise<StoredReservation> {
     const reservation: StoredReservation = {
       ...dto,
       id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       createdAt: new Date(),
       reminderSent: false,
+      invoiceSent: false,
     };
 
     this.reservations.push(reservation);
 
-    // Send emails
-    await Promise.all([
-      this.emailService.sendConfirmationToAma(dto),
-      this.emailService.sendConfirmationToClient(dto),
-    ]);
+    if (!skipEmails) {
+      await Promise.all([
+        this.emailService.sendConfirmationToAma(dto),
+        this.emailService.sendConfirmationToClient(dto),
+      ]);
+    }
 
     return reservation;
   }
@@ -41,14 +44,23 @@ export class ReservationsService {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowStr = tomorrow.toISOString().split('T')[0];
+    return this.reservations.filter((r) => r.date === tomorrowStr && !r.reminderSent);
+  }
 
-    return this.reservations.filter(
-      (r) => r.date === tomorrowStr && !r.reminderSent,
-    );
+  findYesterdayForInvoice(): StoredReservation[] {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    return this.reservations.filter((r) => r.date === yesterdayStr && !r.invoiceSent);
   }
 
   markReminderSent(id: string): void {
     const r = this.reservations.find((res) => res.id === id);
     if (r) r.reminderSent = true;
+  }
+
+  markInvoiceSent(id: string): void {
+    const r = this.reservations.find((res) => res.id === id);
+    if (r) r.invoiceSent = true;
   }
 }
