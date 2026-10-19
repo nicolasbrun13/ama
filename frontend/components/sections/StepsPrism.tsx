@@ -1,7 +1,8 @@
 'use client';
 import { useState, useRef, useCallback } from 'react';
+import Link from 'next/link';
 
-type Step = { n: number; title: string; desc: string };
+type Step = { n: number; title: string; desc: string; cta?: { label: string; href: string } };
 
 const N = 5;
 const ITEM_H = 300;   // height of one card
@@ -36,8 +37,6 @@ function getStyle(rel: number): React.CSSProperties {
 export default function StepsPrism({ steps }: { steps: Step[] }) {
   const [active, setActive] = useState(0);
   const blocked = useRef(false);
-  const lastWheel = useRef(0);
-  const touchY = useRef(0);
 
   const go = useCallback((d: 1 | -1) => {
     if (blocked.current) return;
@@ -46,29 +45,17 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
     setTimeout(() => { blocked.current = false; }, 520);
   }, []);
 
-  const onWheel = useCallback((e: React.WheelEvent) => {
-    const now = Date.now();
-    if (now - lastWheel.current < 750) return;
-    lastWheel.current = now;
-    go(e.deltaY > 0 ? 1 : -1);
-  }, [go]);
-
   return (
     <div style={{ maxWidth: '680px', margin: '0 auto', userSelect: 'none' }}>
 
       {/* ── Drum scene ── */}
       <div
-        onWheel={onWheel}
-        onTouchStart={e => { touchY.current = e.touches[0].clientY; }}
-        onTouchEnd={e => {
-          const delta = touchY.current - e.changedTouches[0].clientY;
-          if (Math.abs(delta) > 40) go(delta > 0 ? 1 : -1);
-        }}
+        onClick={() => go(1)}
         style={{
           position: 'relative',
           height: `${CLIP_H}px`,
           overflow: 'hidden',
-          cursor: 'ns-resize',
+          cursor: 'pointer',
         }}
       >
         {/* Gradient masks — same colour as section bg */}
@@ -105,7 +92,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                   ...getStyle(rel),
                   /* Card design */
                   background: 'linear-gradient(145deg, rgba(22,10,58,.97) 0%, rgba(14,6,38,.93) 100%)',
-                  border: rel === 0 ? '1px solid rgba(200,88,122,.35)' : '1px solid rgba(200,88,122,.12)',
+                  border: rel === 0 ? '1px solid rgba(255,197,211,.35)' : '1px solid rgba(255,197,211,.12)',
                   borderRadius: '14px',
                   padding: '2.2rem 2.8rem',
                   display: 'flex',
@@ -113,7 +100,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                   justifyContent: 'center',
                   gap: '.85rem',
                   boxShadow: rel === 0
-                    ? '0 16px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04), 0 0 40px rgba(200,88,122,.08)'
+                    ? '0 16px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04), 0 0 40px rgba(255,197,211,.08)'
                     : '0 8px 30px rgba(0,0,0,.35)',
                 }}
               >
@@ -133,7 +120,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                 {/* Rose line */}
                 <div style={{
                   width: '36px', height: '1px',
-                  background: 'linear-gradient(90deg, var(--rose), rgba(200,88,122,0))',
+                  background: 'linear-gradient(90deg, var(--rose), rgba(255,197,211,0))',
                 }} />
 
                 {/* Title */}
@@ -157,6 +144,26 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                 }}>
                   {s.desc}
                 </p>
+
+                {/* CTA optionnel — visible uniquement sur la carte active */}
+                {s.cta && rel === 0 && (
+                  <Link
+                    href={s.cta.href}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: '.4rem',
+                      color: 'var(--rose)', textDecoration: 'none',
+                      fontSize: '.76rem', fontWeight: 700, letterSpacing: '.1em',
+                      border: '1px solid rgba(255,197,211,.28)',
+                      borderRadius: '50px', padding: '.4rem 1rem',
+                      background: 'rgba(255,197,211,.06)',
+                      transition: 'background .2s, border-color .2s',
+                      alignSelf: 'flex-start',
+                    }}
+                    className="steps-cta"
+                  >
+                    {s.cta.label}
+                  </Link>
+                )}
               </div>
             );
           })}
@@ -173,7 +180,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
           aria-label="Étape précédente"
           style={{
             width: '40px', height: '40px', borderRadius: '50%',
-            background: 'rgba(200,88,122,.07)', border: '1px solid rgba(200,88,122,.28)',
+            background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.28)',
             color: 'var(--rose)', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '.82rem', transition: 'background .2s',
@@ -197,7 +204,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
               style={{
                 width: i === active ? '20px' : '7px',
                 height: '7px', borderRadius: '4px',
-                background: i === active ? 'var(--rose)' : 'rgba(200,88,122,.22)',
+                background: i === active ? 'var(--rose)' : 'rgba(255,197,211,.22)',
                 border: 'none', cursor: 'pointer',
                 transition: 'width .3s, background .3s',
                 padding: 0,
@@ -211,7 +218,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
           aria-label="Étape suivante"
           style={{
             width: '40px', height: '40px', borderRadius: '50%',
-            background: 'rgba(200,88,122,.07)', border: '1px solid rgba(200,88,122,.28)',
+            background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.28)',
             color: 'var(--rose)', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '.82rem', transition: 'background .2s',
@@ -228,6 +235,8 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
       }}>
         Étape {active + 1}&nbsp;/&nbsp;{N}
       </p>
+
+      <style>{`.steps-cta:hover { background: rgba(255,197,211,.14) !important; border-color: rgba(255,197,211,.5) !important; }`}</style>
     </div>
   );
 }

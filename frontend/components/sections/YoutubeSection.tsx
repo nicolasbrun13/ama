@@ -6,7 +6,7 @@ const CHANNEL = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
 
 export default function YoutubeSection() {
   return (
-    <section id="youtube" style={{ position: 'relative', background: 'var(--bg-mid)', padding: '6rem 2rem' }}>
+    <section id="youtube" style={{ position: 'relative', background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <ScrollReveal direction="up">
           <div style={{ textAlign: 'center', marginBottom: '.75rem', display: 'flex', justifyContent: 'center' }}>
@@ -29,7 +29,7 @@ export default function YoutubeSection() {
             style={{
               display: 'block',
               background: 'rgba(12,6,32,.7)',
-              border: '1px solid rgba(200,88,122,.18)',
+              border: '1px solid rgba(255,197,211,.18)',
               borderRadius: '12px',
               overflow: 'hidden',
               maxWidth: '720px',
@@ -56,11 +56,11 @@ export default function YoutubeSection() {
               }}>
                 <div style={{
                   width: '68px', height: '68px',
-                  background: 'rgba(200,88,122,.85)',
+                  background: 'rgba(255,197,211,.85)',
                   borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: '1.5rem', color: '#000',
-                  boxShadow: '0 4px 24px rgba(200,88,122,.45)',
+                  boxShadow: '0 4px 24px rgba(255,197,211,.45)',
                 }}>▶</div>
               </div>
             </div>
@@ -70,7 +70,7 @@ export default function YoutubeSection() {
         <div style={{ textAlign: 'center' }}>
           <Link href="/youtube" className="btn-cta-ghost" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.5rem',
-            border: '1px solid rgba(200,88,122,.35)', color: 'var(--rose)', textDecoration: 'none',
+            border: '1px solid rgba(255,197,211,.35)', color: 'var(--rose)', textDecoration: 'none',
             fontSize: '.8rem', fontWeight: 700, letterSpacing: '.12em', textTransform: 'uppercase',
             padding: '.85rem 2rem', borderRadius: '50px', transition: 'all .25s',
           }}>

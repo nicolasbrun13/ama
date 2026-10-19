@@ -10,12 +10,12 @@ const config: Config = {
     extend: {
       colors: {
         rose: {
-          DEFAULT: '#C8587A',
-          deep: '#A03460',
-          neon: '#D4607A',
-          glow: 'rgba(200,88,122,0.15)',
-          dim: 'rgba(200,88,122,0.08)',
-          border: 'rgba(200,88,122,0.12)',
+          DEFAULT: '#FFC5D3',
+          deep: '#E896A8',
+          neon: '#FFCFDC',
+          glow: 'rgba(255,197,211,0.15)',
+          dim: 'rgba(255,197,211,0.08)',
+          border: 'rgba(255,197,211,0.12)',
         },
         gold: {
           DEFAULT: '#E8BF50',
@@ -42,15 +42,15 @@ const config: Config = {
       keyframes: {
         breath: {
           '0%, 100%': { boxShadow: '0 4px 20px rgba(255,255,255,0.04)' },
-          '50%': { boxShadow: '0 4px 40px rgba(200,88,122,0.18), 0 0 80px rgba(200,88,122,0.08)' },
+          '50%': { boxShadow: '0 4px 40px rgba(255,197,211,0.18), 0 0 80px rgba(255,197,211,0.08)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-9px)' },
         },
         'pulse-rose': {
-          '0%, 100%': { boxShadow: '0 4px 20px rgba(160,52,96,0.4)' },
-          '50%': { boxShadow: '0 4px 40px rgba(200,88,122,0.78), 0 0 55px rgba(200,88,122,0.22)' },
+          '0%, 100%': { boxShadow: '0 4px 20px rgba(232,150,168,0.4)' },
+          '50%': { boxShadow: '0 4px 40px rgba(255,197,211,0.78), 0 0 55px rgba(255,197,211,0.22)' },
         },
         haloSpin: {
           from: { transform: 'rotate(0deg)' },

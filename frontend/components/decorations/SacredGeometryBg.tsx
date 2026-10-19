@@ -53,7 +53,7 @@ export default function SacredGeometryBg() {
           />
           {L_CIRC.map((c,i) => (
             <circle key={i} cx={c.x} cy={c.y} r={R}
-              fill="none" stroke="rgba(200,88,122,1)" strokeWidth="0.8"/>
+              fill="none" stroke="rgba(255,197,211,1)" strokeWidth="0.8"/>
           ))}
         </g>
 
@@ -66,7 +66,7 @@ export default function SacredGeometryBg() {
           />
           {R_CIRC.map((c,i) => (
             <circle key={i} cx={c.x} cy={c.y} r={R}
-              fill="none" stroke="rgba(200,88,122,1)" strokeWidth="0.8"/>
+              fill="none" stroke="rgba(255,197,211,1)" strokeWidth="0.8"/>
           ))}
         </g>
       </svg>

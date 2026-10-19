@@ -3,6 +3,105 @@ import { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import VideoBackground from '@/components/animations/VideoBackground';
 import type { ReservationPayload } from '@/components/payment/PaypalButton';
+import { OPEN_ISO, OPEN_LABEL, isAvailableDate } from '@/lib/availableDates';
+
+/* ── Calendrier custom (seuls les vendredis disponibles sont cliquables) ── */
+const MOIS_CAL = ['Janvier','Février','Mars','Avril','Mai','Juin',
+                  'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const OPEN_YEAR_CAL  = Number(OPEN_ISO.split('-')[0]);
+const OPEN_MONTH_CAL = Number(OPEN_ISO.split('-')[1]) - 1;
+
+function isoFromYMD(y: number, m: number, d: number) {
+  return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+}
+
+function ReservationCalendar({ value, onChange }: { value: string; onChange: (iso: string) => void }) {
+  const [year,  setYear]  = useState(OPEN_YEAR_CAL);
+  const [month, setMonth] = useState(OPEN_MONTH_CAL);
+
+  const now    = new Date();
+  const todayY = now.getFullYear();
+  const todayM = now.getMonth();
+  const todayD = now.getDate();
+
+  const firstDay    = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const startOffset = (firstDay.getDay() + 6) % 7;
+
+  const cells: (number | null)[] = [];
+  for (let i = 0; i < startOffset; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const isCellAvail = (d: number): boolean => {
+    const today = new Date(todayY, todayM, todayD);
+    const dt = new Date(year, month, d);
+    if (dt <= today) return false;
+    return isAvailableDate(isoFromYMD(year, month, d));
+  };
+
+  const isSelected = (d: number) => value === isoFromYMD(year, month, d);
+  const canPrev = year > OPEN_YEAR_CAL || (year === OPEN_YEAR_CAL && month > OPEN_MONTH_CAL);
+
+  const prevMonth = () => {
+    if (!canPrev) return;
+    if (month === 0) { setMonth(11); setYear(y => y - 1); } else setMonth(m => m - 1);
+  };
+  const nextMonth = () => {
+    if (month === 11) { setMonth(0); setYear(y => y + 1); } else setMonth(m => m + 1);
+  };
+
+  const selectedDisplay = value
+    ? new Date(value + 'T12:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+    : null;
+
+  return (
+    <div>
+      <div style={{ background: 'rgba(6,3,15,.6)', border: '1px solid var(--border)', borderRadius: '8px', padding: '1.1rem 1.1rem .8rem' }}>
+        {/* Navigation mois */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.7rem' }}>
+          <button type="button" onClick={prevMonth} disabled={!canPrev} style={{ background: 'rgba(255,197,211,.08)', border: '1px solid var(--border)', color: canPrev ? 'var(--rose)' : 'rgba(255,197,211,.2)', width: '28px', height: '28px', cursor: canPrev ? 'pointer' : 'default', fontSize: '.9rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>‹</button>
+          <span style={{ fontFamily: '"Playfair Display",serif', fontStyle: 'italic', fontSize: '.95rem', color: 'var(--white)' }}>{MOIS_CAL[month]} {year}</span>
+          <button type="button" onClick={nextMonth} style={{ background: 'rgba(255,197,211,.08)', border: '1px solid var(--border)', color: 'var(--rose)', width: '28px', height: '28px', cursor: 'pointer', fontSize: '.9rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>›</button>
+        </div>
+        {/* En-têtes */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: '2px', marginBottom: '3px' }}>
+          {['L','M','M','J','V','S','D'].map((d, i) => (
+            <span key={i} style={{ textAlign: 'center', fontSize: '.55rem', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: i === 4 ? 'rgba(255,197,211,.65)' : 'rgba(253,240,247,.25)', padding: '3px 0' }}>{d}</span>
+          ))}
+        </div>
+        {/* Grille jours */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: '2px' }}>
+          {cells.map((d, i) => {
+            if (d === null) return <div key={`e-${i}`} style={{ padding: '5px 0' }} />;
+            const avail = isCellAvail(d);
+            const sel   = isSelected(d);
+            return (
+              <button key={d} type="button" onClick={() => avail && onChange(isoFromYMD(year, month, d))} disabled={!avail}
+                style={{ textAlign: 'center', padding: '5px 2px', fontSize: '.76rem', borderRadius: '6px', fontFamily: 'Nunito, sans-serif',
+                  border:      sel   ? '1px solid rgba(255,197,211,.7)' : avail ? '1px solid rgba(255,197,211,.15)' : '1px solid transparent',
+                  background:  sel   ? 'rgba(255,197,211,.25)'          : avail ? 'rgba(255,197,211,.06)'          : 'transparent',
+                  color:       avail ? 'var(--white)'                   : 'rgba(253,240,247,.15)',
+                  fontWeight:  sel   ? 700                               : 400,
+                  cursor:      avail ? 'pointer'                         : 'default',
+                }}>
+                {d}
+              </button>
+            );
+          })}
+        </div>
+        <p style={{ fontSize: '.58rem', color: 'rgba(253,240,247,.25)', marginTop: '.6rem', textAlign: 'center', lineHeight: 1.5 }}>
+          Ouverture {OPEN_LABEL} · vendredis uniquement · hors vacances zone A
+        </p>
+      </div>
+      {selectedDisplay && (
+        <div style={{ marginTop: '.5rem', padding: '.55rem 1rem', background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.22)', borderRadius: '6px', fontSize: '.82rem', color: 'var(--white)' }}>
+          ✿ {selectedDisplay} à 13h30
+        </div>
+      )}
+    </div>
+  );
+}
 
 const PaypalButton = dynamic(() => import('@/components/payment/PaypalButton'), { ssr: false });
 
@@ -16,8 +115,6 @@ type FormData = {
 };
 
 type PageState = 'form' | 'payment' | 'success';
-
-const today = new Date().toISOString().split('T')[0];
 
 export default function ReserverPage() {
   const [form, setForm] = useState<FormData>({
@@ -41,6 +138,10 @@ export default function ReserverPage() {
     e.preventDefault();
     if (!form.prenom.trim() || !form.nom.trim() || !form.email.trim() || !form.dateVoulue) {
       setFormError('Merci de remplir tous les champs obligatoires (*).');
+      return;
+    }
+    if (!isAvailableDate(form.dateVoulue)) {
+      setFormError('Veuillez sélectionner un vendredi disponible dans le calendrier.');
       return;
     }
     setFormError('');
@@ -74,10 +175,10 @@ export default function ReserverPage() {
     <main>
       {/* Sub-hero */}
       <section style={{
-        position: 'relative', padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden', minHeight: '360px',
+        position: 'relative', padding: '3rem 2rem', overflow: 'hidden', minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
         <VideoBackground overlay="rgba(6,3,15,.82)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto' }}>
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto', textAlign: 'center', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
@@ -88,9 +189,10 @@ export default function ReserverPage() {
             ✿ Prendre rendez-vous
           </div>
           <h1 style={{
-            fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-            fontSize: 'clamp(2.2rem, 4vw, 3.4rem)', fontWeight: 400,
-            color: 'var(--white)', lineHeight: 1.2, marginBottom: '1rem',
+            fontFamily: 'Nunito, sans-serif', fontStyle: 'normal',
+            fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 700,
+            color: 'var(--white)', lineHeight: 1.15, marginBottom: '0.5rem',
+            letterSpacing: '-.01em',
           }}>
             Réserver une séance
           </h1>
@@ -107,30 +209,33 @@ export default function ReserverPage() {
       }} />
 
       {/* Steps */}
-      <section style={{ background: 'var(--bg-mid)', padding: '3.5rem 2rem' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '1.75rem 2rem' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.5rem' }} className="steps-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1rem' }} className="steps-grid">
             {[
               { n: 1, title: 'Remplissez le formulaire', desc: 'Vos coordonnées et la date souhaitée (vendredi à 13h30)' },
               { n: 2, title: 'Paiement sécurisé PayPal', desc: '150 € par carte bancaire ou en 4 fois sans frais' },
               { n: 3, title: 'Confirmation instantanée', desc: 'Un email avec le fichier .ics est envoyé immédiatement' },
             ].map((s) => (
               <div key={s.n} style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
-                gap: '.75rem', padding: '1.5rem',
+                display: 'flex', flexDirection: 'row', alignItems: 'flex-start',
+                gap: '.75rem', padding: '.9rem 1rem',
                 background: 'rgba(18,8,48,.4)', border: '1px solid var(--border)', borderRadius: '8px',
               }}>
                 <div style={{
-                  width: '44px', height: '44px',
+                  width: '28px', height: '28px', flexShrink: 0,
                   background: 'var(--rose-deep)', color: 'white', borderRadius: '50%',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '.9rem', fontWeight: 700,
-                  boxShadow: '0 4px 16px rgba(160,52,96,.4)',
+                  fontSize: '.72rem', fontWeight: 700,
+                  boxShadow: '0 3px 10px rgba(160,52,96,.4)',
+                  marginTop: '.1rem',
                 }}>
                   {s.n}
                 </div>
-                <h4 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)' }}>{s.title}</h4>
-                <p style={{ fontSize: '.78rem', color: 'var(--dim)', lineHeight: 1.6 }}>{s.desc}</p>
+                <div>
+                  <h4 style={{ fontSize: '.78rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.2rem' }}>{s.title}</h4>
+                  <p style={{ fontSize: '.7rem', color: 'var(--dim)', lineHeight: 1.55 }}>{s.desc}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -138,7 +243,7 @@ export default function ReserverPage() {
       </section>
 
       {/* Main section */}
-      <section style={{ background: 'var(--bg-soft)', padding: '4rem 2rem 5rem' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '3rem 2rem 5rem' }}>
         <div style={{ maxWidth: '680px', margin: '0 auto' }}>
 
           {/* SUCCESS */}
@@ -235,12 +340,6 @@ export default function ReserverPage() {
           {/* FORM */}
           {pageState === 'form' && (
             <form onSubmit={handleProceedToPayment} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-              <h2 style={{
-                fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-                fontSize: '1.6rem', color: 'var(--white)', marginBottom: '.25rem', textAlign: 'center',
-              }}>
-                Votre réservation
-              </h2>
 
               {/* Prénom + Nom */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }} className="name-grid">
@@ -270,25 +369,13 @@ export default function ReserverPage() {
                   placeholder="+33 6 XX XX XX XX" style={inputStyle} />
               </div>
 
-              {/* Date + heure fixe */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }} className="dt-grid">
-                <div>
-                  <label style={labelStyle}>
-                    Date souhaitée *{' '}
-                    <span style={{ fontSize: '.65rem', opacity: .6, textTransform: 'none', letterSpacing: 0 }}>(vendredi)</span>
-                  </label>
-                  <input name="dateVoulue" type="date" value={form.dateVoulue} onChange={handleChange}
-                    min={today} style={{ ...inputStyle, colorScheme: 'dark' }} required />
-                </div>
-                <div>
-                  <label style={labelStyle}>Heure</label>
-                  <div style={{
-                    ...inputStyle, display: 'flex', alignItems: 'center',
-                    background: 'rgba(6,3,15,.3)', color: 'rgba(253,240,247,.45)',
-                  }}>
-                    13h30 · créneau unique
-                  </div>
-                </div>
+              {/* Date — calendrier custom (seuls les vendredis cliquables) */}
+              <div>
+                <label style={labelStyle}>Date souhaitée *</label>
+                <ReservationCalendar
+                  value={form.dateVoulue}
+                  onChange={(iso) => setForm(prev => ({ ...prev, dateVoulue: iso }))}
+                />
               </div>
 
               {/* Message */}

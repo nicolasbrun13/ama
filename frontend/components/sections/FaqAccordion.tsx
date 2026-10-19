@@ -13,7 +13,7 @@ export default function FaqAccordion({ items }: { items: FaqItem[] }) {
           key={i}
           style={{
             background: 'rgba(6,3,15,.6)',
-            border: `1px solid ${open === i ? 'rgba(200,88,122,.35)' : 'var(--border)'}`,
+            border: `1px solid ${open === i ? 'rgba(255,197,211,.35)' : 'var(--border)'}`,
             borderRadius: '8px', overflow: 'hidden',
             transition: 'border-color .25s',
           }}
@@ -37,7 +37,7 @@ export default function FaqAccordion({ items }: { items: FaqItem[] }) {
               color: 'var(--rose)', fontSize: '1.1rem', lineHeight: 1,
               transition: 'transform .25s, background .25s',
               transform: open === i ? 'rotate(45deg)' : 'none',
-              background: open === i ? 'rgba(200,88,122,.1)' : 'transparent',
+              background: open === i ? 'rgba(255,197,211,.1)' : 'transparent',
               fontFamily: 'monospace',
             }}>
               +

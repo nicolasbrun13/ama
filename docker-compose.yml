@@ -1,0 +1,32 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: annablanc-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    networks:
+      - annablanc-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: annablanc-frontend
+    restart: unless-stopped
+    env_file:
+      - ./frontend/.env.production
+    environment:
+      API_URL: http://backend:3203
+    ports:
+      - "3202:3202"
+    depends_on:
+      - backend
+    networks:
+      - annablanc-net
+
+networks:
+  annablanc-net:
+    driver: bridge

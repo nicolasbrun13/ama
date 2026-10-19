@@ -1,23 +1,33 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 import VideoBackground from '@/components/animations/VideoBackground';
 import FaqAccordion from '@/components/sections/FaqAccordion';
 import StepsPrism from '@/components/sections/StepsPrism';
 import ConstellationBg from '@/components/decorations/ConstellationBg';
+
+function EyeIcon() {
+  return (
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 0C5.73 0 1.25 3.28 0 8c1.25 4.72 5.73 8 11 8s9.75-3.28 11-8C20.75 3.28 16.27 0 11 0zm0 13.33A5.33 5.33 0 1111 2.67a5.33 5.33 0 010 10.66zm0-8.53a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4z" fill="#1a0d2e"/>
+    </svg>
+  );
+}
 
 export const metadata: Metadata = {
   title: 'La Méthode HRE — Hypnose Régressive Ésotérique · Ama',
   description: "Découvrez l'Hypnose Régressive Ésotérique, une approche révolutionnaire fondée par Calogéro Grifasi pour accéder aux zones cachées de l'inconscient.",
 };
 
-const differentiators = [
+const differentiators: { icon: ReactNode; title: string; desc: string }[] = [
   {
     icon: '🎯',
     title: 'Non-intervention',
     desc: "Aucune entité extérieure n'intervient. C'est votre propre partie subliminal qui effectue les transformations.",
   },
   {
-    icon: '👁',
+    icon: <EyeIcon />,
     title: 'Conscience intacte',
     desc: "Contrairement à d'autres formes d'hypnose, vous restez pleinement conscient et lucide durant toute la séance.",
   },
@@ -42,6 +52,7 @@ const steps = [
     n: 1,
     title: "S'approprier la méthode",
     desc: "Au travers de l'écoute des sessions pour une meilleure compréhension de la méthode.",
+    cta: { label: '▶ Comprendre la méthode →', href: '/youtube#comprendre' },
   },
   {
     n: 2,
@@ -98,29 +109,30 @@ export default function LaMethode() {
       {/* Sub-hero */}
       <section style={{
         position: 'relative',
-        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
-        minHeight: '360px', display: 'flex', alignItems: 'center',
+        padding: '4.5rem 2rem', overflow: 'hidden',
+        minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
-        <VideoBackground videoSrc="https://assets.mixkit.co/videos/30063/30063-1080.mp4" overlay="rgba(6,3,15,.75)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+        <VideoBackground videoSrc="/videos/30063.mp4" overlay="rgba(6,3,15,.75)" rotate={180} />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
+            background: 'rgba(196,176,245,.08)', border: '1px solid rgba(196,176,245,.28)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',
             fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
-            textTransform: 'uppercase' as const, color: 'var(--rose)',
+            textTransform: 'uppercase' as const, color: 'var(--violet)',
           }}>
             ✿ La Méthode
           </div>
           <h1 style={{
-            fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-            fontSize: 'clamp(2.2rem, 4vw, 3.4rem)', fontWeight: 400,
-            color: 'var(--white)', lineHeight: 1.2, marginBottom: '1rem',
+            fontFamily: 'Nunito, sans-serif', fontStyle: 'normal',
+            fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 700,
+            color: 'var(--white)', lineHeight: 1.15, marginBottom: '0.5rem',
+            letterSpacing: '-.01em',
           }}>
             L&apos;Hypnose Régressive Ésotérique
           </h1>
           <p style={{
-            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '560px', margin: '0 auto',
+            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '560px',
           }}>
             Une approche révolutionnaire fondée par Calogéro Grifasi
           </p>
@@ -130,18 +142,18 @@ export default function LaMethode() {
       {/* Separator */}
       <div style={{
         height: '1px',
-        background: 'linear-gradient(to right, transparent 0%, rgba(255,197,211,.7) 25%, rgba(255,197,211,.7) 75%, transparent 100%)',
+        background: 'linear-gradient(to right, transparent 0%, rgba(196,176,245,.7) 25%, rgba(196,176,245,.7) 75%, transparent 100%)',
       }} />
 
       {/* Section 1 — Qu'est-ce que l'HRE — fond clair inversé */}
-      <section style={{ background: '#FDF8FA', padding: '5rem 2rem' }}>
+      <section style={{ background: '#FBF0F4', padding: '3rem 2rem 5rem' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <h2 style={{
               fontFamily: '"Playfair Display", serif', fontWeight: 500,
               fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: '#1a0d2e', lineHeight: 1.22,
             }}>
-              Qu&apos;est-ce que <em style={{ fontStyle: 'italic', color: 'var(--rose)' }}>l&apos;HRE ?</em>
+              Qu&apos;est-ce que <em style={{ fontStyle: 'italic', color: 'var(--violet-deep)' }}>l&apos;HRE ?</em>
             </h2>
           </div>
 
@@ -154,13 +166,13 @@ export default function LaMethode() {
                 L&apos;HRE est une méthode thérapeutique qui permet d&apos;accéder aux zones cachées de l&apos;inconscient profond, au-delà des frontières ordinaires du temps et de l&apos;espace.
               </p>
               <p style={{ fontSize: '.9rem', color: 'rgba(30,15,50,.72)', lineHeight: 1.88, marginBottom: '1rem' }}>
-                Fondée en 2012 par <strong style={{ color: 'var(--rose)', fontWeight: 600 }}>Calogéro Grifasi</strong>, chercheur autodidacte passionné par les mécanismes de l&apos;inconscient, la méthode est le fruit d&apos;années d&apos;expérimentation et de recherche.
+                Fondée en 2012 par <strong style={{ color: 'var(--violet-deep)', fontWeight: 600 }}>Calogéro Grifasi</strong>, chercheur autodidacte passionné par les mécanismes de l&apos;inconscient, la méthode est le fruit d&apos;années d&apos;expérimentation et de recherche.
               </p>
               <p style={{ fontSize: '.9rem', color: 'rgba(30,15,50,.72)', lineHeight: 1.88, marginBottom: '1rem' }}>
-                Sa particularité absolue : grâce à un <strong style={{ color: 'var(--rose)', fontWeight: 600 }}>support télépathique</strong>, vous n&apos;entrez pas vous-même en hypnose. Un opérateur formé entre en état de conscience modifié à votre place et accède aux informations de votre espace énergétique.
+                Sa particularité absolue : grâce à un <strong style={{ color: 'var(--violet-deep)', fontWeight: 600 }}>support télépathique</strong>, vous n&apos;entrez pas vous-même en hypnose. Un opérateur formé entre en état de conscience modifié à votre place et accède aux informations de votre espace énergétique.
               </p>
               <p style={{ fontSize: '.9rem', color: 'rgba(30,15,50,.72)', lineHeight: 1.88, marginBottom: '1rem' }}>
-                La méthode repose sur la <strong style={{ color: 'var(--rose)', fontWeight: 600 }}>souveraineté totale de la conscience</strong> : c&apos;est toujours votre propre subconscient qui effectue les transformations. Aucune entité extérieure n&apos;intervient dans votre espace intérieur.
+                La méthode repose sur la <strong style={{ color: 'var(--violet-deep)', fontWeight: 600 }}>souveraineté totale de la conscience</strong> : c&apos;est toujours votre propre subconscient qui effectue les transformations. Aucune entité extérieure n&apos;intervient dans votre espace intérieur.
               </p>
               <p style={{ fontSize: '.9rem', color: 'rgba(30,15,50,.72)', lineHeight: 1.88, marginBottom: '1rem' }}>
                 Les résultats varient selon les personnes : certains sont immédiats et visibles dès les heures suivant la séance, d&apos;autres se manifestent progressivement sur plusieurs jours ou semaines.
@@ -174,14 +186,16 @@ export default function LaMethode() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
               {differentiators.map((d, i) => (
                 <div key={i} className="card-breath" style={{
-                  background: '#fff', border: '1px solid rgba(255,197,211,.35)',
+                  background: 'linear-gradient(135deg,#fff 0%,#f3eaf8 100%)',
+                  border: '1px solid rgba(139,109,200,.28)',
+                  borderLeft: '3px solid rgba(100,60,180,.45)',
                   borderRadius: '8px', padding: '1.5rem',
                   display: 'flex', gap: '1.1rem', alignItems: 'flex-start',
-                  boxShadow: '0 2px 12px rgba(255,197,211,.12)',
+                  boxShadow: '0 4px 24px rgba(100,70,160,.1), 0 1px 4px rgba(0,0,0,.05)',
                 }}>
                   <div style={{
                     width: '44px', height: '44px', flexShrink: 0,
-                    background: 'rgba(255,197,211,.18)', border: '1px solid rgba(255,197,211,.35)',
+                    background: 'rgba(139,109,200,.22)', border: '1px solid rgba(139,109,200,.52)',
                     borderRadius: '50%', display: 'flex', alignItems: 'center',
                     justifyContent: 'center', fontSize: '1.2rem',
                   }}>
@@ -193,22 +207,36 @@ export default function LaMethode() {
                   </div>
                 </div>
               ))}
+
+              {/* Photo-card */}
+              <div style={{
+                position: 'relative', height: '170px',
+                borderRadius: '8px', overflow: 'hidden',
+                boxShadow: '0 4px 24px rgba(100,70,160,.1), 0 1px 4px rgba(0,0,0,.05)',
+              }}>
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/bird-freedom.jpg`}
+                  alt="Un oiseau en liberté, symbole de libération des blocages"
+                  fill
+                  style={{ objectFit: 'cover', objectPosition: 'center 78%', filter: 'grayscale(85%) sepia(25%) hue-rotate(230deg) contrast(1.12) brightness(1.08)' }}
+                />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Section 2 — Ce que l'HRE peut traiter */}
-      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem', position: 'relative' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '3rem 2rem 5rem', position: 'relative' }}>
         <ConstellationBg />
         <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
+              background: 'rgba(196,176,245,.08)', border: '1px solid rgba(196,176,245,.18)',
               borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.25rem',
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
-              textTransform: 'uppercase' as const, color: 'var(--rose)',
+              textTransform: 'uppercase' as const, color: 'var(--violet)',
             }}>
               ✿ Pour qui ?
             </div>
@@ -216,7 +244,7 @@ export default function LaMethode() {
               fontFamily: '"Playfair Display", serif', fontWeight: 500,
               fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--white)', lineHeight: 1.22,
             }}>
-              Ce que l&apos;HRE peut <em style={{ fontStyle: 'italic', color: 'var(--rose)' }}>transformer</em>
+              Ce que l&apos;HRE peut <em style={{ fontStyle: 'italic', color: 'var(--violet)' }}>transformer</em>
             </h2>
           </div>
 
@@ -243,15 +271,15 @@ export default function LaMethode() {
       </section>
 
       {/* Section 3 — Déroulement d'une séance */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '3rem 2rem 5rem' }}>
         <div style={{ maxWidth: '860px', margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
+              background: 'rgba(196,176,245,.08)', border: '1px solid rgba(196,176,245,.18)',
               borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.25rem',
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
-              textTransform: 'uppercase' as const, color: 'var(--rose)',
+              textTransform: 'uppercase' as const, color: 'var(--violet)',
             }}>
               ✿ Déroulement
             </div>
@@ -259,7 +287,7 @@ export default function LaMethode() {
               fontFamily: '"Playfair Display", serif', fontWeight: 500,
               fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--white)', lineHeight: 1.22,
             }}>
-              Comment se déroule <em style={{ fontStyle: 'italic', color: 'var(--rose)' }}>une séance ?</em>
+              Comment se déroule <em style={{ fontStyle: 'italic', color: 'var(--violet)' }}>une séance ?</em>
             </h2>
           </div>
 
@@ -268,16 +296,16 @@ export default function LaMethode() {
       </section>
 
       {/* Section 4 — FAQ */}
-      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem', position: 'relative' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '3rem 2rem 5rem', position: 'relative' }}>
         <ConstellationBg />
         <div style={{ maxWidth: '860px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
+              background: 'rgba(196,176,245,.08)', border: '1px solid rgba(196,176,245,.18)',
               borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.25rem',
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
-              textTransform: 'uppercase' as const, color: 'var(--rose)',
+              textTransform: 'uppercase' as const, color: 'var(--violet)',
             }}>
               ✿ FAQ
             </div>
@@ -285,25 +313,25 @@ export default function LaMethode() {
               fontFamily: '"Playfair Display", serif', fontWeight: 500,
               fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--white)', lineHeight: 1.22,
             }}>
-              Questions <em style={{ fontStyle: 'italic', color: 'var(--rose)' }}>fréquentes</em>
+              Questions <em style={{ fontStyle: 'italic', color: 'var(--violet)' }}>fréquentes</em>
             </h2>
           </div>
-
           <FaqAccordion items={faq} />
         </div>
       </section>
 
-      {/* CTA */}
-      <section style={{ background: 'var(--bg)', padding: '5rem 2rem', textAlign: 'center' }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      {/* CTA — fond vidéo fusionné avec footer */}
+      <section style={{ position: 'relative', background: 'transparent', padding: '3rem 2rem 0', textAlign: 'center' }}>
+        <VideoBackground videoSrc="/videos/30063.mp4" overlay="rgba(6,3,15,.82)" bottomExtend={350} />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '600px', margin: '0 auto' }}>
           <h2 style={{
             fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-            fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--white)',
+            fontSize: '1.8rem', color: 'var(--white)',
             marginBottom: '1rem',
           }}>
             Prêt(e) à découvrir la méthode ?
           </h2>
-          <p style={{ color: 'var(--dim)', fontSize: '.9rem', lineHeight: 1.8, marginBottom: '2rem' }}>
+          <p style={{ color: 'var(--dim)', fontSize: '.88rem', lineHeight: 1.75, maxWidth: '480px', margin: '0 auto 1.75rem' }}>
             Réservez votre séance et commencez votre exploration dès maintenant.
           </p>
           <Link href="/reserver" className="btn-cta-rose" style={{

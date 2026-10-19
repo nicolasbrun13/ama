@@ -2,16 +2,16 @@ import ScrollReveal from '@/components/animations/ScrollReveal';
 
 const cards = [
   { icon:'🌙', title:'Blocages émotionnels', desc:'Peurs inexpliquées, angoisses profondes, tristesse persistante sans cause apparente dans cette vie.' },
-  { icon:'🔄', title:'Schémas répétitifs', desc:'Relations difficiles, échecs récurrents, situations qui se répètent malgré vos efforts conscients.' },
+  { icon:'🔄', title:'Schémas répétitifs', desc:'Sensations de blocage répété, relations difficiles, échecs récurrents, situations qui se répètent malgré vos efforts conscients.' },
   { icon:'🌊', title:'Phobies & traumatismes', desc:'Peurs irrationnelles, phobies inexpliquées, traumas enfouis qui impactent votre quotidien.' },
-  { icon:'⭐', title:'Quête de sens', desc:"Comprendre votre chemin de vie, votre mission d'âme et le sens profond de vos expériences." },
-  { icon:'🔗', title:'Liens karmiques', desc:'Libérer les liens karmiques ou intergénérationnels qui influencent votre vie actuelle.' },
+  { icon:'⭐', title:'Quête de sens', desc:'Comprendre votre existence et remettre du sens sur ces expériences.' },
+  { icon:'🔗', title:'Liens transgénérationnels', desc:'Libérer les liens toxiques qui influencent votre vie actuelle.' },
   { icon:'🌸', title:'Confiance & alignement', desc:'Retrouver confiance en vous et vous aligner avec votre être profond pour vivre pleinement.' },
 ];
 
 export default function BienfaitsSection() {
   return (
-    <section style={{ position:'relative', background:'var(--bg-soft)', padding:'6rem 2rem' }} className="sec-ambient">
+    <section style={{ position:'relative', background:'var(--bg-soft)', padding:'3rem 2rem 5rem' }} className="sec-ambient">
       <div style={{ maxWidth:'1200px', margin:'0 auto' }}>
         <ScrollReveal direction="up">
           <div style={{ textAlign:'center', marginBottom:'.75rem', display:'flex', justifyContent:'center' }}>
@@ -38,7 +38,7 @@ export default function BienfaitsSection() {
       </div>
       <style>{`
         .card-stretch { height: 100%; }
-        .card-breath:hover .benef-orb { background:rgba(200,88,122,.2); border-color:rgba(200,88,122,.5); box-shadow:0 0 18px rgba(200,88,122,.3); transform:scale(1.1) rotate(12deg); }
+        .card-breath:hover .benef-orb { background:rgba(255,197,211,.2); border-color:rgba(255,197,211,.5); box-shadow:0 0 18px rgba(255,197,211,.3); transform:scale(1.1) rotate(12deg); }
         @media(max-width:767px){ div[style*="repeat(3,1fr)"]{ grid-template-columns:1fr !important; } }
         @media(min-width:640px) and (max-width:900px){ div[style*="repeat(3,1fr)"]{ grid-template-columns:repeat(2,1fr) !important; } }
       `}</style>

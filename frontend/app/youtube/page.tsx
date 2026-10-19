@@ -79,10 +79,10 @@ function VideoCard({ video, featured: isFeatured = false }: { video: Video; feat
             width: isFeatured ? '64px' : '44px',
             height: isFeatured ? '64px' : '44px',
             borderRadius: '50%',
-            background: 'rgba(200,88,122,.85)',
+            background: 'rgba(255,197,211,.85)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: isFeatured ? '1.4rem' : '1rem', color: '#000',
-            boxShadow: '0 4px 20px rgba(200,88,122,.4)',
+            boxShadow: '0 4px 20px rgba(255,197,211,.4)',
           }}>▶</div>
         </div>
       </div>
@@ -92,7 +92,7 @@ function VideoCard({ video, featured: isFeatured = false }: { video: Video; feat
         {video.tag && (
           <span style={{
             display: 'inline-block', marginBottom: '.5rem',
-            background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.2)',
+            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.2)',
             color: 'var(--rose)', fontSize: '.58rem', letterSpacing: '.12em',
             textTransform: 'uppercase', padding: '.18rem .6rem', borderRadius: '50px',
           }}>
@@ -124,14 +124,14 @@ export default function YouTubePage() {
       {/* Sub-hero */}
       <section style={{
         position: 'relative',
-        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
-        minHeight: '360px', display: 'flex', alignItems: 'center',
+        padding: '4.5rem 2rem', overflow: 'hidden',
+        minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
-        <VideoBackground videoSrc="https://assets.mixkit.co/videos/10418/10418-1080.mp4" overlay="rgba(6,3,15,.70)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+        <VideoBackground videoSrc="/videos/10418.mp4" overlay="rgba(6,3,15,.70)" />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.22)',
+            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',
             fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
             textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -139,14 +139,15 @@ export default function YouTubePage() {
             ▶ YouTube
           </div>
           <h1 style={{
-            fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-            fontSize: 'clamp(2.2rem, 4vw, 3.4rem)', fontWeight: 400,
-            color: 'var(--white)', lineHeight: 1.2, marginBottom: '1rem',
+            fontFamily: 'Nunito, sans-serif', fontStyle: 'normal',
+            fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 700,
+            color: 'var(--white)', lineHeight: 1.15, marginBottom: '0.5rem',
+            letterSpacing: '-.01em',
           }}>
             La chaîne YouTube
           </h1>
           <p style={{
-            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '580px', margin: '0 auto',
+            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '580px',
           }}>
             Séances de clients, explications de la méthode HRE et explorations de l&apos;inconscient.
           </p>
@@ -156,35 +157,150 @@ export default function YouTubePage() {
       {/* Separator */}
       <div style={{
         height: '1px',
-        background: 'linear-gradient(to right, transparent 0%, rgba(200,88,122,.7) 25%, rgba(200,88,122,.7) 75%, transparent 100%)',
+        background: 'linear-gradient(to right, transparent 0%, rgba(255,197,211,.7) 25%, rgba(255,197,211,.7) 75%, transparent 100%)',
       }} />
 
       {/* Featured video */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
-        <div style={{ maxWidth: '860px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '3rem 2rem 5rem' }}>
+        <div style={{ maxWidth: '920px', margin: '0 auto' }}>
+
+          <div style={{ marginBottom: '1.75rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.12)',
-              borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1rem',
+              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
+              borderRadius: '50px', padding: '.35rem 1rem',
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
               textTransform: 'uppercase' as const, color: 'var(--rose)',
             }}>
               ✿ Dernière vidéo
             </div>
           </div>
-          <VideoCard video={featured} featured />
+
+          <a
+            href={YT_WATCH(featured.id)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="featured-card"
+            style={{
+              display: 'flex', textDecoration: 'none',
+              background: 'rgba(12,6,32,.85)',
+              border: '1px solid rgba(255,197,211,.42)',
+              borderRadius: '14px', overflow: 'hidden',
+              transition: 'border-color .3s, box-shadow .3s',
+              boxShadow: '0 16px 64px rgba(160,52,96,.28), 0 0 80px rgba(255,197,211,.06), inset 0 1px 0 rgba(255,255,255,.05)',
+            }}
+          >
+            {/* Thumbnail */}
+            <div style={{ position: 'relative', width: '495px', flexShrink: 0, aspectRatio: '16/9', background: 'rgba(6,3,15,.9)' }}>
+              <Image
+                src={featured.customThumb ?? YT_THUMB(featured.id)}
+                alt={featured.title}
+                fill
+                style={{ objectFit: 'cover' }}
+                sizes="495px"
+              />
+              {/* Badge "Dernière vidéo" */}
+              <div style={{
+                position: 'absolute', top: '14px', left: '14px', zIndex: 1,
+                background: 'linear-gradient(135deg,#A03460,#6A1030)',
+                color: 'white', borderRadius: '50px',
+                padding: '.28rem .8rem',
+                fontSize: '.56rem', fontWeight: 700, letterSpacing: '.16em',
+                textTransform: 'uppercase' as const,
+                boxShadow: '0 4px 16px rgba(160,52,96,.55)',
+              }}>✦ Dernière vidéo</div>
+              {/* Play overlay */}
+              <div className="featured-play" style={{
+                position: 'absolute', inset: 0,
+                background: 'rgba(6,3,15,.35)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                opacity: 0, transition: 'opacity .25s',
+              }}>
+                <div style={{
+                  width: '64px', height: '64px', borderRadius: '50%',
+                  background: 'rgba(255,197,211,.85)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1.4rem', color: '#000',
+                  boxShadow: '0 4px 24px rgba(255,197,211,.5)',
+                }}>▶</div>
+              </div>
+            </div>
+
+            {/* Info panel */}
+            <div style={{
+              flex: 1,
+              padding: '2rem 2.25rem',
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+              borderLeft: '1px solid rgba(255,197,211,.18)',
+              background: 'linear-gradient(135deg, rgba(30,8,68,.92) 0%, rgba(8,3,24,.96) 100%)',
+              position: 'relative', overflow: 'hidden',
+            }}>
+              {/* Ambient glow */}
+              <div style={{
+                position: 'absolute', top: '-50px', right: '-50px',
+                width: '260px', height: '260px', borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(255,197,211,.16) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }} />
+
+              <div>
+                {featured.tag && (
+                  <span style={{
+                    display: 'inline-block', marginBottom: '1rem',
+                    background: 'rgba(255,197,211,.1)', border: '1px solid rgba(255,197,211,.25)',
+                    color: 'var(--rose)', fontSize: '.6rem', letterSpacing: '.16em',
+                    textTransform: 'uppercase', padding: '.22rem .75rem', borderRadius: '50px',
+                  }}>
+                    {featured.tag}
+                  </span>
+                )}
+                <h2 style={{
+                  fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
+                  fontSize: 'clamp(1.3rem, 2vw, 1.65rem)', fontWeight: 400,
+                  color: 'var(--white)', lineHeight: 1.3, marginBottom: '.75rem',
+                }}>
+                  {featured.title}
+                </h2>
+                <div style={{
+                  width: '36px', height: '1px',
+                  background: 'linear-gradient(to right, var(--rose), transparent)',
+                  marginBottom: '.75rem',
+                }} />
+              </div>
+
+              <div>
+                <p style={{
+                  fontSize: '.72rem', color: 'rgba(253,240,247,.35)',
+                  letterSpacing: '.08em', marginBottom: '1.5rem',
+                }}>
+                  {featured.date}
+                </p>
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+                  background: 'linear-gradient(135deg,#A03460,#6A1030)',
+                  color: 'white', borderRadius: '50px',
+                  padding: '.6rem 1.4rem',
+                  fontSize: '.72rem', fontWeight: 700, letterSpacing: '.12em',
+                  textTransform: 'uppercase' as const,
+                  boxShadow: '0 4px 20px rgba(160,52,96,.35)',
+                }}>
+                  ▶ Regarder
+                </div>
+              </div>
+            </div>
+          </a>
+
         </div>
       </section>
 
       {/* Content videos */}
-      <section style={{ background: 'var(--bg-soft)', padding: '4rem 2rem', position: 'relative' }}>
+      <section id="comprendre" style={{ background: 'var(--bg-soft)', padding: '4rem 2rem', position: 'relative' }}>
         <SacredGeometryBg />
         <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.12)',
+              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
               borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '.75rem',
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
               textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -210,7 +326,7 @@ export default function YouTubePage() {
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.12)',
+              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
               borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '.75rem',
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
               textTransform: 'uppercase' as const, color: 'var(--rose)',
@@ -231,8 +347,9 @@ export default function YouTubePage() {
       </section>
 
       {/* Subscribe CTA */}
-      <section style={{ background: 'var(--bg)', padding: '4.5rem 2rem', textAlign: 'center' }}>
-        <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+      <section style={{ position: 'relative', background: 'transparent', padding: '4.5rem 2rem 0', textAlign: 'center' }}>
+        <VideoBackground videoSrc="/videos/10418.mp4" overlay="rgba(6,3,15,.82)" bottomExtend={350} />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '500px', margin: '0 auto' }}>
           <h2 style={{
             fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
             fontSize: '1.8rem', color: 'var(--white)', marginBottom: '1rem',
@@ -254,7 +371,7 @@ export default function YouTubePage() {
               fontSize: '.8rem', fontWeight: 700, letterSpacing: '.12em',
               textTransform: 'uppercase' as const,
               padding: '.9rem 2.2rem', borderRadius: '50px',
-              boxShadow: '0 8px 32px rgba(200,88,122,.38)',
+              boxShadow: '0 8px 32px rgba(255,197,211,.38)',
             }}
           >
             ▶ S&apos;abonner →
@@ -263,9 +380,13 @@ export default function YouTubePage() {
       </section>
 
       <style>{`
-        .yt-card:hover { border-color: rgba(200,88,122,.32) !important; transform: translateY(-3px); }
+        .yt-card:hover { border-color: rgba(255,197,211,.32) !important; transform: translateY(-3px); }
         .yt-card:hover .yt-play-overlay { opacity: 1 !important; }
+        .featured-card:hover { border-color: rgba(255,197,211,.6) !important; box-shadow: 0 24px 80px rgba(160,52,96,.45), 0 0 100px rgba(255,197,211,.1) !important; }
+        .featured-card:hover .featured-play { opacity: 1 !important; }
         @media (max-width: 767px) {
+          .featured-card { flex-direction: column !important; }
+          .featured-card > div:first-child { width: 100% !important; aspect-ratio: 16/9; }
           .yt-grid { grid-template-columns: 1fr !important; }
           .yt-testi-grid { grid-template-columns: repeat(2,1fr) !important; }
         }

@@ -114,7 +114,7 @@ export default function ConstellationBg() {
                   <line key={i}
                     x1={c.stars[a].x} y1={c.stars[a].y}
                     x2={c.stars[b].x} y2={c.stars[b].y}
-                    stroke="rgba(200,88,122,1)" strokeWidth="0.6"
+                    stroke="rgba(255,197,211,1)" strokeWidth="0.6"
                   />
                 ))}
                 {c.stars.map((s,i) => (

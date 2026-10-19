@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
           <p><strong>Email :</strong> <a href="mailto:${email}" style="color:#C8587A;">${email}</a></p>
           <p><strong>Sujet :</strong> ${sujet || 'Non précisé'}</p>
           <p><strong>Message :</strong></p>
-          <p style="background:rgba(200,88,122,.06);padding:1rem;border-radius:4px;">${message}</p>
+          <p style="background:rgba(255,197,211,.06);padding:1rem;border-radius:4px;">${message}</p>
         </div>
       `,
     });

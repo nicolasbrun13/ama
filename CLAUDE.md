@@ -5,6 +5,8 @@
 - **Nom légal** : Anne-Marie Blanc
 - **Activité** : Praticienne en Hypnose Régressive Ésotérique (HRE), méthode Calogéro Grifasi
 - **Méthode fondée par** : Calogéro Grifasi (2012) — site source : https://www.calogerogrifasi.com/fr/
+- **Nom de domaine** : amablanc-hre.fr (OVH + Cloudflare)
+- **URL prod** : https://amablanc-hre.fr
 
 ## Stack
 | Couche | Tech | Port |
@@ -17,12 +19,16 @@
 ```bash
 # Frontend
 cd "E:/AGENCE IA/annablanc/frontend" && npm run dev
-# → http://localhost:3202
+# → http://localhost:3202/ama  ← basePath: '/ama' dans next.config.ts
+#   http://localhost:3202/ → 404 normal
 
 # Backend
 cd "E:/AGENCE IA/annablanc/backend" && npm run start:dev
 # → http://localhost:3203
 ```
+
+> **basePath** : le frontend Next.js est configuré avec `basePath: '/ama'`.
+> Toutes les URLs commencent par `/ama`. Ne jamais donner `localhost:3202/` seul.
 
 ## Structure
 

@@ -27,7 +27,7 @@ export default function HeroSection() {
     type Star = { x: number; y: number; r: number; a: number; da: number; vx: number; gold: boolean; pink: boolean };
     function makeLayer(n: number, rMin: number, rMax: number, vx: number, g: number, p: number): Star[] {
       return Array.from({ length: n }, () => ({
-        x: Math.random() * 4000, y: Math.random() * 2000,
+        x: Math.random() * W, y: Math.random() * H,
         r: rMin + Math.random() * (rMax - rMin),
         a: Math.random(), da: (Math.random() - .5) * .006,
         vx: vx * (.8 + Math.random() * .4),
@@ -69,9 +69,16 @@ export default function HeroSection() {
       drawLayer(L1, 10); drawLayer(L2, 25); drawLayer(L3, 45);
       rafId = requestAnimationFrame(tick);
     }
-    rafId = requestAnimationFrame(tick);
+
+    canvas.style.opacity = '0';
+    canvas.style.transition = 'opacity 2s ease';
+    const startTimeout = setTimeout(() => {
+      rafId = requestAnimationFrame(tick);
+      canvas.style.opacity = '1';
+    }, 2000);
 
     return () => {
+      clearTimeout(startTimeout);
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
       hero.removeEventListener('mousemove', onMouseMove);
@@ -138,7 +145,7 @@ export default function HeroSection() {
       className="hero-section"
       style={{ position:'relative', overflow:'hidden', minHeight:'100vh', display:'flex', alignItems:'center', padding:'7rem 2rem 5rem' }}
     >
-      <VideoBackground overlay="rgba(6,3,15,.65)" />
+      <VideoBackground overlay="rgba(6,3,15,.65)" playbackRate={1} />
 
       {/* Nebulae */}
       <div className="neb neb-1" />

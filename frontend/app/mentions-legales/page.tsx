@@ -36,41 +36,24 @@ const Li = ({ children }: { children: ReactNode }) => (
 export default function MentionsLegales() {
   return (
     <main>
-      {/* Sub-hero */}
-      <section style={{
-        position: 'relative',
-        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
-        minHeight: '360px', display: 'flex', alignItems: 'center',
-      }}>
-        <VideoBackground videoSrc="https://assets.mixkit.co/videos/30063/30063-1080.mp4" overlay="rgba(6,3,15,.80)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto', width: '100%' }}>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-            background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
-            borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',
-            fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
-            textTransform: 'uppercase' as const, color: 'var(--rose)',
-          }}>
-            ✿ Informations légales
-          </div>
-          <h1 style={{
-            fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-            fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 400,
-            color: 'var(--white)', lineHeight: 1.2,
-          }}>
-            Mentions légales &amp; CGV
-          </h1>
-        </div>
-      </section>
-
       {/* Content */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
+      <section style={{ position: 'relative', background: 'transparent', padding: '3rem 2rem 0' }}>
+        <VideoBackground videoSrc="/videos/30063.mp4" overlay="rgba(6,3,15,.88)" bottomExtend={350} />
         <div style={{
+          position: 'relative', zIndex: 2,
           maxWidth: '820px', margin: '0 auto',
           background: 'rgba(18,8,48,.5)', border: '1px solid var(--border)',
           borderRadius: '10px', padding: 'clamp(2rem,5vw,3.5rem)',
         }}>
 
+          <h1 style={{
+            fontFamily: 'Nunito, sans-serif', fontStyle: 'normal',
+            fontSize: 'clamp(1.3rem, 2.5vw, 1.8rem)', fontWeight: 700,
+            color: 'var(--white)', lineHeight: 1.15, marginBottom: '.35rem',
+            letterSpacing: '-.01em',
+          }}>
+            Mentions légales &amp; CGV
+          </h1>
           <p style={{ fontSize: '.78rem', color: 'rgba(253,240,247,.3)', letterSpacing: '.1em', marginBottom: '2.5rem' }}>
             Dernière mise à jour : octobre 2026
           </p>
@@ -95,8 +78,11 @@ export default function MentionsLegales() {
           {/* ── II. Hébergement ── */}
           <Section title="II. Hébergement">
             <P>
-              Ce site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.
-              Pour toute question relative à l&apos;hébergement : <a href="https://vercel.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>vercel.com</a>
+              Ce site est hébergé par OVHcloud, 2 rue Kellermann, 59100 Roubaix, France.
+              Pour toute question relative à l&apos;hébergement : <a href="https://www.ovhcloud.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>ovhcloud.com</a>
+            </P>
+            <P>
+              Communication et développement : <a href="https://agence-stylia.fr" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--rose)', textDecoration: 'none' }}>agence-stylia.fr</a>
             </P>
           </Section>
 
@@ -178,29 +164,20 @@ export default function MentionsLegales() {
               Modalités de paiement
             </h3>
             <P>
-              Le règlement s&apos;effectue par virement bancaire ou via les modes de paiement précisés lors de la réservation. Le paiement intégral est dû avant la séance, sauf accord contraire.
+              Le règlement s&apos;effectue via PayPal, en paiement comptant ou en 4 fois. Le paiement intégral (ou le premier versement) est dû avant la séance.
             </P>
 
             <h3 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.65rem', marginTop: '1.25rem' }}>
               Annulation et report
             </h3>
             <P>
-              Toute annulation doit être notifiée par e-mail :
+              Toute annulation ou demande de report doit être notifiée par e-mail à <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a> dans les meilleurs délais.
             </P>
-            <ul style={{ listStyle: 'none', padding: '0 0 0 .5rem', marginBottom: '.75rem' }}>
-              <Li>Plus de 48h avant la séance : remboursement intégral ou report sans frais</Li>
-              <Li>Entre 24h et 48h avant : report possible une fois sans frais supplémentaires</Li>
-              <Li>Moins de 24h avant ou absence sans préavis : la séance est due en totalité</Li>
-            </ul>
             <P>
-              En cas d&apos;annulation par la praticienne, le Client sera remboursé intégralement ou pourra reporter la séance à une date de son choix. En cas de force majeure dûment justifiée (maladie grave, accident, deuil), un remboursement ou un report pourra être accordé.
+              En cas de force majeure (maladie soudaine, accident, décès d&apos;un proche, catastrophe naturelle ou tout événement imprévisible et indépendant de la volonté des parties), l&apos;annulation ou le report de la séance sera accepté sans pénalité, sur présentation d&apos;un justificatif si possible.
             </P>
-
-            <h3 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.65rem', marginTop: '1.25rem' }}>
-              Droit de rétractation
-            </h3>
             <P>
-              Conformément à l&apos;article L.221-18 du Code de la consommation, le Client dispose d&apos;un délai de 14 jours à compter de la conclusion du contrat pour exercer son droit de rétractation, sauf si la prestation a été réalisée avec son accord exprès avant l&apos;expiration de ce délai.
+              En dehors des cas de force majeure, les conditions d&apos;annulation et de report sont définies dans les présentes CGV.
             </P>
 
             <h3 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.65rem', marginTop: '1.25rem' }}>
@@ -219,6 +196,9 @@ export default function MentionsLegales() {
             <P>
               L&apos;ensemble des informations partagées lors des séances est traité avec la plus stricte confidentialité. Anne-Marie Blanc est tenue au secret professionnel.
             </P>
+            <P>
+              Les séances peuvent faire l&apos;objet d&apos;un enregistrement audio ou vidéo et d&apos;une diffusion publique uniquement avec l&apos;autorisation écrite et expresse du Client. Sans accord explicite, aucune séance ne peut être enregistrée ni partagée.
+            </P>
 
             <h3 style={{ fontSize: '.88rem', fontWeight: 700, color: 'var(--white)', marginBottom: '.65rem', marginTop: '1.25rem' }}>
               Droit applicable et juridiction compétente
@@ -231,11 +211,8 @@ export default function MentionsLegales() {
           {/* ── VII. Contact ── */}
           <Section title="VII. Contact">
             <P>
-              Pour toute question relative aux présentes mentions légales ou conditions générales de vente :
+              <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a>
             </P>
-            <ul style={{ listStyle: 'none', padding: '0 0 0 .5rem' }}>
-              <Li>Par e-mail : <a href="mailto:anne.marie.blanc@gmail.com" style={{ color: 'var(--rose)', textDecoration: 'none' }}>anne.marie.blanc@gmail.com</a></Li>
-            </ul>
           </Section>
 
         </div>

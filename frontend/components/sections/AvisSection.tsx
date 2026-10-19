@@ -78,7 +78,7 @@ export default function AvisSection() {
 
   const btnStyle: React.CSSProperties = {
     width: '40px', height: '40px', borderRadius: '50%',
-    background: 'rgba(200,88,122,.07)', border: '1px solid rgba(200,88,122,.28)',
+    background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.28)',
     color: 'var(--rose)', cursor: 'pointer',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: '.82rem', transition: 'background .2s', fontFamily: 'monospace',
@@ -94,8 +94,8 @@ export default function AvisSection() {
   const translateX = `translateX(-${active * (100 / N)}%)`;
 
   return (
-    <section id="avis" style={{ position: 'relative', overflow: 'hidden', padding: '6rem 2rem' }}>
-      <VideoBackground overlay="rgba(6,3,15,.78)" />
+    <section id="avis" style={{ position: 'relative', padding: '3rem 2rem 2rem' }}>
+      <VideoBackground overlay="rgba(6,3,15,.78)" bottomExtend={350} playbackRate={1} />
 
       <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto' }}>
 
@@ -140,7 +140,7 @@ export default function AvisSection() {
                   <div style={{
                     height: '100%',
                     background: 'linear-gradient(145deg, rgba(22,10,58,.97) 0%, rgba(14,6,38,.93) 100%)',
-                    border: '1px solid rgba(200,88,122,.22)',
+                    border: '1px solid rgba(255,197,211,.22)',
                     borderRadius: '12px',
                     padding: '1.65rem',
                     display: 'flex',
@@ -156,7 +156,7 @@ export default function AvisSection() {
                     </div>
 
                     {/* Rose line */}
-                    <div style={{ width: '28px', height: '1px', background: 'linear-gradient(90deg, var(--rose), rgba(200,88,122,0))' }} />
+                    <div style={{ width: '28px', height: '1px', background: 'linear-gradient(90deg, var(--rose), rgba(255,197,211,0))' }} />
 
                     {/* Text */}
                     <p style={{ fontSize: '.82rem', fontStyle: 'italic', color: 'var(--white)', lineHeight: 1.82, margin: 0, flex: 1 }}>
@@ -164,13 +164,13 @@ export default function AvisSection() {
                     </p>
 
                     {/* Author + tag */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '.5rem', borderTop: '1px solid rgba(200,88,122,.08)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '.5rem', borderTop: '1px solid rgba(255,197,211,.08)' }}>
                       <div>
                         <div style={{ fontSize: '.78rem', fontWeight: 700, color: 'var(--white)' }}>{a.author}</div>
                         <div style={{ fontSize: '.6rem', color: 'rgba(253,240,247,.28)', letterSpacing: '.08em', marginTop: '.12rem' }}>Avis Google ★</div>
                       </div>
                       <span style={{
-                        background: 'rgba(200,88,122,.08)', border: '1px solid rgba(200,88,122,.15)',
+                        background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.15)',
                         color: 'var(--rose)', fontSize: '.58rem', letterSpacing: '.1em',
                         textTransform: 'uppercase' as const, padding: '.18rem .55rem', borderRadius: '50px',
                         whiteSpace: 'nowrap' as const,
@@ -195,7 +195,7 @@ export default function AvisSection() {
                   style={{
                     width: i === active ? '20px' : '7px',
                     height: '7px', borderRadius: '4px',
-                    background: i === active ? 'var(--rose)' : 'rgba(200,88,122,.22)',
+                    background: i === active ? 'var(--rose)' : 'rgba(255,197,211,.22)',
                     border: 'none', cursor: 'pointer',
                     transition: 'width .3s, background .3s', padding: 0,
                   }}

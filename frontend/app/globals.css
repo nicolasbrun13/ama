@@ -5,12 +5,14 @@
 @tailwind utilities;
 
 :root {
-  --rose:       #C8587A;
-  --rose-deep:  #A03460;
-  --rose-neon:  #D4607A;
-  --rose-glow:  rgba(200,88,122,.15);
-  --rose-dim:   rgba(200,88,122,.08);
-  --border:     rgba(200,88,122,.12);
+  --rose:       #FFC5D3;
+  --rose-deep:  #E896A8;
+  --rose-neon:  #FFCFDC;
+  --rose-glow:  rgba(255,197,211,.15);
+  --rose-dim:   rgba(255,197,211,.08);
+  --border:     rgba(255,197,211,.12);
+  --violet:      #C4B0F5;
+  --violet-deep: #8B6DC8;
   --gold:       #E8BF50;
   --gold-light: #F5D878;
   --bg:         #06030F;
@@ -45,7 +47,7 @@ body {
 }
 .sep-line::before, .sep-line::after {
   content: ''; flex: 1; height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(200,88,122,.6) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,197,211,.6) 50%, transparent 100%);
   background-size: 200% 1px;
   animation: sepFlow 3.5s linear infinite;
 }
@@ -60,12 +62,12 @@ body {
 .card-breath:hover {
   transition: box-shadow .2s ease, border-color .2s ease, background .2s ease, transform .2s ease;
   transform: translateY(-5px);
-  border-color: rgba(200,88,122,.4) !important;
-  box-shadow: 0 8px 32px rgba(200,88,122,.18), 0 0 60px rgba(200,88,122,.08) !important;
+  border-color: rgba(255,197,211,.4) !important;
+  box-shadow: 0 8px 32px rgba(255,197,211,.18), 0 0 60px rgba(255,197,211,.08) !important;
 }
 @keyframes cardBreath {
-  0%,100% { box-shadow: 0 4px 20px rgba(200,88,122,.04); }
-  50%      { box-shadow: 0 4px 40px rgba(200,88,122,.14), 0 0 60px rgba(200,88,122,.06); }
+  0%,100% { box-shadow: 0 4px 20px rgba(255,197,211,.04); }
+  50%      { box-shadow: 0 4px 40px rgba(255,197,211,.14), 0 0 60px rgba(255,197,211,.06); }
 }
 .card-breath:nth-child(2) { animation-delay: -1s; }
 .card-breath:nth-child(3) { animation-delay: -2s; }
@@ -82,7 +84,7 @@ body {
 /* Ambient section glow */
 .sec-ambient::before {
   content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
-  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(200,88,122,.04) 0%, transparent 75%);
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(255,197,211,.04) 0%, transparent 75%);
   animation: secAmb 12s ease-in-out infinite;
 }
 @keyframes secAmb { 0%,100%{opacity:.5;transform:scale(1)} 50%{opacity:1;transform:scale(1.2)} }
@@ -91,7 +93,7 @@ body {
 .callout-glow { animation: callGlow 4s ease-in-out infinite; }
 @keyframes callGlow {
   0%,100%{border-left-color:var(--rose);box-shadow:none}
-  50%{border-left-color:var(--rose-neon);box-shadow:-5px 0 18px rgba(212,96,122,.25)}
+  50%{border-left-color:var(--rose-neon);box-shadow:-5px 0 18px rgba(255,207,220,.25)}
 }
 
 /* Video background */
@@ -149,12 +151,12 @@ body {
 }
 .btn-cta-rose:hover {
   transform: translateY(-3px) !important;
-  box-shadow: 0 14px 48px rgba(200,88,122,.56) !important;
+  box-shadow: 0 14px 48px rgba(255,197,211,.56) !important;
   filter: brightness(1.08);
 }
 .btn-cta-rose:active {
   transform: translateY(-1px) !important;
-  box-shadow: 0 8px 28px rgba(200,88,122,.42) !important;
+  box-shadow: 0 8px 28px rgba(255,197,211,.42) !important;
 }
 
 /* Bouton contour (ghost) */
@@ -164,9 +166,9 @@ body {
 .btn-cta-ghost:hover {
   transform: translateY(-3px) !important;
   border-color: var(--rose) !important;
-  box-shadow: 0 6px 28px rgba(200,88,122,.22) !important;
+  box-shadow: 0 6px 28px rgba(255,197,211,.22) !important;
   color: var(--white) !important;
-  background: rgba(200,88,122,.06) !important;
+  background: rgba(255,197,211,.06) !important;
 }
 .btn-cta-ghost:active {
   transform: translateY(-1px) !important;

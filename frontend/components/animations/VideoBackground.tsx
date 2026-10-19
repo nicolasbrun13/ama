@@ -1,14 +1,20 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-const DEFAULT_VIDEO = 'https://assets.mixkit.co/videos/1610/1610-1080.mp4';
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const DEFAULT_VIDEO = '/videos/1610.mp4';
 
 interface Props {
   overlay?: string;
   videoSrc?: string;
+  rotate?: number;
+  startDelay?: number;
+  bottomExtend?: number; // px to extend below the container
+  playbackRate?: number;
 }
 
-export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc = DEFAULT_VIDEO }: Props) {
+export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc = DEFAULT_VIDEO, rotate, startDelay = 0, bottomExtend, playbackRate = 0.5 }: Props) {
+  const resolvedSrc = videoSrc.startsWith('http') ? videoSrc : `${BASE}${videoSrc}`;
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -47,6 +53,7 @@ export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc
     let pool: Star[] = [];
     let lastSpawn = 0;
     let nextDelay = rnd(300, 900);
+    let startTime: number | null = null;
     let rafId: number;
 
     resize();
@@ -57,8 +64,9 @@ export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc
     else window.addEventListener('resize', resize);
 
     function loop(t: number) {
+      if (startTime === null) startTime = t;
       ctx.clearRect(0, 0, W, H);
-      if (t - lastSpawn > nextDelay) {
+      if (t - startTime >= startDelay && t - lastSpawn > nextDelay) {
         pool.push(makeStar());
         lastSpawn = t;
         nextDelay = rnd(900, 2400);
@@ -92,9 +100,13 @@ export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc
   }, []);
 
   return (
-    <div className="vid-bg" style={{ '--vid-overlay': overlay } as React.CSSProperties}>
-      <video autoPlay muted loop playsInline suppressHydrationWarning>
-        <source src={videoSrc} type="video/mp4" suppressHydrationWarning />
+    <div className="vid-bg" style={{ '--vid-overlay': overlay, ...(bottomExtend ? { bottom: `-${bottomExtend}px` } : {}) } as React.CSSProperties}>
+      <video
+        autoPlay muted loop playsInline suppressHydrationWarning
+        style={rotate ? { transform: `rotate(${rotate}deg)`, transformOrigin: 'center' } : undefined}
+        onLoadedMetadata={(e) => { (e.target as HTMLVideoElement).playbackRate = playbackRate; }}
+      >
+        <source src={resolvedSrc} type="video/mp4" suppressHydrationWarning />
       </video>
       <canvas ref={canvasRef} className="vid-canvas" />
     </div>

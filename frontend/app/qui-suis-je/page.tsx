@@ -33,11 +33,11 @@ export default function QuiSuisJe() {
       {/* Sub-hero */}
       <section style={{
         position: 'relative',
-        padding: '6rem 2rem', textAlign: 'center', overflow: 'hidden',
-        minHeight: '360px', display: 'flex', alignItems: 'center',
+        padding: '4.5rem 2rem', overflow: 'hidden',
+        minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
-        <VideoBackground videoSrc="https://assets.mixkit.co/videos/30073/30073-1080.mp4" overlay="rgba(6,3,15,.72)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '800px', margin: '0 auto', width: '100%' }}>
+        <VideoBackground videoSrc="/videos/30073.mp4" playbackRate={0.7} overlay="rgba(6,3,15,.72)" />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
@@ -48,14 +48,15 @@ export default function QuiSuisJe() {
             ✿ Qui suis-je
           </div>
           <h1 style={{
-            fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-            fontSize: 'clamp(2.2rem, 4vw, 3.4rem)', fontWeight: 400,
-            color: 'var(--white)', lineHeight: 1.2, marginBottom: '1rem',
+            fontFamily: 'Nunito, sans-serif', fontStyle: 'normal',
+            fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', fontWeight: 700,
+            color: 'var(--white)', lineHeight: 1.15, marginBottom: '0.5rem',
+            letterSpacing: '-.01em',
           }}>
             Anne-Marie Blanc
           </h1>
           <p style={{
-            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '560px', margin: '0 auto',
+            fontSize: '.95rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '560px',
           }}>
             Praticienne en Hypnose Régressive Ésotérique, méthode Calogéro Grifasi
           </p>
@@ -70,17 +71,17 @@ export default function QuiSuisJe() {
       }} />
 
       {/* Main content */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem' }}>
+      <section style={{ background: 'var(--bg-mid)', padding: '3rem 2rem 5rem' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
 
           {/* Rangée : photo à gauche + 3 premiers paragraphes à droite */}
           <div className="qsj-flex" style={{ display: 'flex', gap: '4rem', alignItems: 'flex-start', marginBottom: '1.1rem' }}>
 
             {/* Photo */}
-            <div className="qsj-photo" style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className="qsj-photo" style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '5rem' }}>
               <div style={{
-                position: 'relative', width: '280px', height: '380px',
-                borderRadius: '140px 140px 100px 100px',
+                position: 'relative', width: '240px', height: '330px',
+                borderRadius: '12px',
                 border: '1px solid rgba(255,197,211,.3)',
                 boxShadow: '0 24px 80px rgba(0,0,0,.7), 0 0 60px rgba(255,197,211,.08)',
                 overflow: 'hidden',
@@ -145,7 +146,7 @@ export default function QuiSuisJe() {
       </section>
 
       {/* Values */}
-      <section style={{ background: 'var(--bg-soft)', padding: '5rem 2rem', position: 'relative' }}>
+      <section style={{ background: 'var(--bg-soft)', padding: '3rem 2rem 5rem', position: 'relative' }}>
         <FloatingStars />
         <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -192,16 +193,17 @@ export default function QuiSuisJe() {
       </section>
 
       {/* CTA */}
-      <section style={{ background: 'var(--bg-mid)', padding: '5rem 2rem', textAlign: 'center' }}>
-        <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <section style={{ position: 'relative', background: 'transparent', padding: '3rem 2rem 0', textAlign: 'center' }}>
+        <VideoBackground videoSrc="/videos/30073.mp4" playbackRate={0.7} overlay="rgba(6,3,15,.82)" bottomExtend={350} />
+        <div style={{ position: 'relative', zIndex: 2, maxWidth: '600px', margin: '0 auto' }}>
           <h2 style={{
             fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-            fontSize: 'clamp(1.8rem, 3vw, 2.4rem)', color: 'var(--white)',
+            fontSize: '1.8rem', color: 'var(--white)',
             marginBottom: '1rem',
           }}>
             Prêt(e) à explorer ?
           </h2>
-          <p style={{ color: 'var(--dim)', fontSize: '.9rem', lineHeight: 1.8, marginBottom: '2rem' }}>
+          <p style={{ color: 'var(--dim)', fontSize: '.88rem', lineHeight: 1.75, marginBottom: '1.75rem' }}>
             Réservez votre séance ou découvrez la méthode en détail.
           </p>
           <Link href="/reserver" className="btn-cta-rose" style={{

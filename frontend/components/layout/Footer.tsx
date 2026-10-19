@@ -1,7 +1,25 @@
+'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-const MAPS_URL = 'https://www.google.com/maps/search/Anne-Marie+Blanc+hypnose+Libourne';
-const YT_URL   = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
+const YT_URL = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
+
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const PAGE_RATES: Record<string, number> = {
+  '/':            1,
+  '/reserver':    1,
+  '/qui-suis-je': 0.7,
+};
+const PAGE_VIDEOS: Record<string, string> = {
+  '/':                 `${BASE}/videos/1610.mp4`,
+  '/qui-suis-je':      `${BASE}/videos/30073.mp4`,
+  '/la-methode':       `${BASE}/videos/30063.mp4`,
+  '/youtube':          `${BASE}/videos/10418.mp4`,
+  '/contact':          `${BASE}/videos/4034.mp4`,
+  '/reserver':         `${BASE}/videos/1610.mp4`,
+  '/mentions-legales': `${BASE}/videos/30063.mp4`,
+};
 
 function YouTubeLogo() {
   return (
@@ -13,10 +31,61 @@ function YouTubeLogo() {
 }
 
 export default function Footer() {
+  const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
+  // Strip the /ama basePath prefix if present
+  const cleanPath = pathname.replace(/^\/ama/, '') || '/';
+
+  const scrollTop = (href: string) => (e: { preventDefault(): void }) => {
+    if (href === cleanPath) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+  const videoSrc = PAGE_VIDEOS[cleanPath] ?? PAGE_VIDEOS['/'];
+  const videoRate = PAGE_RATES[cleanPath] ?? 0.5;
+
+  const noVideo = ['/', '/la-methode', '/qui-suis-je', '/youtube', '/mentions-legales'].includes(cleanPath);
+
   return (
-    <footer style={{ background:'#030208', borderTop:'1px solid var(--border)', padding:'3.5rem 2rem 2rem' }}>
-      <div style={{ maxWidth:'1200px', margin:'0 auto' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'2fr 1fr 1fr', gap:'3rem', marginBottom:'2rem' }}>
+    <footer style={{ background: noVideo ? 'transparent' : '#030208', borderTop: noVideo ? 'none' : '1px solid var(--border)', padding:'3.5rem 2rem 2rem', position:'relative', overflow:'hidden' }}>
+
+      {/* Video background — only on pages where last section doesn't extend into footer */}
+      {mounted && !noVideo && (
+        <>
+          <video
+            key={videoSrc}
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+            onLoadedMetadata={(e) => { (e.target as HTMLVideoElement).playbackRate = videoRate; }}
+            style={{
+              position: 'absolute', inset: 0,
+              width: '100%', height: '100%',
+              objectFit: 'cover',
+              opacity: 0.40,
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+
+          {/* Overlay to darken further */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'rgba(3,2,8,.58)',
+            zIndex: 1, pointerEvents: 'none',
+          }} />
+        </>
+      )}
+
+      <div style={{ maxWidth:'1200px', margin:'0 auto', position:'relative', zIndex:2 }}>
+        <div style={{ display:'grid', gridTemplateColumns:'2fr auto', gap:'3rem', marginBottom:'2rem' }}>
 
           {/* Brand */}
           <div>
@@ -44,13 +113,16 @@ export default function Footer() {
             </div>
           </div>
 
+          {/* Navigation + Contact groupés */}
+          <div style={{ display:'flex', gap:'2.5rem' }}>
+
           {/* Navigation */}
           <div>
             <h4 style={{ fontSize:'.67rem', fontWeight:700, letterSpacing:'.22em', textTransform:'uppercase', color:'var(--gold)', marginBottom:'.9rem' }}>Navigation</h4>
             <ul style={{ listStyle:'none', padding:0 }}>
               {[['/', 'Accueil'], ['/qui-suis-je', 'Qui suis-je'], ['/la-methode', 'La Méthode HRE'], ['/reserver', 'Réserver'], ['/contact', 'Contact']].map(([href, label]) => (
                 <li key={href} style={{ marginBottom:'.45rem' }}>
-                  <Link href={href} style={{ color:'var(--dim)', textDecoration:'none', fontSize:'.8rem', transition:'color .2s' }}>{label}</Link>
+                  <Link href={href} onClick={scrollTop(href)} style={{ color:'var(--dim)', textDecoration:'none', fontSize:'.8rem', transition:'color .2s' }}>{label}</Link>
                 </li>
               ))}
             </ul>
@@ -65,20 +137,21 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+          </div>{/* fin Navigation + Contact groupés */}
         </div>
 
         <div style={{ borderTop:'1px solid rgba(255,255,255,.04)', paddingTop:'1.5rem', display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'.7rem', color:'var(--dim)' }}>
           <span>© 2026 Anne-Marie Blanc · Hypnose HRE · Tous droits réservés</span>
           <span>
-            <Link href="/mentions-legales" style={{ color:'var(--dim)', textDecoration:'none', marginRight:'1rem' }}>Mentions légales &amp; CGV</Link>
-            <Link href="/contact" style={{ color:'var(--dim)', textDecoration:'none' }}>Contact</Link>
+            <Link href="/mentions-legales" onClick={scrollTop('/mentions-legales')} style={{ color:'var(--dim)', textDecoration:'none', marginRight:'1rem' }}>Mentions légales &amp; CGV</Link>
+            <Link href="/contact" onClick={scrollTop('/contact')} style={{ color:'var(--dim)', textDecoration:'none' }}>Contact</Link>
           </span>
         </div>
       </div>
 
       <style>{`
         @media (max-width: 767px) {
-          footer > div > div:first-child { grid-template-columns: 1fr !important; }
+          footer > div:last-child > div:first-child { grid-template-columns: 1fr !important; }
         }
         .footer-yt-btn:hover { border-color: rgba(255,0,0,.5) !important; background: rgba(255,0,0,.07) !important; }
       `}</style>

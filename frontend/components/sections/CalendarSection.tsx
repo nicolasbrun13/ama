@@ -1,12 +1,16 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ScrollReveal from '@/components/animations/ScrollReveal';
+import { OPEN_ISO, OPEN_LABEL, isAvailableDate, isHolidayZoneA } from '@/lib/availableDates';
 
 const JOURS  = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 const MOIS   = ['Janvier','Février','Mars','Avril','Mai','Juin',
                 'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+const OPEN_YEAR  = Number(OPEN_ISO.split('-')[0]);
+const OPEN_MONTH = Number(OPEN_ISO.split('-')[1]) - 1; // 0-indexed
 
 function toISO(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -14,36 +18,40 @@ function toISO(y: number, m: number, d: number) {
 
 export default function CalendarSection() {
   const router = useRouter();
-  const [now]  = useState(() => new Date());
+  const now    = new Date();
   const todayY = now.getFullYear();
   const todayM = now.getMonth();
   const todayD = now.getDate();
 
-  const [year,  setYear]  = useState(todayY);
-  const [month, setMonth] = useState(todayM);
+  /* Démarrer directement sur février 2027 si on est avant */
+  const openDate = new Date(OPEN_YEAR, OPEN_MONTH, 1);
+  const initYear  = now < openDate ? OPEN_YEAR  : todayY;
+  const initMonth = now < openDate ? OPEN_MONTH : todayM;
+
+  const [year,  setYear]  = useState(initYear);
+  const [month, setMonth] = useState(initMonth);
 
   const firstDay    = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  // Monday-first offset  (JS getDay: 0=Sun → Mon-first index 6)
-  const startOffset = (firstDay.getDay() + 6) % 7;
+  const startOffset = (firstDay.getDay() + 6) % 7; // lundi en premier
 
   const cells: (number | null)[] = [];
   for (let i = 0; i < startOffset; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
 
-  const isAvailable = (day: number) => {
+  const isCellAvailable = (day: number): boolean => {
+    const today = new Date(todayY, todayM, todayD);
     const d = new Date(year, month, day);
-    const ref = new Date(todayY, todayM, todayD);
-    if (d <= ref) return false;        // past + today
-    if (d.getDay() === 0) return false; // dimanche
-    return true;
+    if (d <= today) return false;
+    return isAvailableDate(toISO(year, month, day));
   };
 
   const isToday = (day: number) =>
     year === todayY && month === todayM && day === todayD;
 
-  const canPrev = year > todayY || (year === todayY && month > todayM);
+  /* Empêcher de revenir avant le mois d'ouverture */
+  const canPrev = year > OPEN_YEAR || (year === OPEN_YEAR && month > OPEN_MONTH);
 
   const prevMonth = () => {
     if (!canPrev) return;
@@ -56,36 +64,36 @@ export default function CalendarSection() {
   };
 
   const handleDay = (day: number) => {
-    if (!isAvailable(day)) return;
-    router.push(`/reserver?date=${toISO(year, month, day)}`);
+    if (!isCellAvailable(day)) return;
+    router.push(`/reserver?date=${toISO(year, month, day)}&time=13:30`);
   };
 
   /* ── Styles ── */
   const navBtnStyle = (active: boolean): React.CSSProperties => ({
     width: '36px', height: '36px', borderRadius: '50%',
-    background: active ? 'rgba(200,88,122,.08)' : 'transparent',
-    border: `1px solid ${active ? 'rgba(200,88,122,.28)' : 'rgba(200,88,122,.08)'}`,
-    color: active ? 'var(--rose)' : 'rgba(200,88,122,.2)',
+    background: active ? 'rgba(255,197,211,.08)' : 'transparent',
+    border: `1px solid ${active ? 'rgba(255,197,211,.28)' : 'rgba(255,197,211,.08)'}`,
+    color: active ? 'var(--rose)' : 'rgba(255,197,211,.2)',
     cursor: active ? 'pointer' : 'default',
     display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: '.82rem', fontFamily: 'monospace', flexShrink: 0,
   });
 
   const dayStyle = (day: number): React.CSSProperties => {
-    const avail = isAvailable(day);
+    const avail = isCellAvailable(day);
     const tod   = isToday(day);
     return {
       height: '40px',
       borderRadius: '8px',
       border: tod
-        ? '1px solid rgba(200,88,122,.6)'
+        ? '1px solid rgba(255,197,211,.6)'
         : avail
-          ? '1px solid rgba(200,88,122,.18)'
+          ? '1px solid rgba(255,197,211,.18)'
           : '1px solid transparent',
       background: tod
-        ? 'rgba(200,88,122,.14)'
+        ? 'rgba(255,197,211,.14)'
         : avail
-          ? 'rgba(200,88,122,.07)'
+          ? 'rgba(255,197,211,.07)'
           : 'transparent',
       color: avail || tod ? 'var(--white)' : 'rgba(253,240,247,.18)',
       fontSize: '.84rem',
@@ -97,7 +105,7 @@ export default function CalendarSection() {
   };
 
   return (
-    <section id="calendrier" style={{ background: 'var(--bg-soft)', padding: '6rem 2rem' }}>
+    <section id="calendrier" style={{ background: 'var(--bg-soft)', padding: '3rem 2rem 5rem' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
 
         {/* Header */}
@@ -110,18 +118,36 @@ export default function CalendarSection() {
           </div>
           <h2 className="section-h2">Choisissez votre <em>date</em></h2>
           <p className="section-lead">
-            Toutes les dates en surbrillance sont disponibles. Cliquez pour pré-remplir votre réservation.
+            Séances disponibles chaque vendredi à 13h30, à partir du {OPEN_LABEL}.
           </p>
         </ScrollReveal>
 
+        {/* Bulle d'information */}
+        <div style={{
+          maxWidth: '480px', margin: '0 auto 1.5rem',
+          background: 'rgba(255,197,211,.05)',
+          border: '1px solid rgba(255,197,211,.2)',
+          borderRadius: '10px',
+          padding: '.85rem 1.2rem',
+          display: 'flex', alignItems: 'flex-start', gap: '.75rem',
+        }}>
+          <span style={{ color: 'var(--rose)', fontSize: '.95rem', flexShrink: 0, marginTop: '.05rem' }}>✦</span>
+          <p style={{ fontSize: '.74rem', color: 'rgba(253,240,247,.5)', lineHeight: 1.7 }}>
+            Les réservations ouvrent le{' '}
+            <strong style={{ color: 'var(--rose)', fontWeight: 600 }}>{OPEN_LABEL}</strong>.
+            Un seul créneau par vendredi : <strong style={{ color: 'rgba(253,240,247,.75)' }}>13h30</strong>.
+            Les vendredis en vacances scolaires zone A ne sont pas disponibles.
+          </p>
+        </div>
+
         {/* Calendar card */}
         <div style={{
-          maxWidth: '480px', margin: '2.5rem auto 0',
+          maxWidth: '480px', margin: '0 auto',
           background: 'linear-gradient(145deg, rgba(22,10,58,.97) 0%, rgba(14,6,38,.93) 100%)',
-          border: '1px solid rgba(200,88,122,.25)',
+          border: '1px solid rgba(255,197,211,.25)',
           borderRadius: '16px',
           padding: '2rem 2rem 1.5rem',
-          boxShadow: '0 20px 70px rgba(0,0,0,.6), 0 0 50px rgba(200,88,122,.07), inset 0 1px 0 rgba(255,255,255,.04)',
+          boxShadow: '0 20px 70px rgba(0,0,0,.6), 0 0 50px rgba(255,197,211,.07), inset 0 1px 0 rgba(255,255,255,.04)',
         }}>
 
           {/* Month navigation */}
@@ -142,7 +168,8 @@ export default function CalendarSection() {
               <div key={j} style={{
                 textAlign: 'center', fontSize: '.6rem', fontWeight: 700,
                 letterSpacing: '.12em', textTransform: 'uppercase',
-                color: 'rgba(253,240,247,.28)', padding: '.25rem 0',
+                color: j === 'Ven' ? 'rgba(255,197,211,.6)' : 'rgba(253,240,247,.28)',
+                padding: '.25rem 0',
               }}>{j}</div>
             ))}
           </div>
@@ -156,10 +183,10 @@ export default function CalendarSection() {
                   <button
                     key={day}
                     onClick={() => handleDay(day)}
-                    disabled={!isAvailable(day) && !isToday(day)}
+                    disabled={!isCellAvailable(day) && !isToday(day)}
                     style={dayStyle(day)}
-                    className={isAvailable(day) ? 'cal-avail' : ''}
-                    aria-label={isAvailable(day) ? `Réserver le ${day} ${MOIS[month]} ${year}` : undefined}
+                    className={isCellAvailable(day) ? 'cal-avail' : ''}
+                    aria-label={isCellAvailable(day) ? `Réserver le ${day} ${MOIS[month]} ${year} à 13h30` : undefined}
                   >
                     {day}
                   </button>
@@ -168,10 +195,9 @@ export default function CalendarSection() {
           </div>
 
           {/* Legend */}
-          <div style={{ display: 'flex', gap: '1.75rem', justifyContent: 'center', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(200,88,122,.08)' }}>
+          <div style={{ display: 'flex', gap: '1.75rem', justifyContent: 'center', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,197,211,.08)' }}>
             {[
-              { color: 'rgba(200,88,122,.14)', border: 'rgba(200,88,122,.35)', label: "Aujourd'hui" },
-              { color: 'rgba(200,88,122,.07)', border: 'rgba(200,88,122,.18)', label: 'Disponible' },
+              { color: 'rgba(255,197,211,.07)', border: 'rgba(255,197,211,.18)', label: 'Vendredi 13h30' },
               { color: 'transparent',          border: 'transparent',          label: 'Indisponible' },
             ].map(l => (
               <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: '.45rem' }}>
@@ -192,8 +218,8 @@ export default function CalendarSection() {
 
       <style>{`
         .cal-avail:hover {
-          background: rgba(200,88,122,.22) !important;
-          border-color: rgba(200,88,122,.5) !important;
+          background: rgba(255,197,211,.22) !important;
+          border-color: rgba(255,197,211,.5) !important;
           color: var(--white) !important;
         }
       `}</style>
