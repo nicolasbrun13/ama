@@ -50,7 +50,7 @@ export default function Footer() {
   const noVideo = ['/', '/la-methode', '/qui-suis-je', '/youtube', '/mentions-legales'].includes(cleanPath);
 
   return (
-    <footer style={{ background: noVideo ? 'transparent' : '#030208', borderTop: noVideo ? 'none' : '1px solid var(--border)', padding:'3.5rem 2rem 2rem', position:'relative', overflow:'hidden' }}>
+    <footer className={noVideo ? 'footer-transparent' : ''} style={{ background: noVideo ? 'transparent' : '#030208', borderTop: noVideo ? 'none' : '1px solid var(--border)', padding:'3.5rem 2rem 2rem', position:'relative', overflow:'hidden' }}>
 
       {/* Video background — only on pages where last section doesn't extend into footer */}
       {mounted && !noVideo && (
@@ -164,6 +164,9 @@ export default function Footer() {
             justify-content: center !important;
             gap: .5rem 1rem !important;
           }
+          /* Pages où le footer est transparent : fond de secours sur mobile
+             (la vidéo de la section du dessus ne descend pas assez bas) */
+          .footer-transparent { background: var(--bg) !important; }
         }
         .footer-yt-btn:hover { border-color: rgba(255,0,0,.5) !important; background: rgba(255,0,0,.07) !important; }
       `}</style>

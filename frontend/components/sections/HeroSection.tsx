@@ -238,8 +238,9 @@ export default function HeroSection() {
           .hero-section { padding-top:5rem !important; padding-bottom:2.5rem !important; padding-left:1.25rem !important; padding-right:1.25rem !important; }
           .hero-stars-canvas { display:none !important; }
           .halo-ring { display:none !important; }
-          .photo-glow { width:130px !important; height:130px !important; }
-          .photo-frame { width:175px !important; height:235px !important; }
+          .photo-glow { width:110px !important; height:110px !important; }
+          .photo-frame { width:148px !important; height:198px !important; }
+          .hero-badge { position:relative !important; bottom:auto !important; left:auto !important; transform:none !important; margin-top:.6rem; }
           .btn-rose-link, .btn-ghost-link { width:100%; justify-content:center !important; box-sizing:border-box; padding-left:1rem !important; padding-right:1rem !important; }
         }
 

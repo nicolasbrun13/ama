@@ -350,7 +350,7 @@ export default function LaMethode() {
       <style>{`
         @media (max-width: 767px) {
           .methode-grid { grid-template-columns: 1fr !important; }
-          .bienfaits-grid { grid-template-columns: 1fr !important; }
+          .bienfaits-grid { grid-template-columns: repeat(2,1fr) !important; }
           .methode-photo-card { height: 200px !important; min-height: 200px !important; }
         }
         @media (min-width: 640px) and (max-width: 900px) {

@@ -22,7 +22,7 @@ export default function BienfaitsSection() {
           <p className="section-lead">La méthode s&apos;adresse à toute personne souhaitant comprendre et libérer ce qui l&apos;empêche de s&apos;épanouir.</p>
         </ScrollReveal>
 
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1.25rem', maxWidth:'1000px', margin:'0 auto' }}>
+        <div className="bienfaits-home-grid" style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:'1.25rem', maxWidth:'1000px', margin:'0 auto' }}>
           {cards.map((c, i) => (
             <ScrollReveal key={c.title} direction="up" delay={i * 90} className="card-stretch">
               <div className="card-breath" style={{ background:'rgba(6,3,15,.6)', border:'1px solid var(--border)', borderRadius:'8px', padding:'1.75rem 1.4rem', textAlign:'center', height:'100%', boxSizing:'border-box' }}>
@@ -39,8 +39,8 @@ export default function BienfaitsSection() {
       <style>{`
         .card-stretch { height: 100%; }
         .card-breath:hover .benef-orb { background:rgba(255,197,211,.2); border-color:rgba(255,197,211,.5); box-shadow:0 0 18px rgba(255,197,211,.3); transform:scale(1.1) rotate(12deg); }
-        @media(max-width:767px){ div[style*="repeat(3,1fr)"]{ grid-template-columns:1fr !important; } }
-        @media(min-width:640px) and (max-width:900px){ div[style*="repeat(3,1fr)"]{ grid-template-columns:repeat(2,1fr) !important; } }
+        @media(max-width:767px){ .bienfaits-home-grid { grid-template-columns:repeat(2,1fr) !important; } }
+        @media(max-width:480px){ .bienfaits-home-grid { gap:.85rem !important; } }
       `}</style>
     </section>
   );
