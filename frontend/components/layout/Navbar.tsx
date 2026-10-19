@@ -213,6 +213,9 @@ export default function Navbar() {
           .nav-desktop { display:none !important; }
           .nav-burger { display:block !important; }
         }
+        @media (max-width: 480px) {
+          nav { padding-left: 1.15rem !important; padding-right: 1.15rem !important; }
+        }
       `}</style>
     </>
   );

@@ -228,6 +228,13 @@ export default function QuiSuisJe() {
         @media (min-width: 640px) and (max-width: 900px) {
           .values-grid { grid-template-columns: repeat(2,1fr) !important; }
         }
+        @media (max-width: 400px) {
+          .qsj-photo > div {
+            width: 75vw !important;
+            max-width: 200px !important;
+            height: calc(75vw * 330 / 240) !important;
+          }
+        }
       `}</style>
     </main>
   );

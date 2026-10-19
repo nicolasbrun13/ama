@@ -85,7 +85,7 @@ export default function Footer() {
       )}
 
       <div style={{ maxWidth:'1200px', margin:'0 auto', position:'relative', zIndex:2 }}>
-        <div style={{ display:'grid', gridTemplateColumns:'2fr auto', gap:'3rem', marginBottom:'2rem' }}>
+        <div className="footer-grid" style={{ display:'grid', gridTemplateColumns:'2fr auto', gap:'3rem', marginBottom:'2rem' }}>
 
           {/* Brand */}
           <div>
@@ -114,7 +114,7 @@ export default function Footer() {
           </div>
 
           {/* Navigation + Contact groupés */}
-          <div style={{ display:'flex', gap:'2.5rem' }}>
+          <div className="footer-nav-group" style={{ display:'flex', gap:'2.5rem' }}>
 
           {/* Navigation */}
           <div>
@@ -140,7 +140,7 @@ export default function Footer() {
           </div>{/* fin Navigation + Contact groupés */}
         </div>
 
-        <div style={{ borderTop:'1px solid rgba(255,255,255,.04)', paddingTop:'1.5rem', display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'.7rem', color:'var(--dim)' }}>
+        <div className="footer-bottom" style={{ borderTop:'1px solid rgba(255,255,255,.04)', paddingTop:'1.5rem', display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'.7rem', color:'var(--dim)' }}>
           <span>© 2026 Anne-Marie Blanc · Hypnose HRE · Tous droits réservés</span>
           <span>
             <Link href="/mentions-legales" onClick={scrollTop('/mentions-legales')} style={{ color:'var(--dim)', textDecoration:'none', marginRight:'1rem' }}>Mentions légales &amp; CGV</Link>
@@ -151,7 +151,19 @@ export default function Footer() {
 
       <style>{`
         @media (max-width: 767px) {
-          footer > div:last-child > div:first-child { grid-template-columns: 1fr !important; }
+          .footer-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
+          .footer-nav-group { flex-direction: column !important; gap: 1.5rem !important; }
+          .footer-bottom {
+            flex-direction: column !important;
+            gap: .55rem !important;
+            text-align: center !important;
+          }
+          .footer-bottom > span:last-child {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: .5rem 1rem !important;
+          }
         }
         .footer-yt-btn:hover { border-color: rgba(255,0,0,.5) !important; background: rgba(255,0,0,.07) !important; }
       `}</style>

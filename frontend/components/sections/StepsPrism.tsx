@@ -1,16 +1,13 @@
 'use client';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 
 type Step = { n: number; title: string; desc: string; cta?: { label: string; href: string } };
 
 const N = 5;
-const ITEM_H = 300;   // height of one card
-const CLIP_H = 340;   // visible window (active card + peek)
-const PEEK_Y = 260;   // how far adjacent cards are offset
 
-// Maps relative position → visual style
-function getStyle(rel: number): React.CSSProperties {
+// Maps relative position → visual style (peekY passé en paramètre pour être réactif)
+function getStyle(rel: number, peekY: number): React.CSSProperties {
   if (rel === 0) return {
     transform: 'translateY(0px) scale(1)',
     opacity: 1,
@@ -19,14 +16,14 @@ function getStyle(rel: number): React.CSSProperties {
     pointerEvents: 'auto',
   };
   if (Math.abs(rel) === 1) return {
-    transform: `translateY(${rel * PEEK_Y}px) scale(0.82)`,
+    transform: `translateY(${rel * peekY}px) scale(0.82)`,
     opacity: 0.28,
     zIndex: 2,
     filter: 'blur(1px)',
     pointerEvents: 'none',
   };
   return {
-    transform: `translateY(${rel * PEEK_Y * 1.5}px) scale(0.7)`,
+    transform: `translateY(${rel * peekY * 1.5}px) scale(0.7)`,
     opacity: 0,
     zIndex: 1,
     filter: 'blur(2px)',
@@ -36,7 +33,21 @@ function getStyle(rel: number): React.CSSProperties {
 
 export default function StepsPrism({ steps }: { steps: Step[] }) {
   const [active, setActive] = useState(0);
+  const [dims, setDims] = useState({ h: 300, clip: 340, peek: 260, pad: '2.2rem 2.8rem' });
   const blocked = useRef(false);
+
+  useEffect(() => {
+    const update = () => {
+      if (window.innerWidth < 600) {
+        setDims({ h: 220, clip: 256, peek: 190, pad: '1.4rem 1.6rem' });
+      } else {
+        setDims({ h: 300, clip: 340, peek: 260, pad: '2.2rem 2.8rem' });
+      }
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   const go = useCallback((d: 1 | -1) => {
     if (blocked.current) return;
@@ -53,7 +64,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
         onClick={() => go(1)}
         style={{
           position: 'relative',
-          height: `${CLIP_H}px`,
+          height: `${dims.clip}px`,
           overflow: 'hidden',
           cursor: 'pointer',
         }}
@@ -71,14 +82,14 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
         }} />
 
         {/* Cards stacked at the same absolute position */}
-        <div style={{ position: 'relative', height: `${CLIP_H}px` }}>
+        <div style={{ position: 'relative', height: `${dims.clip}px` }}>
           {steps.map((s, i) => {
             // shortest-path relative position (-2 to +2)
             let rel = i - active;
             if (rel > Math.floor(N / 2)) rel -= N;
             if (rel < -Math.floor(N / 2)) rel += N;
 
-            const topOffset = (CLIP_H - ITEM_H) / 2; // center active card
+            const topOffset = (dims.clip - dims.h) / 2; // center active card
 
             return (
               <div
@@ -87,14 +98,14 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                   position: 'absolute',
                   top: `${topOffset}px`,
                   left: 0, right: 0,
-                  height: `${ITEM_H}px`,
+                  height: `${dims.h}px`,
                   transition: 'transform .48s cubic-bezier(0.33, 1, 0.68, 1), opacity .42s ease, filter .42s ease',
-                  ...getStyle(rel),
+                  ...getStyle(rel, dims.peek),
                   /* Card design */
                   background: 'linear-gradient(145deg, rgba(22,10,58,.97) 0%, rgba(14,6,38,.93) 100%)',
                   border: rel === 0 ? '1px solid rgba(255,197,211,.35)' : '1px solid rgba(255,197,211,.12)',
                   borderRadius: '14px',
-                  padding: '2.2rem 2.8rem',
+                  padding: dims.pad,
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',

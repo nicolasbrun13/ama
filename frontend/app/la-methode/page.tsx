@@ -158,7 +158,7 @@ export default function LaMethode() {
           </div>
 
           <div style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start',
+            display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'stretch',
           }} className="methode-grid">
             {/* Left: description */}
             <div>
@@ -182,8 +182,8 @@ export default function LaMethode() {
               </p>
             </div>
 
-            {/* Right: differentiators */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+            {/* Right: differentiators + photo */}
+            <div style={{ display: 'grid', gridTemplateRows: 'auto auto auto 1fr', gap: '1.1rem', alignSelf: 'stretch' }}>
               {differentiators.map((d, i) => (
                 <div key={i} className="card-breath" style={{
                   background: 'linear-gradient(135deg,#fff 0%,#f3eaf8 100%)',
@@ -208,9 +208,9 @@ export default function LaMethode() {
                 </div>
               ))}
 
-              {/* Photo-card */}
-              <div style={{
-                position: 'relative', height: '170px',
+              {/* Photo-card — 1fr = espace restant jusqu'au bas du dernier paragraphe */}
+              <div className="methode-photo-card" style={{
+                position: 'relative', minHeight: '80px',
                 borderRadius: '8px', overflow: 'hidden',
                 boxShadow: '0 4px 24px rgba(100,70,160,.1), 0 1px 4px rgba(0,0,0,.05)',
               }}>
@@ -351,6 +351,7 @@ export default function LaMethode() {
         @media (max-width: 767px) {
           .methode-grid { grid-template-columns: 1fr !important; }
           .bienfaits-grid { grid-template-columns: 1fr !important; }
+          .methode-photo-card { height: 200px !important; min-height: 200px !important; }
         }
         @media (min-width: 640px) and (max-width: 900px) {
           .bienfaits-grid { grid-template-columns: repeat(2,1fr) !important; }

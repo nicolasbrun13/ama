@@ -127,6 +127,14 @@ body {
     padding-top: 2.5rem !important;
     padding-bottom: 2.5rem !important;
   }
+  section[style*="padding: 3rem 2rem"] {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  section[style*="padding: 4.5rem 2rem"] {
+    padding-top: 2.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
   /* Typography */
   .section-h2 { font-size: clamp(1.45rem, 5.5vw, 1.85rem) !important; }
   .section-lead { font-size: .84rem !important; margin-bottom: 2rem !important; }
@@ -139,6 +147,14 @@ body {
   section[style*="padding: 6rem 2rem"]  { padding-left: 1.15rem !important; padding-right: 1.15rem !important; }
   section[style*="padding: 5rem 2rem"]  { padding-left: 1.15rem !important; padding-right: 1.15rem !important; }
   section[style*="padding: 8rem 2rem"]  { padding-left: 1.15rem !important; padding-right: 1.15rem !important; }
+}
+
+@media (max-width: 480px) {
+  /* Padding latéral universel sur téléphones étroits (iPhone SE 320px) */
+  section {
+    padding-left: 1.15rem !important;
+    padding-right: 1.15rem !important;
+  }
 }
 
 /* ============================================================
