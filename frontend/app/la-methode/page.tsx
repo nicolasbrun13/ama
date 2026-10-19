@@ -114,7 +114,7 @@ export default function LaMethode() {
       }}>
         <VideoBackground videoSrc="/videos/30063.mp4" overlay="rgba(6,3,15,.75)" rotate={180} />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
-          <div style={{
+          <div className="sub-hero-pill" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(196,176,245,.08)', border: '1px solid rgba(196,176,245,.28)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',

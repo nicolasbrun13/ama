@@ -72,7 +72,7 @@ export default function ContactPage() {
       }}>
         <VideoBackground videoSrc="/videos/4034.mp4" overlay="rgba(6,3,15,.68)" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '1000px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
-          <div style={{
+          <div className="sub-hero-pill" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',

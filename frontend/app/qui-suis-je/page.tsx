@@ -38,7 +38,7 @@ export default function QuiSuisJe() {
       }}>
         <VideoBackground videoSrc="/videos/30073.mp4" playbackRate={0.7} overlay="rgba(6,3,15,.72)" />
         <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
-          <div style={{
+          <div className="sub-hero-pill" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
             borderRadius: '50px', padding: '.35rem 1rem', marginBottom: '1.5rem',

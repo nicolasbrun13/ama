@@ -140,6 +140,8 @@ body {
   .section-lead { font-size: .84rem !important; margin-bottom: 2rem !important; }
   /* Eyebrow pills — avoid overflow */
   .eyebrow-pill { font-size: .6rem !important; padding: .3rem .75rem !important; }
+  /* Puces au-dessus des titres hero (pages internes) — masquées sur mobile */
+  .sub-hero-pill { display: none !important; }
 }
 
 @media (max-width: 600px) {
