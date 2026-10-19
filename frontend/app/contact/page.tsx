@@ -120,6 +120,7 @@ export default function ContactPage() {
               Informations de contact
             </h2>
 
+            <div className="contact-info-cards" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {[
               {
                 icon: '📧',
@@ -148,6 +149,7 @@ export default function ContactPage() {
                 </div>
               </div>
             ))}
+            </div>
           </div>
 
           {/* Right: form */}
@@ -268,7 +270,10 @@ export default function ContactPage() {
         input:focus, textarea:focus, select:focus { border-color: rgba(255,197,211,.5) !important; }
         select option { background: #0C0620; color: #FDF0F7; }
         .btn-cta-outline:hover { background: rgba(255,197,211,.07) !important; border-color: rgba(255,197,211,.6) !important; }
-        @media (max-width: 767px) { .contact-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 767px) {
+          .contact-grid { grid-template-columns: 1fr !important; }
+          .contact-info-cards { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; }
+        }
       `}</style>
     </main>
   );
