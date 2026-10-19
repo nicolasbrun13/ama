@@ -152,8 +152,8 @@ export default function HeroSection() {
       <div className="neb neb-2" />
       <div className="neb neb-3" />
 
-      {/* Parallax stars */}
-      <canvas ref={canvasRef} style={{ position:'absolute', inset:0, width:'100%', height:'100%', zIndex:1, pointerEvents:'none' }} />
+      {/* Parallax stars — desktop only */}
+      <canvas ref={canvasRef} className="hero-stars-canvas" style={{ position:'absolute', inset:0, width:'100%', height:'100%', zIndex:1, pointerEvents:'none' }} />
 
       <div style={{ position:'relative', zIndex:2, maxWidth:'1200px', margin:'0 auto', width:'100%' }} className="hero-inner">
 
@@ -236,6 +236,7 @@ export default function HeroSection() {
         }
         @media(max-width:600px){
           .hero-section { padding-top:5rem !important; padding-bottom:2.5rem !important; padding-left:1.25rem !important; padding-right:1.25rem !important; }
+          .hero-stars-canvas { display:none !important; }
           .halo-ring { display:none !important; }
           .photo-glow { width:130px !important; height:130px !important; }
           .photo-frame { width:175px !important; height:235px !important; }
