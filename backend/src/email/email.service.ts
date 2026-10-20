@@ -18,7 +18,21 @@ const WHITE_PURE  = '#FFFFFF';
 const SUCCESS     = '#27AE60';
 const BORDER_SOFT = 'rgba(139,109,200,.15)';
 
+void GOLD; // utilisé dans PDF si besoin
+
 const CONTACT_EMAIL = 'contact@amablanc-hre.fr';
+
+// ─── Sécurité HTML ────────────────────────────────────────────────────────────
+/** Échappe les caractères HTML dangereux dans les données utilisateur */
+function escHtml(s: string | undefined | null): string {
+  if (!s) return '';
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
 
 // ─── Helpers HTML ─────────────────────────────────────────────────────────────
 function emailWrapper(content: string): string {
@@ -71,9 +85,8 @@ function generateInvoicePdf(dto: CreateReservationDto): Promise<Buffer> {
       weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
     });
 
-    const W = doc.page.width - 112; // usable width
+    const W = doc.page.width - 112;
 
-    // ── Bandeau titre ─────────────────────────────────────────────────────────
     doc.rect(56, 56, W, 56).fill('#8B6DC8');
     doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(20).text('FACTURE', 72, 72, { align: 'left' });
     doc.font('Helvetica').fontSize(10).fillColor('rgba(255,255,255,.8)').text(invNo, 72, 97);
@@ -81,7 +94,6 @@ function generateInvoicePdf(dto: CreateReservationDto): Promise<Buffer> {
 
     let y = 136;
 
-    // ── Émetteur / Client ─────────────────────────────────────────────────────
     doc.fillColor('#1E0A3C').font('Helvetica-Bold').fontSize(8)
        .text('ÉMETTEUR', 56, y).text('CLIENT', 330, y);
     y += 14;
@@ -106,7 +118,6 @@ function generateInvoicePdf(dto: CreateReservationDto): Promise<Buffer> {
     doc.moveTo(56, y).lineTo(56 + W, y).strokeColor('#E0D5F5').lineWidth(1).stroke();
     y += 20;
 
-    // ── Tableau prestation ────────────────────────────────────────────────────
     doc.rect(56, y, W, 28).fill('#F0EBFF');
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#6B5B8A')
        .text('PRESTATION', 66, y + 9)
@@ -123,18 +134,15 @@ function generateInvoicePdf(dto: CreateReservationDto): Promise<Buffer> {
     doc.moveTo(56, y).lineTo(56 + W, y).strokeColor('#E0D5F5').stroke();
     y += 16;
 
-    // ── Total ─────────────────────────────────────────────────────────────────
     doc.font('Helvetica').fontSize(9).fillColor('#8B8B8B').text('TVA non applicable — art. 293 B du CGI', 56, y);
     doc.font('Helvetica-Bold').fontSize(14).fillColor('#8B6DC8').text('Total TTC : 150,00 €', 0, y, { align: 'right', width: W + 56 });
     y += 36;
 
-    // ── Badge paiement ────────────────────────────────────────────────────────
     doc.rect(56, y, W, 32).fill('#F0FFF4').stroke('#27AE60');
     doc.font('Helvetica').fontSize(10).fillColor('#27AE60')
        .text('✓  Paiement reçu via PayPal — merci pour votre confiance.', 68, y + 10);
     y += 48;
 
-    // ── Pied de page ──────────────────────────────────────────────────────────
     doc.moveTo(56, y).lineTo(56 + W, y).strokeColor('#E0D5F5').stroke();
     y += 12;
     doc.font('Helvetica').fontSize(8.5).fillColor('#8B8B8B')
@@ -177,30 +185,43 @@ export class EmailService {
     return Buffer.from(calendar.toString(), 'utf-8');
   }
 
+  private get amaEmail(): string {
+    return process.env.AMA_EMAIL || CONTACT_EMAIL;
+  }
+
   // ── Notification à Ama ─────────────────────────────────────────────────────
   async sendConfirmationToAma(dto: CreateReservationDto): Promise<void> {
     const icsBuffer = this.generateIcs(dto);
+    const fn  = escHtml(dto.firstName);
+    const ln  = escHtml(dto.lastName);
+    const em  = escHtml(dto.email);
+    const ph  = escHtml(dto.phone) || 'Non renseigné';
+    const dt  = escHtml(dto.date);
+    const tm  = escHtml(dto.time);
+    const msg = escHtml(dto.message);
+
     await this.transporter.sendMail({
-      from: `"Site Ama HRE" <${process.env.SMTP_USER}>`,
-      to: process.env.AMA_EMAIL || CONTACT_EMAIL,
+      from:    `"Site Ama HRE" <${process.env.SMTP_USER}>`,
+      to:      this.amaEmail,
+      replyTo: dto.email,  // Ama peut répondre directement au client
       subject: `Nouvelle réservation — ${dto.firstName} ${dto.lastName} — ${dto.date} à ${dto.time}`,
       html: emailWrapper(`
         <h2 style="color:${VIOLET};font-family:Georgia,serif;font-style:italic;font-size:1.3rem;margin-bottom:1.5rem;">Nouvelle réservation</h2>
         <table style="width:100%;border-collapse:collapse;">
           <tr><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};width:120px;">Nom</td>
-              <td style="padding:.5rem .75rem;font-weight:700;color:${TEXT};">${dto.firstName} ${dto.lastName}</td></tr>
+              <td style="padding:.5rem .75rem;font-weight:700;color:${TEXT};">${fn} ${ln}</td></tr>
           <tr style="background:${VIOLET_CARD};"><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};">Email</td>
-              <td style="padding:.5rem .75rem;"><a href="mailto:${dto.email}" style="color:${VIOLET};">${dto.email}</a></td></tr>
+              <td style="padding:.5rem .75rem;"><a href="mailto:${em}" style="color:${VIOLET};">${em}</a></td></tr>
           <tr><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};">Téléphone</td>
-              <td style="padding:.5rem .75rem;color:${TEXT};">${dto.phone || 'Non renseigné'}</td></tr>
+              <td style="padding:.5rem .75rem;color:${TEXT};">${ph}</td></tr>
           <tr style="background:${VIOLET_CARD};"><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};">Date</td>
-              <td style="padding:.5rem .75rem;font-weight:700;color:${VIOLET_DARK};">${dto.date} à ${dto.time}</td></tr>
+              <td style="padding:.5rem .75rem;font-weight:700;color:${VIOLET_DARK};">${dt} à ${tm}</td></tr>
           <tr><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};">Mode</td>
               <td style="padding:.5rem .75rem;color:${TEXT};">Zoom</td></tr>
           <tr style="background:${VIOLET_CARD};"><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};">Paiement</td>
               <td style="padding:.5rem .75rem;font-weight:700;color:${SUCCESS};">150 € confirmé via PayPal</td></tr>
-          ${dto.message ? `<tr><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};vertical-align:top;">Message</td>
-              <td style="padding:.5rem .75rem;font-style:italic;color:${SUBTEXT};">${dto.message}</td></tr>` : ''}
+          ${msg ? `<tr><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};vertical-align:top;">Message</td>
+              <td style="padding:.5rem .75rem;font-style:italic;color:${SUBTEXT};">${msg}</td></tr>` : ''}
         </table>
         <p style="margin-top:1.5rem;font-size:.78rem;color:${SUBTEXT};">Le fichier .ics ci-joint te permet d'ajouter ce rendez-vous à ton agenda.</p>
       `),
@@ -215,22 +236,27 @@ export class EmailService {
   // ── Confirmation au client ─────────────────────────────────────────────────
   async sendConfirmationToClient(dto: CreateReservationDto): Promise<void> {
     const icsBuffer = this.generateIcs(dto);
+    const fn  = escHtml(dto.firstName);
+    const dt  = escHtml(dto.date);
+    const tm  = escHtml(dto.time);
+
     await this.transporter.sendMail({
-      from: `"Ama — Hypnose HRE" <${process.env.SMTP_USER}>`,
-      to: dto.email,
+      from:    `"Ama — Hypnose HRE" <${process.env.SMTP_USER}>`,
+      to:      dto.email,
+      replyTo: this.amaEmail,  // Le client peut répondre directement à Ama
       subject: `Votre séance HRE est confirmée — ${dto.date} à ${dto.time}`,
       html: emailWrapper(`
         <h2 style="color:${TEXT};font-family:Georgia,serif;font-style:italic;font-size:1.35rem;margin-bottom:.25rem;">Votre séance est confirmée</h2>
         <p style="color:${SUBTEXT};font-size:.8rem;margin-bottom:1.75rem;">Hypnose Régressive Ésotérique · méthode Calogéro Grifasi</p>
 
         <p style="color:${TEXT};line-height:1.85;margin-bottom:1.5rem;">
-          Bonjour <strong>${dto.firstName}</strong>,<br><br>
+          Bonjour <strong>${fn}</strong>,<br><br>
           Votre réservation a bien été enregistrée et votre paiement confirmé.
         </p>
 
         <div style="background:${VIOLET_CARD};border-left:3px solid ${ROSE};padding:1.2rem 1.5rem;border-radius:0 8px 8px 0;margin-bottom:2rem;">
           <p style="font-weight:700;color:${VIOLET_DARK};margin-bottom:.75rem;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;">Récapitulatif</p>
-          <p style="color:${TEXT};font-size:.9rem;margin-bottom:.35rem;">📅 &nbsp;<strong>${dto.date}</strong> à <strong>${dto.time}</strong></p>
+          <p style="color:${TEXT};font-size:.9rem;margin-bottom:.35rem;">📅 &nbsp;<strong>${dt}</strong> à <strong>${tm}</strong></p>
           <p style="color:${TEXT};font-size:.9rem;margin-bottom:.35rem;">💻 &nbsp;Via Zoom — le lien vous sera envoyé le jour même</p>
           <p style="color:${SUCCESS};font-size:.9rem;">✅ &nbsp;Paiement de 150 € confirmé</p>
         </div>
@@ -257,17 +283,22 @@ export class EmailService {
 
   // ── Rappel J-1 ────────────────────────────────────────────────────────────
   async sendReminderToClient(dto: CreateReservationDto): Promise<void> {
+    const fn = escHtml(dto.firstName);
+    const dt = escHtml(dto.date);
+    const tm = escHtml(dto.time);
+
     await this.transporter.sendMail({
-      from: `"Ama — Hypnose HRE" <${process.env.SMTP_USER}>`,
-      to: dto.email,
+      from:    `"Ama — Hypnose HRE" <${process.env.SMTP_USER}>`,
+      to:      dto.email,
+      replyTo: this.amaEmail,
       subject: `Rappel — Votre séance HRE demain à ${dto.time}`,
       html: emailWrapper(`
         <h2 style="color:${TEXT};font-family:Georgia,serif;font-style:italic;font-size:1.35rem;margin-bottom:.25rem;">Votre séance est demain</h2>
         <p style="color:${SUBTEXT};font-size:.8rem;margin-bottom:1.75rem;">Hypnose Régressive Ésotérique · méthode Calogéro Grifasi</p>
 
         <p style="color:${TEXT};line-height:1.85;margin-bottom:1.5rem;">
-          Bonjour <strong>${dto.firstName}</strong>,<br><br>
-          Votre séance est prévue <strong>demain ${dto.date} à ${dto.time}</strong> via Zoom.
+          Bonjour <strong>${fn}</strong>,<br><br>
+          Votre séance est prévue <strong>demain ${dt} à ${tm}</strong> via Zoom.
         </p>
 
         <div style="background:${VIOLET_CARD};border:1px solid rgba(139,109,200,.25);border-radius:8px;padding:1.4rem 1.6rem;margin-bottom:1.75rem;">
@@ -297,22 +328,25 @@ export class EmailService {
       weekday: 'long', day: '2-digit', month: 'long', year: 'numeric',
     });
 
+    const fn = escHtml(dto.firstName);
+
     await this.transporter.sendMail({
-      from: `"Ama — Hypnose HRE" <${process.env.SMTP_USER}>`,
-      to: dto.email,
+      from:    `"Ama — Hypnose HRE" <${process.env.SMTP_USER}>`,
+      to:      dto.email,
+      replyTo: this.amaEmail,
       subject: `Facture — Séance HRE du ${dto.date} — ${invNo}`,
       html: emailWrapper(`
         <h2 style="color:${TEXT};font-family:Georgia,serif;font-style:italic;font-size:1.35rem;margin-bottom:.25rem;">Votre facture</h2>
-        <p style="color:${SUBTEXT};font-size:.8rem;margin-bottom:1.75rem;">${invNo} · Émise le ${invDate}</p>
+        <p style="color:${SUBTEXT};font-size:.8rem;margin-bottom:1.75rem;">${escHtml(invNo)} · Émise le ${escHtml(invDate)}</p>
 
         <p style="color:${TEXT};line-height:1.85;margin-bottom:1.5rem;">
-          Bonjour <strong>${dto.firstName}</strong>,<br><br>
+          Bonjour <strong>${fn}</strong>,<br><br>
           Veuillez trouver ci-joint la facture pour votre séance d'Hypnose Régressive Ésotérique.
         </p>
 
         <div style="background:${VIOLET_CARD};border-radius:8px;padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
           <p style="font-size:.82rem;color:${SUBTEXT};margin-bottom:.35rem;">Séance d'Hypnose Régressive Ésotérique</p>
-          <p style="font-size:.82rem;color:${SUBTEXT};margin-bottom:.75rem;">Réalisée le ${sessionDate} à ${dto.time} — via Zoom</p>
+          <p style="font-size:.82rem;color:${SUBTEXT};margin-bottom:.75rem;">Réalisée le ${escHtml(sessionDate)} à ${escHtml(dto.time)} — via Zoom</p>
           <p style="font-size:.78rem;color:${SUBTEXT};margin-bottom:.25rem;">TVA non applicable — art. 293 B du CGI</p>
           <p style="font-size:1.15rem;font-weight:700;color:${VIOLET_DARK};">Total : 150,00 €</p>
         </div>
