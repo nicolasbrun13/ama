@@ -2,18 +2,21 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import VideoBackground from '@/components/animations/VideoBackground';
+import { isSafeEmail } from '@/lib/validateEmail';
 
 type FormData = {
   nom: string;
   email: string;
   sujet: string;
   message: string;
+  /** Piège à robots : champ invisible, doit rester vide */
+  website: string;
 };
 
 type FormState = 'idle' | 'loading' | 'success' | 'error';
 
 export default function ContactPage() {
-  const [form, setForm] = useState<FormData>({ nom: '', email: '', sujet: '', message: '' });
+  const [form, setForm] = useState<FormData>({ nom: '', email: '', sujet: '', message: '', website: '' });
   const [state, setState] = useState<FormState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -25,6 +28,11 @@ export default function ContactPage() {
     e.preventDefault();
     if (!form.nom.trim() || !form.email.trim() || !form.message.trim()) {
       setErrorMsg('Merci de remplir tous les champs obligatoires.');
+      setState('error');
+      return;
+    }
+    if (!isSafeEmail(form.email.trim())) {
+      setErrorMsg('Adresse email invalide.');
       setState('error');
       return;
     }
@@ -43,7 +51,7 @@ export default function ContactPage() {
         throw new Error(data.message || 'Erreur lors de l\'envoi');
       }
       setState('success');
-      setForm({ nom: '', email: '', sujet: '', message: '' });
+      setForm({ nom: '', email: '', sujet: '', message: '', website: '' });
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : 'Erreur inconnue');
       setState('error');
@@ -176,6 +184,14 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                {/* Honeypot anti-robots : hors écran, ignoré par les humains et les lecteurs d'écran */}
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}>
+                  <label htmlFor="website">Site web</label>
+                  <input
+                    id="website" name="website" type="text" value={form.website} onChange={handleChange}
+                    tabIndex={-1} autoComplete="off"
+                  />
+                </div>
                 <div>
                   <label style={labelStyle}>Nom *</label>
                   <input
