@@ -29,7 +29,8 @@ const securityHeaders = [
   },
   {
     key:   'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload',
+    // Pas de preload : on ne soumet pas le domaine à la preload list (engagement difficile à annuler)
+    value: 'max-age=63072000; includeSubDomains',
   },
   {
     key:   'X-Frame-Options',
@@ -51,6 +52,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: 'standalone',
+  // Ne pas annoncer la techno (header x-powered-by: Next.js)
+  poweredByHeader: false,
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'assets.mixkit.co' },
