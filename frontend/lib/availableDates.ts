@@ -6,11 +6,17 @@
  *
  * Sources : vacances-scolaires-gouv.com / education.gouv.fr
  * Mis à jour : octobre 2026
+ *
+ * Doit rester en sync avec backend/src/reservations/slots.ts
+ * (test backend : src/reservations/slots.spec.ts échoue si les listes divergent).
  */
 
 /** Date d'ouverture des réservations */
 export const OPEN_ISO = '2027-02-01';
 export const OPEN_LABEL = '1er février 2027';
+
+/** Seul horaire proposé (doit rester égal à SLOT_TIME côté backend) */
+export const SLOT_TIME = '13:30';
 
 /**
  * Plages de vacances scolaires zone A

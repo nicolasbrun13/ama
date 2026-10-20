@@ -10,7 +10,7 @@ export const SLOT_TIME = '13:30';
 export const OPEN_ISO  = '2027-02-01';
 
 /** Plages de vacances scolaires zone A [début_inclus, fin_inclus] */
-const HOLIDAYS_ZONE_A: [string, string][] = [
+export const HOLIDAYS_ZONE_A: [string, string][] = [
   ['2026-10-17', '2026-11-02'],
   ['2026-12-19', '2027-01-04'],
   ['2027-02-13', '2027-03-01'],
@@ -33,7 +33,7 @@ function isHolidayZoneA(iso: string): boolean {
 export function isValidSlotDate(iso: string): boolean {
   if (iso < OPEN_ISO) return false;
   const d = new Date(iso + 'T12:00:00Z');
-  if (d.getDay() !== 5) return false; // 5 = vendredi
+  if (d.getUTCDay() !== 5) return false; // 5 = vendredi
   if (isHolidayZoneA(iso)) return false;
   return true;
 }
@@ -49,4 +49,13 @@ export function isValidSlot(date: string, time: string): boolean {
   const slotUtc = new Date(`${date}T${time}:00+02:00`); // heure d'été; conservatif
   if (slotUtc < new Date()) return false;
   return true;
+}
+
+/** Retourne "YYYY-MM-DD" pour aujourd'hui + offsetDays, en heure de Paris,
+ *  quel que soit le fuseau du process (TZ du conteneur). */
+export function parisDateStr(offsetDays = 0, now: Date = new Date()): string {
+  const todayParis = now.toLocaleDateString('sv-SE', { timeZone: 'Europe/Paris' });
+  const d = new Date(`${todayParis}T12:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + offsetDays);
+  return d.toISOString().slice(0, 10);
 }
