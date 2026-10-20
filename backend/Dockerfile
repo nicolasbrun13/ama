@@ -1,5 +1,6 @@
 # Stage 1 — Build
 FROM node:24-alpine AS builder
+RUN apk add --no-cache openssl
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -8,6 +9,7 @@ RUN npx prisma generate && npm run build
 
 # Stage 2 — Production runner
 FROM node:24-alpine AS runner
+RUN apk add --no-cache openssl
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package.json package-lock.json ./
