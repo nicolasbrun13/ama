@@ -7,6 +7,7 @@ import { EmailService } from './email/email.service';
 import { SchedulerService } from './scheduler/scheduler.service';
 import { PaymentController } from './payment/payment.controller';
 import { PaymentService } from './payment/payment.service';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { PaymentService } from './payment/payment.service';
     ScheduleModule.forRoot(),
   ],
   controllers: [ReservationsController, PaymentController],
-  providers: [ReservationsService, EmailService, SchedulerService, PaymentService],
+  providers: [PrismaService, ReservationsService, EmailService, SchedulerService, PaymentService],
 })
 export class AppModule {}

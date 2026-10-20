@@ -1,0 +1,24 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Reservation {
+  id             String    @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String
+  phone          String?
+  date           String    // "YYYY-MM-DD"
+  time           String    // "HH:MM"
+  message        String?
+  sessionType    String?
+  createdAt      DateTime  @default(now())
+  reminderSentAt DateTime?
+  invoiceSentAt  DateTime?
+}

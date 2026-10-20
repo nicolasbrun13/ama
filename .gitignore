@@ -14,6 +14,7 @@ backend/dist/
 
 # Env — ne jamais committer les vrais secrets
 .env
+.env.db
 frontend/.env.local
 backend/.env
 

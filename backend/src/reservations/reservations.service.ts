@@ -1,30 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { EmailService } from '../email/email.service';
-
-export interface StoredReservation extends CreateReservationDto {
-  id: string;
-  createdAt: Date;
-  reminderSent: boolean;
-  invoiceSent: boolean;
-}
+import { PrismaService } from '../prisma/prisma.service';
+import { Reservation } from '@prisma/client';
 
 @Injectable()
 export class ReservationsService {
-  private reservations: StoredReservation[] = [];
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly emailService: EmailService,
+  ) {}
 
-  constructor(private readonly emailService: EmailService) {}
-
-  async create(dto: CreateReservationDto, skipEmails = false): Promise<StoredReservation> {
-    const reservation: StoredReservation = {
-      ...dto,
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      createdAt: new Date(),
-      reminderSent: false,
-      invoiceSent: false,
-    };
-
-    this.reservations.push(reservation);
+  async create(dto: CreateReservationDto, skipEmails = false): Promise<Reservation> {
+    const reservation = await this.prisma.reservation.create({
+      data: {
+        firstName:   dto.firstName,
+        lastName:    dto.lastName,
+        email:       dto.email,
+        phone:       dto.phone,
+        date:        dto.date,
+        time:        dto.time,
+        message:     dto.message,
+        sessionType: dto.sessionType,
+      },
+    });
 
     if (!skipEmails) {
       await Promise.all([
@@ -36,31 +35,41 @@ export class ReservationsService {
     return reservation;
   }
 
-  findAll(): StoredReservation[] {
-    return this.reservations;
+  async findAll(): Promise<Reservation[]> {
+    return this.prisma.reservation.findMany({ orderBy: { createdAt: 'desc' } });
   }
 
-  findUpcomingTomorrow(): StoredReservation[] {
+  /** Réservations du lendemain sans rappel envoyé */
+  async findUpcomingTomorrow(): Promise<Reservation[]> {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowStr = tomorrow.toISOString().split('T')[0];
-    return this.reservations.filter((r) => r.date === tomorrowStr && !r.reminderSent);
+    return this.prisma.reservation.findMany({
+      where: { date: tomorrowStr, reminderSentAt: null },
+    });
   }
 
-  findYesterdayForInvoice(): StoredReservation[] {
+  /** Réservations d'hier sans facture envoyée */
+  async findYesterdayForInvoice(): Promise<Reservation[]> {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
-    return this.reservations.filter((r) => r.date === yesterdayStr && !r.invoiceSent);
+    return this.prisma.reservation.findMany({
+      where: { date: yesterdayStr, invoiceSentAt: null },
+    });
   }
 
-  markReminderSent(id: string): void {
-    const r = this.reservations.find((res) => res.id === id);
-    if (r) r.reminderSent = true;
+  async markReminderSent(id: string): Promise<void> {
+    await this.prisma.reservation.update({
+      where: { id },
+      data: { reminderSentAt: new Date() },
+    });
   }
 
-  markInvoiceSent(id: string): void {
-    const r = this.reservations.find((res) => res.id === id);
-    if (r) r.invoiceSent = true;
+  async markInvoiceSent(id: string): Promise<void> {
+    await this.prisma.reservation.update({
+      where: { id },
+      data: { invoiceSentAt: new Date() },
+    });
   }
 }
