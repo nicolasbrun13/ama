@@ -18,7 +18,10 @@ model Reservation {
   time           String    // "HH:MM"
   message        String?
   sessionType    String?
+  paypalOrderId  String?   @unique // empêche la double-capture d'un même paiement
   createdAt      DateTime  @default(now())
   reminderSentAt DateTime?
   invoiceSentAt  DateTime?
+
+  @@unique([date, time]) // un seul RDV par créneau
 }

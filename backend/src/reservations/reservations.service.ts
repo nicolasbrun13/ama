@@ -11,17 +11,29 @@ export class ReservationsService {
     private readonly emailService: EmailService,
   ) {}
 
-  async create(dto: CreateReservationDto, skipEmails = false): Promise<Reservation> {
+  /** Retourne "YYYY-MM-DD" pour today+offset en heure Paris (sv-SE = ISO date) */
+  private parisDateStr(offsetDays: number): string {
+    const d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    return d.toLocaleDateString('sv-SE', { timeZone: 'Europe/Paris' });
+  }
+
+  async create(
+    dto: CreateReservationDto,
+    skipEmails = false,
+    paypalOrderId?: string,
+  ): Promise<Reservation> {
     const reservation = await this.prisma.reservation.create({
       data: {
-        firstName:   dto.firstName,
-        lastName:    dto.lastName,
-        email:       dto.email,
-        phone:       dto.phone,
-        date:        dto.date,
-        time:        dto.time,
-        message:     dto.message,
-        sessionType: dto.sessionType,
+        firstName:     dto.firstName,
+        lastName:      dto.lastName,
+        email:         dto.email,
+        phone:         dto.phone,
+        date:          dto.date,
+        time:          dto.time,
+        message:       dto.message,
+        sessionType:   dto.sessionType,
+        paypalOrderId: paypalOrderId,
       },
     });
 
@@ -35,41 +47,39 @@ export class ReservationsService {
     return reservation;
   }
 
-  async findAll(): Promise<Reservation[]> {
-    return this.prisma.reservation.findMany({ orderBy: { createdAt: 'desc' } });
-  }
-
-  /** Réservations du lendemain sans rappel envoyé */
-  async findUpcomingTomorrow(): Promise<Reservation[]> {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  /** Créneaux pris pour un mois (YYYY-MM) — aucune donnée perso exposée */
+  async findTakenByMonth(month: string): Promise<{ date: string; time: string }[]> {
     return this.prisma.reservation.findMany({
-      where: { date: tomorrowStr, reminderSentAt: null },
+      where:  { date: { startsWith: month } },
+      select: { date: true, time: true },
     });
   }
 
-  /** Réservations d'hier sans facture envoyée */
-  async findYesterdayForInvoice(): Promise<Reservation[]> {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
+  /** Vérifie si un créneau est déjà pris */
+  async isSlotTaken(date: string, time: string): Promise<boolean> {
+    const count = await this.prisma.reservation.count({ where: { date, time } });
+    return count > 0;
+  }
+
+  /** Réservations du lendemain sans rappel envoyé (heure Paris) */
+  async findUpcomingTomorrow(): Promise<Reservation[]> {
     return this.prisma.reservation.findMany({
-      where: { date: yesterdayStr, invoiceSentAt: null },
+      where: { date: this.parisDateStr(+1), reminderSentAt: null },
+    });
+  }
+
+  /** Réservations d'hier sans facture envoyée (heure Paris) */
+  async findYesterdayForInvoice(): Promise<Reservation[]> {
+    return this.prisma.reservation.findMany({
+      where: { date: this.parisDateStr(-1), invoiceSentAt: null },
     });
   }
 
   async markReminderSent(id: string): Promise<void> {
-    await this.prisma.reservation.update({
-      where: { id },
-      data: { reminderSentAt: new Date() },
-    });
+    await this.prisma.reservation.update({ where: { id }, data: { reminderSentAt: new Date() } });
   }
 
   async markInvoiceSent(id: string): Promise<void> {
-    await this.prisma.reservation.update({
-      where: { id },
-      data: { invoiceSentAt: new Date() },
-    });
+    await this.prisma.reservation.update({ where: { id }, data: { invoiceSentAt: new Date() } });
   }
 }
