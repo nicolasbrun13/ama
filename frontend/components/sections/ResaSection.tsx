@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import VideoBackground from '@/components/animations/VideoBackground';
 import ScrollReveal from '@/components/animations/ScrollReveal';
 import { OPEN_ISO, OPEN_LABEL, isAvailableDate } from '@/lib/availableDates';
+import { useTakenDates } from '@/lib/useTakenDates';
+import AvailabilityNotice from '@/components/booking/AvailabilityNotice';
 
 const MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin',
               'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
@@ -26,6 +28,7 @@ function CalMini() {
   /* Démarre sur le mois d'ouverture, jamais sur le mois courant s'il est avant */
   const [year,  setYear]  = useState(OPEN_YEAR);
   const [month, setMonth] = useState(OPEN_MONTH);
+  const { taken, status, retry } = useTakenDates(year, month);
 
   const firstDay    = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -36,12 +39,16 @@ function CalMini() {
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
 
-  const isAvail = (d: number) => {
+  const isFutureOpenDay = (d: number) => {
     const today = new Date(todayY, todayM, todayD);
     const dt = new Date(year, month, d);
     if (dt <= today) return false;
     return isAvailableDate(toISO(year, month, d));
   };
+
+  /* Cliquable seulement si les créneaux pris sont chargés ET que la date est libre */
+  const isAvail = (d: number) => status === 'ready' && isFutureOpenDay(d) && !taken.has(toISO(year, month, d));
+  const isTaken = (d: number) => status === 'ready' && isFutureOpenDay(d) && taken.has(toISO(year, month, d));
 
   const isToday = (d: number) =>
     year === todayY && month === todayM && d === todayD;
@@ -90,15 +97,18 @@ function CalMini() {
         {cells.map((d, i) => {
           if (d === null) return <div key={`e-${i}`} style={{ padding:'6px 3px' }} />;
           const avail = isAvail(d);
+          const tkn   = isTaken(d);
           const tod   = isToday(d);
           return (
             <div
               key={d}
               onClick={() => avail && router.push(`/reserver?date=${toISO(year, month, d)}`)}
               className={avail ? 'cal-day-avail' : ''}
+              title={tkn ? 'Créneau déjà réservé' : undefined}
               style={{
                 textAlign:'center', padding:'6px 3px', fontSize:'.76rem', borderRadius:'50%',
-                color: tod ? 'var(--rose)' : avail ? 'var(--white)' : 'rgba(253,240,247,.25)',
+                color: tod ? 'var(--rose)' : avail ? 'var(--white)' : tkn ? 'rgba(200,88,122,.5)' : 'rgba(253,240,247,.25)',
+                textDecoration: tkn ? 'line-through' : 'none',
                 background: tod ? 'rgba(255,197,211,.15)' : 'transparent',
                 fontWeight: tod ? 700 : 400,
                 cursor: avail ? 'pointer' : 'default',
@@ -110,6 +120,7 @@ function CalMini() {
           );
         })}
       </div>
+      <AvailabilityNotice status={status} onRetry={retry} />
       <p style={{ fontSize:'.6rem', color:'var(--dim)', marginTop:'.75rem', textAlign:'center', lineHeight: 1.6 }}>
         Vendredis 13h30 · ouverture {OPEN_LABEL}
       </p>

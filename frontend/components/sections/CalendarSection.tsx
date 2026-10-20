@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ScrollReveal from '@/components/animations/ScrollReveal';
-import { OPEN_ISO, OPEN_LABEL, isAvailableDate, isHolidayZoneA } from '@/lib/availableDates';
+import { OPEN_ISO, OPEN_LABEL, isAvailableDate } from '@/lib/availableDates';
+import { useTakenDates } from '@/lib/useTakenDates';
+import AvailabilityNotice from '@/components/booking/AvailabilityNotice';
 
 const JOURS  = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 const MOIS   = ['Janvier','Février','Mars','Avril','Mai','Juin',
@@ -30,6 +32,7 @@ export default function CalendarSection() {
 
   const [year,  setYear]  = useState(initYear);
   const [month, setMonth] = useState(initMonth);
+  const { taken, status, retry } = useTakenDates(year, month);
 
   const firstDay    = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -40,12 +43,19 @@ export default function CalendarSection() {
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
   while (cells.length % 7 !== 0) cells.push(null);
 
-  const isCellAvailable = (day: number): boolean => {
+  const isFutureOpenDay = (day: number): boolean => {
     const today = new Date(todayY, todayM, todayD);
     const d = new Date(year, month, day);
     if (d <= today) return false;
     return isAvailableDate(toISO(year, month, day));
   };
+
+  /* Cliquable seulement si les créneaux pris sont chargés ET que la date est libre */
+  const isCellAvailable = (day: number): boolean =>
+    status === 'ready' && isFutureOpenDay(day) && !taken.has(toISO(year, month, day));
+
+  const isCellTaken = (day: number): boolean =>
+    status === 'ready' && isFutureOpenDay(day) && taken.has(toISO(year, month, day));
 
   const isToday = (day: number) =>
     year === todayY && month === todayM && day === todayD;
@@ -81,6 +91,7 @@ export default function CalendarSection() {
 
   const dayStyle = (day: number): React.CSSProperties => {
     const avail = isCellAvailable(day);
+    const tkn   = isCellTaken(day);
     const tod   = isToday(day);
     return {
       height: '40px',
@@ -95,7 +106,8 @@ export default function CalendarSection() {
         : avail
           ? 'rgba(255,197,211,.07)'
           : 'transparent',
-      color: avail || tod ? 'var(--white)' : 'rgba(253,240,247,.18)',
+      color: avail || tod ? 'var(--white)' : tkn ? 'rgba(200,88,122,.5)' : 'rgba(253,240,247,.18)',
+      textDecoration: tkn ? 'line-through' : 'none',
       fontSize: '.84rem',
       cursor: avail ? 'pointer' : 'default',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -183,10 +195,11 @@ export default function CalendarSection() {
                   <button
                     key={day}
                     onClick={() => handleDay(day)}
-                    disabled={!isCellAvailable(day) && !isToday(day)}
+                    disabled={!isCellAvailable(day)}
                     style={dayStyle(day)}
                     className={isCellAvailable(day) ? 'cal-avail' : ''}
-                    aria-label={isCellAvailable(day) ? `Réserver le ${day} ${MOIS[month]} ${year} à 13h30` : undefined}
+                    title={isCellTaken(day) ? 'Créneau déjà réservé' : undefined}
+                    aria-label={isCellAvailable(day) ? `Réserver le ${day} ${MOIS[month]} ${year} à 13h30` : isCellTaken(day) ? `${day} ${MOIS[month]} : déjà réservé` : undefined}
                   >
                     {day}
                   </button>
@@ -194,10 +207,13 @@ export default function CalendarSection() {
             )}
           </div>
 
+          <AvailabilityNotice status={status} onRetry={retry} />
+
           {/* Legend */}
           <div style={{ display: 'flex', gap: '1.75rem', justifyContent: 'center', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,197,211,.08)' }}>
             {[
               { color: 'rgba(255,197,211,.07)', border: 'rgba(255,197,211,.18)', label: 'Vendredi 13h30' },
+              { color: 'rgba(200,88,122,.07)', border: 'rgba(200,88,122,.25)', label: 'Réservé' },
               { color: 'transparent',          border: 'transparent',          label: 'Indisponible' },
             ].map(l => (
               <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: '.45rem' }}>

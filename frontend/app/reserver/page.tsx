@@ -1,9 +1,11 @@
 'use client';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import VideoBackground from '@/components/animations/VideoBackground';
 import type { ReservationPayload } from '@/components/payment/PaypalButton';
-import { OPEN_ISO, OPEN_LABEL, isAvailableDate } from '@/lib/availableDates';
+import { OPEN_ISO, OPEN_LABEL, SLOT_TIME, isAvailableDate } from '@/lib/availableDates';
+import { fetchTakenDates, useTakenDates } from '@/lib/useTakenDates';
+import AvailabilityNotice from '@/components/booking/AvailabilityNotice';
 
 /* ── Calendrier custom (seuls les vendredis disponibles sont cliquables) ── */
 const MOIS_CAL = ['Janvier','Février','Mars','Avril','Mai','Juin',
@@ -15,21 +17,34 @@ function isoFromYMD(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 }
 
+/** Date réservable et strictement future (heure locale du navigateur) */
+function isFutureAvailableDate(iso: string): boolean {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso) || !isAvailableDate(iso)) return false;
+  const now = new Date();
+  return iso > isoFromYMD(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
 function ReservationCalendar({ value, onChange }: { value: string; onChange: (iso: string) => void }) {
   const [year,  setYear]  = useState(OPEN_YEAR_CAL);
   const [month, setMonth] = useState(OPEN_MONTH_CAL);
-  const [takenSet, setTakenSet] = useState<Set<string>>(new Set());
+  // Créneaux déjà réservés pour le mois affiché. Tant que ce n'est pas chargé, rien n'est cliquable.
+  const { taken: takenSet, status, retry } = useTakenDates(year, month);
 
-  // Charge les créneaux déjà réservés pour le mois affiché
+  // Une date choisie ailleurs (lien ?date=) : afficher son mois (ajustement pendant le rendu)
+  const [shownValue, setShownValue] = useState(value);
+  if (value !== shownValue) {
+    setShownValue(value);
+    if (value) {
+      const [y, m] = value.split('-').map(Number);
+      setYear(y);
+      setMonth(m - 1);
+    }
+  }
+
+  // La date sélectionnée vient d'être prise : on la retire
   useEffect(() => {
-    const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
-    fetch(`/api/availability?month=${monthStr}`)
-      .then(r => r.ok ? r.json() : { taken: [] })
-      .then((data: { taken: { date: string; time: string }[] }) => {
-        setTakenSet(new Set((data.taken ?? []).map(t => t.date)));
-      })
-      .catch(() => { /* ignore — créneaux non chargés, pas bloquant */ });
-  }, [year, month]);
+    if (status === 'ready' && value && takenSet.has(value)) onChange('');
+  }, [status, takenSet, value, onChange]);
 
   const now    = new Date();
   const todayY = now.getFullYear();
@@ -46,6 +61,7 @@ function ReservationCalendar({ value, onChange }: { value: string; onChange: (is
   while (cells.length % 7 !== 0) cells.push(null);
 
   const isCellAvail = (d: number): boolean => {
+    if (status !== 'ready') return false;
     const today = new Date(todayY, todayM, todayD);
     const dt = new Date(year, month, d);
     if (dt <= today) return false;
@@ -56,6 +72,7 @@ function ReservationCalendar({ value, onChange }: { value: string; onChange: (is
 
   /** Vendredi possible mais déjà réservé */
   const isCellTaken = (d: number): boolean => {
+    if (status !== 'ready') return false;
     const today = new Date(todayY, todayM, todayD);
     const dt = new Date(year, month, d);
     if (dt <= today) return false;
@@ -118,6 +135,7 @@ function ReservationCalendar({ value, onChange }: { value: string; onChange: (is
             );
           })}
         </div>
+        <AvailabilityNotice status={status} onRetry={retry} />
         <p style={{ fontSize: '.58rem', color: 'rgba(253,240,247,.25)', marginTop: '.6rem', textAlign: 'center', lineHeight: 1.5 }}>
           Ouverture {OPEN_LABEL} · vendredis uniquement · hors vacances zone A
         </p>
@@ -151,12 +169,51 @@ export default function ReserverPage() {
   const [pageState, setPageState] = useState<PageState>('form');
   const [formError, setFormError] = useState('');
   const [payError, setPayError] = useState('');
+  const [dateNotice, setDateNotice] = useState('');
 
+  // Date pré-remplie par ?date= : uniquement si elle est réservable ET encore libre
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const d = params.get('date');
-    if (d) setForm(prev => ({ ...prev, dateVoulue: d }));
+    const d = new URLSearchParams(window.location.search).get('date');
+    if (!d) return;
+    let cancelled = false;
+
+    /** Renvoie un message si la date doit être ignorée, sinon null */
+    async function checkPrefilledDate(iso: string): Promise<string | null> {
+      if (!isFutureAvailableDate(iso)) {
+        return "La date demandée n'est pas proposée. Choisissez un vendredi dans le calendrier.";
+      }
+      try {
+        const taken = await fetchTakenDates(iso.slice(0, 7));
+        return taken.has(iso) ? "Ce vendredi vient d'être réservé. Choisissez une autre date dans le calendrier." : null;
+      } catch {
+        return 'Impossible de vérifier la date demandée. Choisissez-la dans le calendrier.';
+      }
+    }
+
+    checkPrefilledDate(d).then((notice) => {
+      if (cancelled) return;
+      if (notice) setDateNotice(notice);
+      else setForm(prev => ({ ...prev, dateVoulue: d }));
+    });
+    return () => { cancelled = true; };
   }, []);
+
+  const handleDateChange = useCallback((iso: string) => {
+    setForm(prev => ({ ...prev, dateVoulue: iso }));
+    if (iso) setDateNotice('');
+  }, []);
+
+  /** Erreur PayPal / serveur. Créneau pris (409) : retour au formulaire, calendrier rechargé. */
+  function handlePayError(msg: string, opts?: { slotTaken?: boolean }) {
+    if (opts?.slotTaken) {
+      setForm(prev => ({ ...prev, dateVoulue: '' }));
+      setPayError('');
+      setFormError(msg);
+      setPageState('form'); // remonte le calendrier → recharge les disponibilités
+      return;
+    }
+    setPayError(msg);
+  }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -168,7 +225,7 @@ export default function ReserverPage() {
       setFormError('Merci de remplir tous les champs obligatoires (*).');
       return;
     }
-    if (!isAvailableDate(form.dateVoulue)) {
+    if (!isFutureAvailableDate(form.dateVoulue)) {
       setFormError('Veuillez sélectionner un vendredi disponible dans le calendrier.');
       return;
     }
@@ -183,7 +240,7 @@ export default function ReserverPage() {
     email: form.email,
     phone: form.telephone || undefined,
     date: form.dateVoulue,
-    time: '13:30',
+    time: SLOT_TIME,
     message: form.message || undefined,
   };
 
@@ -348,7 +405,7 @@ export default function ReserverPage() {
                 <PaypalButton
                   reservationData={reservationData}
                   onSuccess={() => setPageState('success')}
-                  onError={(msg) => setPayError(msg)}
+                  onError={handlePayError}
                 />
               </Suspense>
 
@@ -400,10 +457,15 @@ export default function ReserverPage() {
               {/* Date — calendrier custom (seuls les vendredis cliquables) */}
               <div>
                 <label style={labelStyle}>Date souhaitée *</label>
-                <ReservationCalendar
-                  value={form.dateVoulue}
-                  onChange={(iso) => setForm(prev => ({ ...prev, dateVoulue: iso }))}
-                />
+                {dateNotice && (
+                  <div role="alert" style={{
+                    marginBottom: '.6rem', background: 'rgba(255,197,211,.07)', border: '1px solid rgba(255,197,211,.3)',
+                    borderRadius: '6px', padding: '.6rem .9rem', fontSize: '.8rem', color: 'var(--rose)',
+                  }}>
+                    {dateNotice}
+                  </div>
+                )}
+                <ReservationCalendar value={form.dateVoulue} onChange={handleDateChange} />
               </div>
 
               {/* Message */}
