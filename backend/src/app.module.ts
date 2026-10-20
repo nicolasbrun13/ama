@@ -10,23 +10,13 @@ import { SchedulerService } from './scheduler/scheduler.service';
 import { PaymentController } from './payment/payment.controller';
 import { PaymentService } from './payment/payment.service';
 import { PrismaService } from './prisma/prisma.service';
+import { THROTTLERS } from './throttle.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
-    ThrottlerModule.forRoot([
-      {
-        name:  'short',
-        ttl:   10_000,  // 10 s
-        limit: 5,       // 5 req max par IP par fenêtre courte
-      },
-      {
-        name:  'long',
-        ttl:   60_000,  // 1 min
-        limit: 20,      // 20 req max par IP par minute
-      },
-    ]),
+    ThrottlerModule.forRoot(THROTTLERS),
   ],
   controllers: [ReservationsController, PaymentController],
   providers: [
