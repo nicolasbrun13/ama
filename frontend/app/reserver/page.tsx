@@ -18,6 +18,18 @@ function isoFromYMD(y: number, m: number, d: number) {
 function ReservationCalendar({ value, onChange }: { value: string; onChange: (iso: string) => void }) {
   const [year,  setYear]  = useState(OPEN_YEAR_CAL);
   const [month, setMonth] = useState(OPEN_MONTH_CAL);
+  const [takenSet, setTakenSet] = useState<Set<string>>(new Set());
+
+  // Charge les créneaux déjà réservés pour le mois affiché
+  useEffect(() => {
+    const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+    fetch(`/api/availability?month=${monthStr}`)
+      .then(r => r.ok ? r.json() : { taken: [] })
+      .then((data: { taken: { date: string; time: string }[] }) => {
+        setTakenSet(new Set((data.taken ?? []).map(t => t.date)));
+      })
+      .catch(() => { /* ignore — créneaux non chargés, pas bloquant */ });
+  }, [year, month]);
 
   const now    = new Date();
   const todayY = now.getFullYear();
@@ -37,7 +49,18 @@ function ReservationCalendar({ value, onChange }: { value: string; onChange: (is
     const today = new Date(todayY, todayM, todayD);
     const dt = new Date(year, month, d);
     if (dt <= today) return false;
-    return isAvailableDate(isoFromYMD(year, month, d));
+    const iso = isoFromYMD(year, month, d);
+    if (takenSet.has(iso)) return false;
+    return isAvailableDate(iso);
+  };
+
+  /** Vendredi possible mais déjà réservé */
+  const isCellTaken = (d: number): boolean => {
+    const today = new Date(todayY, todayM, todayD);
+    const dt = new Date(year, month, d);
+    if (dt <= today) return false;
+    const iso = isoFromYMD(year, month, d);
+    return takenSet.has(iso) && isAvailableDate(iso);
   };
 
   const isSelected = (d: number) => value === isoFromYMD(year, month, d);
@@ -75,15 +98,20 @@ function ReservationCalendar({ value, onChange }: { value: string; onChange: (is
           {cells.map((d, i) => {
             if (d === null) return <div key={`e-${i}`} style={{ padding: '5px 0' }} />;
             const avail = isCellAvail(d);
+            const taken = isCellTaken(d);
             const sel   = isSelected(d);
             return (
-              <button key={d} type="button" onClick={() => avail && onChange(isoFromYMD(year, month, d))} disabled={!avail}
+              <button key={d} type="button"
+                onClick={() => avail && onChange(isoFromYMD(year, month, d))}
+                disabled={!avail}
+                title={taken ? 'Créneau déjà réservé' : undefined}
                 style={{ textAlign: 'center', padding: '5px 2px', fontSize: '.76rem', borderRadius: '6px', fontFamily: 'Nunito, sans-serif',
-                  border:      sel   ? '1px solid rgba(255,197,211,.7)' : avail ? '1px solid rgba(255,197,211,.15)' : '1px solid transparent',
-                  background:  sel   ? 'rgba(255,197,211,.25)'          : avail ? 'rgba(255,197,211,.06)'          : 'transparent',
-                  color:       avail ? 'var(--white)'                   : 'rgba(253,240,247,.15)',
-                  fontWeight:  sel   ? 700                               : 400,
-                  cursor:      avail ? 'pointer'                         : 'default',
+                  border:      sel   ? '1px solid rgba(255,197,211,.7)'  : avail ? '1px solid rgba(255,197,211,.15)' : taken ? '1px solid rgba(200,88,122,.18)' : '1px solid transparent',
+                  background:  sel   ? 'rgba(255,197,211,.25)'           : avail ? 'rgba(255,197,211,.06)'          : taken ? 'rgba(200,88,122,.07)'           : 'transparent',
+                  color:       avail ? 'var(--white)'                    : taken ? 'rgba(200,88,122,.45)'           : 'rgba(253,240,247,.15)',
+                  fontWeight:  sel   ? 700                                : 400,
+                  cursor:      avail ? 'pointer'                          : 'default',
+                  textDecoration: taken ? 'line-through' : 'none',
                 }}>
                 {d}
               </button>
