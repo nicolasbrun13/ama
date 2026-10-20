@@ -1,33 +1,56 @@
-import { IsString, IsEmail, IsNotEmpty, IsDateString, IsOptional } from 'class-validator';
+import {
+  IsString,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  MaxLength,
+  Matches,
+  IsIn,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateReservationDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(100)
+  @Transform(({ value }: { value: string }) => value?.trim())
   firstName: string;
 
   @IsString()
   @IsNotEmpty()
+  @MaxLength(100)
+  @Transform(({ value }: { value: string }) => value?.trim())
   lastName: string;
 
   @IsEmail()
+  @MaxLength(254)
+  @Transform(({ value }: { value: string }) => value?.trim().toLowerCase())
   email: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(30)
+  @Matches(/^[0-9 +()./-]*$/, { message: 'Numéro de téléphone invalide' })
+  @Transform(({ value }: { value: string }) => value?.trim())
   phone?: string;
 
-  @IsDateString()
-  date: string; // ISO date string: "2026-10-19"
+  /** Format YYYY-MM-DD uniquement */
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, { message: 'Date invalide (attendu YYYY-MM-DD)' })
+  @Transform(({ value }: { value: string }) => value?.trim())
+  date: string;
 
-  @IsString()
-  @IsNotEmpty()
-  time: string; // "14:00"
+  /** Seul créneau accepté : 13:30 */
+  @IsIn(['13:30'], { message: 'Heure invalide (seul créneau disponible : 13:30)' })
+  time: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(2000)
+  @Transform(({ value }: { value: string }) => value?.trim())
   message?: string;
 
   @IsString()
   @IsOptional()
-  sessionType?: string; // "en ligne" | "présentiel"
+  @IsIn(['en ligne', 'présentiel'], { message: 'sessionType invalide' })
+  sessionType?: string;
 }
