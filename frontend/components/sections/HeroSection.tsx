@@ -6,16 +6,13 @@ import VideoBackground from '@/components/animations/VideoBackground';
 
 export default function HeroSection() {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
-  const sectionRef   = useRef<HTMLElement>(null);
-  const haloRingsRef = useRef<HTMLDivElement>(null);   // wrapper around the 3 rings only
 
-  /* ── Parallax star field ── */
+  /* ── Champ d'étoiles (scintillement + dérive lente, sans parallax) ── */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
     let W: number, H: number;
-    let mx = 0, my = 0;
 
     function resize() {
       W = canvas!.width  = canvas!.parentElement!.offsetWidth;
@@ -38,7 +35,7 @@ export default function HeroSection() {
     const L2 = makeLayer(80,  .7, 1.4, .04, .12, .15);
     const L3 = makeLayer(35, 1.4, 2.4, .08, .22, .22);
 
-    function drawLayer(layer: Star[], pf: number) {
+    function drawLayer(layer: Star[]) {
       for (const s of layer) {
         s.x += s.vx; if (s.x > canvas!.width) s.x = 0;
         s.a += s.da; if (s.a < .05 || s.a > .95) s.da *= -1;
@@ -46,27 +43,15 @@ export default function HeroSection() {
         const h   = Math.round(a * 255).toString(16).padStart(2, '0');
         const col = s.gold ? '#E8BF50' : s.pink ? '#FFAAC0' : '#FDF0F7';
         ctx.beginPath();
-        ctx.arc(
-          ((s.x + mx * pf) % W + W) % W,
-          ((s.y + my * pf) % H + H) % H,
-          s.r, 0, Math.PI * 2,
-        );
+        ctx.arc(s.x % W, s.y % H, s.r, 0, Math.PI * 2);
         ctx.fillStyle = col + h; ctx.fill();
       }
     }
 
-    const hero = canvas.parentElement!;
-    const onMouseMove = (e: MouseEvent) => {
-      const r = hero.getBoundingClientRect();
-      mx = (e.clientX - r.left) / r.width  - .5;
-      my = (e.clientY - r.top)  / r.height - .5;
-    };
-    hero.addEventListener('mousemove', onMouseMove);
-
     let rafId: number;
     function tick() {
       ctx.clearRect(0, 0, W, H);
-      drawLayer(L1, 10); drawLayer(L2, 25); drawLayer(L3, 45);
+      drawLayer(L1); drawLayer(L2); drawLayer(L3);
       rafId = requestAnimationFrame(tick);
     }
 
@@ -81,67 +66,11 @@ export default function HeroSection() {
       clearTimeout(startTimeout);
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', resize);
-      hero.removeEventListener('mousemove', onMouseMove);
-    };
-  }, []);
-
-  /* ── Scroll → halo rings expand + fade ── */
-  useEffect(() => {
-    const section = sectionRef.current;
-    const rings   = haloRingsRef.current;
-    if (!section || !rings) return;
-
-    let rafId: number;
-    let scale = 1, targetScale = 1;
-    let opac  = 1, targetOpac  = 1;
-    let animating = false;
-
-    function animate() {
-      scale += (targetScale - scale) * 0.1;
-      opac  += (targetOpac  - opac)  * 0.1;
-      rings!.style.transform = `scale(${scale.toFixed(5)})`;
-      rings!.style.opacity   = opac.toFixed(5);
-
-      const doneS = Math.abs(targetScale - scale) < 0.0005;
-      const doneO = Math.abs(targetOpac  - opac)  < 0.0005;
-
-      if (!doneS || !doneO) {
-        rafId = requestAnimationFrame(animate);
-      } else {
-        rings!.style.transform = `scale(${targetScale.toFixed(5)})`;
-        rings!.style.opacity   = targetOpac.toFixed(5);
-        animating = false;
-      }
-    }
-
-    function onScroll() {
-      const rect     = section!.getBoundingClientRect();
-      const scrolled = Math.max(0, -rect.top);
-      // Cover the full 5 wheel-notches: progress over 110 % of hero height
-      const progress = Math.min(1, scrolled / (rect.height * 1.1));
-      // ease-out quad
-      const eased    = 1 - Math.pow(1 - progress, 2);
-      targetScale = 1 + eased * 2.0;        // 1× → 3× (was 1.72×)
-      targetOpac  = 1 - eased * 0.88;       // 1 → 0.12 (almost invisible at max)
-
-      if (!animating) {
-        animating = true;
-        rafId = requestAnimationFrame(animate);
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafId);
     };
   }, []);
 
   return (
     <section
-      ref={sectionRef}
       className="hero-section"
       style={{ position:'relative', overflow:'hidden', minHeight:'100vh', display:'flex', alignItems:'center', padding:'7rem 2rem 5rem' }}
     >
@@ -152,7 +81,7 @@ export default function HeroSection() {
       <div className="neb neb-2" />
       <div className="neb neb-3" />
 
-      {/* Parallax stars — desktop only */}
+      {/* Étoiles (desktop uniquement) */}
       <canvas ref={canvasRef} className="hero-stars-canvas" style={{ position:'absolute', inset:0, width:'100%', height:'100%', zIndex:1, pointerEvents:'none' }} />
 
       <div style={{ position:'relative', zIndex:2, maxWidth:'1200px', margin:'0 auto', width:'100%' }} className="hero-inner">
@@ -163,7 +92,7 @@ export default function HeroSection() {
           <h1 style={{ fontFamily:'"Playfair Display",serif', fontWeight:500, fontSize:'clamp(2.1rem,3.8vw,3.6rem)', lineHeight:1.18, color:'var(--white)', marginBottom:'1.5rem' }}>
             <em style={{ fontStyle:'italic', color:'var(--rose)' }}>Transformez</em> votre présent,<br />
             vers une expansion de <em style={{ fontStyle:'italic', color:'var(--rose)' }}>conscience</em><br />
-            par l'exploration du soi
+            par l&apos;exploration du soi
           </h1>
           <p style={{ fontSize:'.97rem', fontWeight:300, color:'var(--dim)', lineHeight:1.9, maxWidth:'500px', marginBottom:'2.5rem' }}>
             Avec la méthode HRE (Hypnose Régressive Ésotérique), je vous accompagne dans une exploration profonde et bienveillante de votre espace énergétique pour libérer ce qui vous retient, de vie en vie.
@@ -178,10 +107,9 @@ export default function HeroSection() {
         <div className="hero-right" style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', position:'relative' }}>
           <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center' }}>
 
-            {/* Rings wrapper — this is what gets scaled on scroll.
+            {/* Rings wrapper (statique : plus d'effet au scroll).
                 position:absolute inset:0 + flex centering preserves the rings' centering. */}
             <div
-              ref={haloRingsRef}
               style={{
                 position: 'absolute',
                 inset: 0,
