@@ -5,6 +5,10 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Trust le proxy nginx (X-Forwarded-For / X-Real-IP) pour le rate limiting
+  const expressApp = app.getHttpAdapter().getInstance() as { set: (k: string, v: unknown) => void };
+  expressApp.set('trust proxy', 1);
+
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3202',
     methods: ['GET', 'POST', 'OPTIONS'],
