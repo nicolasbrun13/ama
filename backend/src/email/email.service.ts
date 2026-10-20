@@ -24,7 +24,7 @@ const CONTACT_EMAIL = 'contact@amablanc-hre.fr';
 
 // ─── Sécurité HTML ────────────────────────────────────────────────────────────
 /** Échappe les caractères HTML dangereux dans les données utilisateur */
-function escHtml(s: string | undefined | null): string {
+export function escHtml(s: string | undefined | null): string {
   if (!s) return '';
   return s
     .replace(/&/g, '&amp;')
@@ -278,6 +278,36 @@ export class EmailService {
         content: icsBuffer,
         contentType: 'text/calendar; charset=utf-8; method=REQUEST',
       }],
+    });
+  }
+
+  // ── Alerte : remboursement automatique échoué ─────────────────────────────
+  async sendRefundFailureAlert(info: {
+    orderID: string;
+    captureID: string;
+    reason: string;
+    dto: CreateReservationDto;
+  }): Promise<void> {
+    const { orderID, captureID, reason, dto } = info;
+    await this.transporter.sendMail({
+      from:    `"Site Ama HRE" <${process.env.SMTP_USER}>`,
+      to:      this.amaEmail,
+      replyTo: dto.email,
+      subject: `URGENT : remboursement PayPal à faire à la main (${orderID})`,
+      html: emailWrapper(`
+        <h2 style="color:#C0392B;font-family:Georgia,serif;font-style:italic;font-size:1.3rem;margin-bottom:1rem;">Remboursement automatique échoué</h2>
+        <p style="color:${TEXT};line-height:1.7;margin-bottom:1rem;">
+          Un client a payé mais sa réservation n'a pas pu être enregistrée, et le remboursement automatique a été refusé par PayPal.
+          <strong>Merci de rembourser ce paiement depuis ton compte PayPal.</strong>
+        </p>
+        <table style="width:100%;border-collapse:collapse;font-size:.88rem;color:${TEXT};">
+          <tr><td style="padding:.4rem .75rem;color:${SUBTEXT};width:140px;">Commande PayPal</td><td style="padding:.4rem .75rem;font-weight:700;">${escHtml(orderID)}</td></tr>
+          <tr><td style="padding:.4rem .75rem;color:${SUBTEXT};">Capture</td><td style="padding:.4rem .75rem;font-weight:700;">${escHtml(captureID)}</td></tr>
+          <tr><td style="padding:.4rem .75rem;color:${SUBTEXT};">Client</td><td style="padding:.4rem .75rem;">${escHtml(dto.firstName)} ${escHtml(dto.lastName)} (${escHtml(dto.email)})</td></tr>
+          <tr><td style="padding:.4rem .75rem;color:${SUBTEXT};">Créneau demandé</td><td style="padding:.4rem .75rem;">${escHtml(dto.date)} à ${escHtml(dto.time)}</td></tr>
+          <tr><td style="padding:.4rem .75rem;color:${SUBTEXT};">Raison</td><td style="padding:.4rem .75rem;">${escHtml(reason)}</td></tr>
+        </table>
+      `),
     });
   }
 

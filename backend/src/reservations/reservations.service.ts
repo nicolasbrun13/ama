@@ -1,22 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { EmailService } from '../email/email.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Reservation } from '@prisma/client';
+import { parisDateStr } from './slots';
 
 @Injectable()
 export class ReservationsService {
+  private readonly logger = new Logger(ReservationsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly emailService: EmailService,
   ) {}
-
-  /** Retourne "YYYY-MM-DD" pour today+offset en heure Paris (sv-SE = ISO date) */
-  private parisDateStr(offsetDays: number): string {
-    const d = new Date();
-    d.setDate(d.getDate() + offsetDays);
-    return d.toLocaleDateString('sv-SE', { timeZone: 'Europe/Paris' });
-  }
 
   async create(
     dto: CreateReservationDto,
@@ -37,11 +33,22 @@ export class ReservationsService {
       },
     });
 
+    // La réservation est en base (et payée) : un échec SMTP ne doit JAMAIS
+    // faire échouer la requête. On logge, Ama retrouve la résa en base.
     if (!skipEmails) {
-      await Promise.all([
+      const results = await Promise.allSettled([
         this.emailService.sendConfirmationToAma(dto),
         this.emailService.sendConfirmationToClient(dto),
       ]);
+      results.forEach((r, i) => {
+        if (r.status === 'rejected') {
+          const target = i === 0 ? 'Ama' : dto.email;
+          this.logger.error(
+            `Échec envoi mail de confirmation (${target}) pour la résa ${reservation.id} du ${dto.date} ${dto.time}`,
+            r.reason instanceof Error ? r.reason.stack : String(r.reason),
+          );
+        }
+      });
     }
 
     return reservation;
@@ -64,14 +71,14 @@ export class ReservationsService {
   /** Réservations du lendemain sans rappel envoyé (heure Paris) */
   async findUpcomingTomorrow(): Promise<Reservation[]> {
     return this.prisma.reservation.findMany({
-      where: { date: this.parisDateStr(+1), reminderSentAt: null },
+      where: { date: parisDateStr(+1), reminderSentAt: null },
     });
   }
 
   /** Réservations d'hier sans facture envoyée (heure Paris) */
   async findYesterdayForInvoice(): Promise<Reservation[]> {
     return this.prisma.reservation.findMany({
-      where: { date: this.parisDateStr(-1), invoiceSentAt: null },
+      where: { date: parisDateStr(-1), invoiceSentAt: null },
     });
   }
 

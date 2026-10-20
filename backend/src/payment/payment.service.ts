@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { CreateReservationDto } from '../reservations/dto/create-reservation.dto';
 import { ReservationsService } from '../reservations/reservations.service';
+import { EmailService } from '../email/email.service';
 import { isValidSlot } from '../reservations/slots';
 
 const PAYPAL_API = {
@@ -22,7 +23,10 @@ const ITEM_NAME = 'Séance HRE — Hypnose Régressive Ésotérique';
 export class PaymentService {
   private readonly logger = new Logger(PaymentService.name);
 
-  constructor(private readonly reservationsService: ReservationsService) {}
+  constructor(
+    private readonly reservationsService: ReservationsService,
+    private readonly emailService: EmailService,
+  ) {}
 
   private get baseUrl(): string {
     return process.env.PAYPAL_MODE === 'live' ? PAYPAL_API.live : PAYPAL_API.sandbox;
@@ -52,27 +56,56 @@ export class PaymentService {
     return data.access_token;
   }
 
-  /** Rembourse une capture PayPal déjà réalisée (best-effort, ne lance pas d'exception) */
-  private async refundCapture(captureID: string): Promise<void> {
+  /** Rembourse une capture PayPal déjà réalisée. Ne lance jamais d'exception.
+   *  Retourne true seulement si PayPal a accepté le remboursement.
+   *  En cas d'échec : log en erreur + mail d'alerte à Ama pour un remboursement manuel. */
+  private async refundCapture(
+    orderID: string,
+    captureID: string,
+    dto: CreateReservationDto,
+  ): Promise<boolean> {
+    let reason: string;
     try {
       const token = await this.getAccessToken();
-      await fetch(`${this.baseUrl}/v2/payments/captures/${captureID}/refund`, {
+      const res = await fetch(`${this.baseUrl}/v2/payments/captures/${encodeURIComponent(captureID)}/refund`, {
         method:  'POST',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body:    JSON.stringify({}),
       });
-      this.logger.log(`Capture ${captureID} remboursée`);
+      const data = await res.json().catch(() => ({})) as { status?: string };
+      if (res.ok && (data.status === 'COMPLETED' || data.status === 'PENDING')) {
+        this.logger.log(`Capture ${captureID} remboursée (statut ${data.status})`);
+        return true;
+      }
+      reason = `PayPal a répondu HTTP ${res.status}, statut ${data.status ?? 'inconnu'}`;
     } catch (err) {
-      this.logger.error(`Échec remboursement capture ${captureID}`, err);
+      reason = err instanceof Error ? err.message : String(err);
     }
+
+    this.logger.error(`ÉCHEC remboursement capture ${captureID} (commande ${orderID}) : ${reason}`);
+    try {
+      await this.emailService.sendRefundFailureAlert({ orderID, captureID, reason, dto });
+    } catch (err) {
+      this.logger.error(`Échec envoi alerte remboursement pour ${captureID}`, err);
+    }
+    return false;
+  }
+
+  private refundMessage(refunded: boolean): string {
+    return refunded
+      ? 'Votre paiement a été remboursé.'
+      : 'Votre paiement va vous être remboursé manuellement très rapidement.';
   }
 
   /** Crée une commande PayPal de 150 € — vérifie que le créneau est encore libre */
-  async createOrder(reservationData: Partial<CreateReservationDto>): Promise<{ orderID: string }> {
-    const date = reservationData.date;
-    const time = reservationData.time ?? '13:30';
+  async createOrder(reservationData: CreateReservationDto): Promise<{ orderID: string }> {
+    const { date, time } = reservationData;
 
-    if (date && await this.reservationsService.isSlotTaken(date, time)) {
+    // Vérifié AVANT PayPal : créneau réel, futur et encore libre
+    if (!isValidSlot(date, time)) {
+      throw new BadRequestException('Créneau invalide ou expiré.');
+    }
+    if (await this.reservationsService.isSlotTaken(date, time)) {
       throw new ConflictException('Ce créneau est déjà réservé.');
     }
 
@@ -92,7 +125,7 @@ export class PaymentService {
           unit_amount: { currency_code: CURRENCY, value: PRICE_EUR },
           category:    'DIGITAL_GOODS',
         }],
-        description: `Séance HRE — ${reservationData.firstName ?? ''} ${reservationData.lastName ?? ''} — ${reservationData.date ?? ''}`,
+        description: `Séance HRE, ${reservationData.firstName} ${reservationData.lastName}, ${reservationData.date}`.slice(0, 127),
       }],
       payment_source: {
         paypal: {
@@ -136,10 +169,16 @@ export class PaymentService {
     if (!isValidSlot(reservationDto.date, reservationDto.time)) {
       throw new BadRequestException('Créneau invalide ou expiré.');
     }
+    // Créneau déjà pris : on refuse AVANT de débiter le client
+    if (await this.reservationsService.isSlotTaken(reservationDto.date, reservationDto.time)) {
+      throw new ConflictException(
+        'Ce créneau vient d\'être réservé par quelqu\'un d\'autre. Aucun paiement n\'a été prélevé.',
+      );
+    }
 
     const token = await this.getAccessToken();
 
-    const res = await fetch(`${this.baseUrl}/v2/checkout/orders/${orderID}/capture`, {
+    const res = await fetch(`${this.baseUrl}/v2/checkout/orders/${encodeURIComponent(orderID)}/capture`, {
       method:  'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     });
@@ -162,25 +201,34 @@ export class PaymentService {
       throw new BadRequestException(`Payment not completed: ${capture.status}`);
     }
 
-    const captureInfo = capture.purchase_units[0].payments.captures[0];
-    const captureID   = captureInfo.id;
+    const captureInfo = capture.purchase_units?.[0]?.payments?.captures?.[0];
+    if (!captureInfo?.id) {
+      throw new BadRequestException('Réponse PayPal inattendue (capture introuvable).');
+    }
+    const captureID = captureInfo.id;
 
     // Vérifier que le montant capturé est bien 150,00 EUR
     if (captureInfo.amount?.value !== PRICE_EUR || captureInfo.amount?.currency_code !== CURRENCY) {
-      await this.refundCapture(captureID);
-      throw new BadRequestException('Montant capturé incorrect — remboursement initié.');
+      const refunded = await this.refundCapture(orderID, captureID, reservationDto);
+      throw new BadRequestException(`Montant capturé incorrect. ${this.refundMessage(refunded)}`);
     }
 
-    // Créer la réservation avec paypalOrderId pour idempotence
+    // Créer la réservation (contraintes uniques : (date,time) et paypalOrderId)
     try {
       await this.reservationsService.create(reservationDto, false, orderID);
     } catch (err: unknown) {
-      const prismaError = err as { code?: string };
+      const prismaError = err as { code?: string; meta?: { target?: unknown } };
       if (prismaError.code === 'P2002') {
-        // Créneau pris en simultané : rembourser et rejeter
-        await this.refundCapture(captureID);
+        const target = JSON.stringify(prismaError.meta?.target ?? '');
+        if (target.includes('paypalOrderId')) {
+          // Même paiement rejoué : la résa existe déjà avec ce paiement, on ne rembourse PAS
+          this.logger.warn(`Capture rejouée pour la commande ${orderID} (déjà enregistrée)`);
+          throw new ConflictException('Ce paiement a déjà été utilisé pour une réservation.');
+        }
+        // Créneau pris en simultané (date,time) : rembourser et rejeter
+        const refunded = await this.refundCapture(orderID, captureID, reservationDto);
         throw new ConflictException(
-          'Ce créneau vient d\'être réservé par quelqu\'un d\'autre. Votre paiement a été remboursé.',
+          `Ce créneau vient d'être réservé par quelqu'un d'autre. ${this.refundMessage(refunded)}`,
         );
       }
       throw err;
