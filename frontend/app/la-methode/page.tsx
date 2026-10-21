@@ -218,6 +218,7 @@ export default function LaMethode() {
                   src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/bird-freedom.jpg`}
                   alt="Un oiseau en liberté, symbole de libération des blocages"
                   fill
+                  sizes="(max-width: 600px) 100vw, 520px"
                   style={{ objectFit: 'cover', objectPosition: 'center 78%', filter: 'grayscale(85%) sepia(25%) hue-rotate(230deg) contrast(1.12) brightness(1.08)' }}
                 />
               </div>

@@ -125,6 +125,7 @@ export default function HeroSection() {
                 src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/anna-blanc.png`}
                 alt="Ama — Anne-Marie Blanc, Praticienne HRE"
                 fill
+                sizes="240px"
                 style={{ objectFit:'cover', objectPosition:'center top', zIndex:1 }}
                 priority
               />

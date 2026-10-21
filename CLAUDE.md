@@ -50,7 +50,8 @@ annablanc/
 │   │   └── sections/       # HeroSection, MethodeSection, etc.
 │   ├── public/
 │   │   ├── anna-blanc.png
-│   │   └── favicon.png
+│   │   ├── videos/         # mp4 + posters webp, noms hashes (lib/videos.ts), cache immutable
+│   │   └── youtube-*.png
 │   └── .env.local          # Variables d'environnement frontend
 │
 └── backend/                # NestJS

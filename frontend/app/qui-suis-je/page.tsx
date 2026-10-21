@@ -90,6 +90,7 @@ export default function QuiSuisJe() {
                   src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/anna-blanc.png`}
                   alt="Anne-Marie Blanc, Praticienne HRE"
                   fill
+                  sizes="240px"
                   style={{ objectFit: 'cover', objectPosition: 'center top' }}
                 />
               </div>
