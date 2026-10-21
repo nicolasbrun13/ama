@@ -16,12 +16,6 @@ export default function Home() {
     <main>
       <HeroSection />
 
-      {/* Separator hero → contenu */}
-      <div style={{
-        height: '1px',
-        background: 'linear-gradient(to right, transparent 0%, rgba(255,197,211,.7) 25%, rgba(255,197,211,.7) 75%, transparent 100%)',
-      }} />
-
       <MethodeSection />
 
       <BienfaitsSection />
