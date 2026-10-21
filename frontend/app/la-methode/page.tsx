@@ -141,7 +141,7 @@ export default function LaMethode() {
 
       {/* Separator */}
       <div style={{
-        height: '1px',
+        height: '2px',
         background: 'linear-gradient(to right, transparent 0%, rgba(196,176,245,.7) 25%, rgba(196,176,245,.7) 75%, transparent 100%)',
       }} />
 
