@@ -156,9 +156,12 @@ export default function Footer() {
           </div>{/* fin Navigation + Contact groupés */}
         </div>
 
-        <div className="footer-bottom" style={{ borderTop:'1px solid rgba(255,255,255,.04)', paddingTop:'1.5rem', display:'flex', justifyContent:'space-between', alignItems:'center', fontSize:'.7rem', color:'var(--dim)' }}>
+        <div className="footer-bottom" style={{ borderTop:'1px solid rgba(255,255,255,.04)', paddingTop:'1.5rem', display:'grid', gridTemplateColumns:'1fr auto 1fr', alignItems:'center', fontSize:'.7rem', color:'var(--dim)' }}>
           <span>© 2026 Anne-Marie Blanc · Hypnose HRE · Tous droits réservés</span>
-          <span>
+          <span className="footer-credit">
+            Communication : <a href="https://agence-stylia.fr" target="_blank" rel="noopener noreferrer" style={{ color:'var(--rose)', textDecoration:'none' }}>agence-stylia.fr</a>
+          </span>
+          <span style={{ justifySelf:'end' }}>
             <Link href="/mentions-legales" onClick={scrollTop('/mentions-legales')} style={{ color:'var(--dim)', textDecoration:'none', marginRight:'1rem' }}>Mentions légales &amp; CGV</Link>
             <Link href="/contact" onClick={scrollTop('/contact')} style={{ color:'var(--dim)', textDecoration:'none' }}>Contact</Link>
           </span>
@@ -170,11 +173,13 @@ export default function Footer() {
           .footer-grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
           .footer-nav-group { flex-direction: column !important; gap: 1.5rem !important; }
           .footer-bottom {
+            display: flex !important;
             flex-direction: column !important;
             gap: .55rem !important;
             text-align: center !important;
           }
           .footer-bottom > span:last-child {
+            justify-self: auto !important;
             display: flex !important;
             flex-wrap: wrap !important;
             justify-content: center !important;
