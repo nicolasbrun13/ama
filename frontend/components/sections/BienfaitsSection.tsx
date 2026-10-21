@@ -5,7 +5,7 @@ const cards = [
   { icon:'🔄', title:'Schémas répétitifs', desc:'Sensations de blocage répété, relations difficiles, échecs récurrents, situations qui se répètent malgré vos efforts conscients.' },
   { icon:'🌊', title:'Phobies & traumatismes', desc:'Peurs irrationnelles, phobies inexpliquées, traumas enfouis qui impactent votre quotidien.' },
   { icon:'⭐', title:'Quête de sens', desc:'Comprendre votre existence et remettre du sens sur ces expériences.' },
-  { icon:'🔗', title:'Liens transgénérationnels', desc:'Libérer les liens toxiques qui influencent votre vie actuelle.' },
+  { icon:'🔗', title:'Liens transgéné­rationnels', desc:'Libérer les liens toxiques qui influencent votre vie actuelle.' },
   { icon:'🌸', title:'Confiance & alignement', desc:'Retrouver confiance en vous et vous aligner avec votre être profond pour vivre pleinement.' },
 ];
 
@@ -39,8 +39,15 @@ export default function BienfaitsSection() {
       <style>{`
         .card-stretch { height: 100%; }
         .card-breath:hover .benef-orb { background:rgba(255,197,211,.2); border-color:rgba(255,197,211,.5); box-shadow:0 0 18px rgba(255,197,211,.3); transform:scale(1.1) rotate(12deg); }
-        @media(max-width:767px){ .bienfaits-home-grid { grid-template-columns:repeat(2,1fr) !important; } }
-        @media(max-width:480px){ .bienfaits-home-grid { gap:.85rem !important; } }
+        @media(max-width:767px){
+          .bienfaits-home-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+          .bienfaits-home-grid h4, .bienfaits-home-grid p { hyphens:auto; overflow-wrap:break-word; }
+        }
+        @media(max-width:480px){
+          .bienfaits-home-grid { gap:.85rem !important; }
+          .bienfaits-home-grid .card-breath { padding:1.5rem 1rem !important; }
+          .bienfaits-home-grid h4 { font-size:.8rem !important; }
+        }
       `}</style>
     </section>
   );

@@ -130,12 +130,12 @@ export default function HeroSection() {
                 priority
               />
               <div className="photo-caption">
-                <div style={{ display:'flex', gap:'3px' }}>
+                <div className="photo-stars" style={{ display:'flex', gap:'3px' }}>
                   {'★★★★★'.split('').map((s, i) => (
                     <span key={i} style={{ color:'var(--gold)', fontSize:'.7rem' }}>{s}</span>
                   ))}
                 </div>
-                <div style={{ fontFamily:'"Playfair Display",serif', fontStyle:'italic', fontSize:'1.75rem', color:'rgba(253,240,247,.92)' }}>Ama</div>
+                <div className="photo-name" style={{ fontFamily:'"Playfair Display",serif', fontStyle:'italic', fontSize:'1.75rem', color:'rgba(253,240,247,.92)' }}>Ama</div>
               </div>
             </Link>
           </div>
@@ -161,6 +161,10 @@ export default function HeroSection() {
           .halo-ring { display:none !important; }
           .photo-glow { width:110px !important; height:110px !important; }
           .photo-frame { width:148px !important; height:198px !important; }
+          .photo-caption { padding:.6rem .8rem .8rem !important; gap:.2rem !important; }
+          .photo-stars { gap:2px !important; }
+          .photo-stars span { font-size:.55rem !important; }
+          .photo-name { font-size:1.3rem !important; }
           .hero-badge { position:relative !important; bottom:auto !important; left:auto !important; transform:none !important; margin-top:.6rem; }
           .btn-rose-link, .btn-ghost-link { width:100%; justify-content:center !important; box-sizing:border-box; padding-left:1rem !important; padding-right:1rem !important; }
         }

@@ -43,7 +43,7 @@ const bienfaits = [
   { icon: '🔄', title: 'Schémas répétitifs', desc: 'Relations difficiles, échecs récurrents, situations qui se répètent malgré vos efforts conscients.' },
   { icon: '🌊', title: 'Phobies & traumatismes', desc: "Peurs irrationnelles, phobies inexpliquées, traumas enfouis qui impactent votre quotidien." },
   { icon: '⭐', title: 'Quête de sens', desc: "Comprendre votre chemin de vie, votre mission d'âme et le sens profond de vos expériences." },
-  { icon: '🔗', title: 'Liens transgénérationnels', desc: 'Libérer les liens transgénérationnels qui influencent votre vie actuelle.' },
+  { icon: '🔗', title: 'Liens transgéné­rationnels', desc: 'Libérer les liens transgénérationnels qui influencent votre vie actuelle.' },
   { icon: '🌸', title: 'Confiance & alignement', desc: 'Retrouver confiance en vous et vous aligner avec votre être profond pour vivre pleinement.' },
 ];
 
@@ -351,11 +351,17 @@ export default function LaMethode() {
       <style>{`
         @media (max-width: 767px) {
           .methode-grid { grid-template-columns: 1fr !important; }
-          .bienfaits-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .bienfaits-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+          .bienfaits-grid h4, .bienfaits-grid p { hyphens: auto; overflow-wrap: break-word; }
           .methode-photo-card { height: 200px !important; min-height: 200px !important; }
         }
+        @media (max-width: 480px) {
+          .bienfaits-grid { gap: .85rem !important; }
+          .bienfaits-grid .card-breath { padding: 1.5rem 1rem !important; }
+          .bienfaits-grid h4 { font-size: .8rem !important; }
+        }
         @media (min-width: 640px) and (max-width: 900px) {
-          .bienfaits-grid { grid-template-columns: repeat(2,1fr) !important; }
+          .bienfaits-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
         }
       `}</style>
     </main>

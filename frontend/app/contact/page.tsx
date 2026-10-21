@@ -288,7 +288,8 @@ export default function ContactPage() {
         .btn-cta-outline:hover { background: rgba(255,197,211,.07) !important; border-color: rgba(255,197,211,.6) !important; }
         @media (max-width: 767px) {
           .contact-grid { grid-template-columns: 1fr !important; }
-          .contact-info-cards { display: grid !important; grid-template-columns: 1fr 1fr !important; flex-direction: unset !important; }
+          .contact-info-cards { display: grid !important; grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; flex-direction: unset !important; }
+          .contact-info-cards a, .contact-info-cards div { overflow-wrap: anywhere; }
         }
       `}</style>
     </main>
