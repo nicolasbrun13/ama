@@ -12,7 +12,7 @@ const CHANNEL = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
 const YT_WATCH = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 const YT_THUMB = (id: string) => `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
 
-type Video = { id: string; title: string; date: string; tag?: string; customThumb?: string };
+type Video = { id: string; title: string; date?: string; tag?: string; customThumb?: string };
 
 const featured: Video = {
   id: 'UzQzHmQs6EA',
@@ -20,6 +20,13 @@ const featured: Video = {
   date: '18 sept. 2026',
   tag: 'Témoignage',
   customThumb: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/youtube-featured.png`,
+};
+
+// Vidéo de présentation : cible des liens "Comprendre la méthode" du site (/youtube#comprendre)
+const highlight: Video = {
+  id: 'rzDwEVCcAEQ',
+  title: 'Présentation Ama et Nag',
+  tag: 'Pour commencer',
 };
 
 const contentVideos: Video[] = [
@@ -110,9 +117,11 @@ function VideoCard({ video, featured: isFeatured = false }: { video: Video; feat
         }}>
           {video.title}
         </h3>
-        <p style={{ fontSize: '.72rem', color: 'rgba(253,240,247,.35)', letterSpacing: '.04em' }}>
-          {video.date}
-        </p>
+        {video.date && (
+          <p style={{ fontSize: '.72rem', color: 'rgba(253,240,247,.35)', letterSpacing: '.04em' }}>
+            {video.date}
+          </p>
+        )}
       </div>
     </a>
   );
@@ -314,6 +323,16 @@ export default function YouTubePage() {
               Comprendre la méthode
             </h2>
           </div>
+          <div style={{ maxWidth: '720px', margin: '0 auto 3rem' }}>
+            <VideoCard video={highlight} featured />
+          </div>
+          <p style={{
+            textAlign: 'center', marginBottom: '1.25rem',
+            fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
+            textTransform: 'uppercase' as const, color: 'var(--dim)',
+          }}>
+            Pour aller plus loin
+          </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1.25rem' }} className="yt-grid">
             {contentVideos.map(v => <VideoCard key={v.id} video={v} />)}
           </div>
