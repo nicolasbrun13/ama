@@ -169,16 +169,26 @@ export class EmailService {
     });
   }
 
-  generateIcs(dto: CreateReservationDto): Buffer {
+  generateIcs(dto: CreateReservationDto, forAma = false): Buffer {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const ical = require('ical-generator');
     const calendar: ICalCalendar = ical.default({ name: 'Séance HRE — Ama' });
     const start = new Date(`${dto.date}T${dto.time}:00`);
     const end   = new Date(start.getTime() + 2 * 60 * 60 * 1000);
+    // Valeurs brutes (pas escHtml) : ce n'est pas du HTML, ical-generator échappe le format ICS.
+    const amaDescription = [
+      `${dto.firstName} ${dto.lastName}`,
+      dto.email,
+      dto.phone || 'Non renseigné',
+      ...(dto.message ? [dto.message.replace(/\r/g, '').slice(0, 500)] : []),
+      'Mode : Zoom',
+    ].join('\n');
     calendar.createEvent({
       start, end,
-      summary: 'Séance HRE avec Ama',
-      description: `Séance d'Hypnose Régressive Ésotérique avec Anne-Marie Blanc.\nMode : Zoom.\nContact : ${CONTACT_EMAIL}`,
+      summary: forAma ? `Séance HRE \u2014 ${dto.firstName} ${dto.lastName}` : 'Séance HRE avec Ama',
+      description: forAma
+        ? amaDescription
+        : `Séance d'Hypnose Régressive Ésotérique avec Anne-Marie Blanc.\nMode : Zoom.\nContact : ${CONTACT_EMAIL}`,
       organizer: { name: 'Ama — Hypnose HRE', email: process.env.AMA_EMAIL || CONTACT_EMAIL },
       attendees: [{ name: `${dto.firstName} ${dto.lastName}`, email: dto.email, rsvp: true }],
     });
@@ -191,7 +201,7 @@ export class EmailService {
 
   // ── Notification à Ama ─────────────────────────────────────────────────────
   async sendConfirmationToAma(dto: CreateReservationDto): Promise<void> {
-    const icsBuffer = this.generateIcs(dto);
+    const icsBuffer = this.generateIcs(dto, true);
     const fn  = escHtml(dto.firstName);
     const ln  = escHtml(dto.lastName);
     const em  = escHtml(dto.email);
