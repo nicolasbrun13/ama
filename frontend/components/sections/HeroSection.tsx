@@ -5,72 +5,66 @@ import Link from 'next/link';
 import VideoBackground from '@/components/animations/VideoBackground';
 
 export default function HeroSection() {
-  const canvasRef    = useRef<HTMLCanvasElement>(null);
+  const sectionRef   = useRef<HTMLElement>(null);
+  const haloRingsRef = useRef<HTMLDivElement>(null);   // wrapper around the 3 rings only
 
-  /* ── Champ d'étoiles (scintillement + dérive lente, sans parallax) ── */
+  /* ── Scroll → halo rings expand + fade ── */
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d')!;
-    let W: number, H: number;
+    const section = sectionRef.current;
+    const rings   = haloRingsRef.current;
+    if (!section || !rings) return;
 
-    function resize() {
-      W = canvas!.width  = canvas!.parentElement!.offsetWidth;
-      H = canvas!.height = canvas!.parentElement!.offsetHeight;
-    }
-    resize();
-    window.addEventListener('resize', resize);
+    let rafId: number;
+    let scale = 1, targetScale = 1;
+    let opac  = 1, targetOpac  = 1;
+    let animating = false;
 
-    type Star = { x: number; y: number; r: number; a: number; da: number; vx: number; gold: boolean; pink: boolean };
-    function makeLayer(n: number, rMin: number, rMax: number, vx: number, g: number, p: number): Star[] {
-      return Array.from({ length: n }, () => ({
-        x: Math.random() * W, y: Math.random() * H,
-        r: rMin + Math.random() * (rMax - rMin),
-        a: Math.random(), da: (Math.random() - .5) * .006,
-        vx: vx * (.8 + Math.random() * .4),
-        gold: Math.random() < g, pink: Math.random() < p,
-      }));
-    }
-    const L1 = makeLayer(180, .2,  .7, 0,   .04, .08);
-    const L2 = makeLayer(80,  .7, 1.4, .04, .12, .15);
-    const L3 = makeLayer(35, 1.4, 2.4, .08, .22, .22);
+    function animate() {
+      scale += (targetScale - scale) * 0.1;
+      opac  += (targetOpac  - opac)  * 0.1;
+      rings!.style.transform = `scale(${scale.toFixed(5)})`;
+      rings!.style.opacity   = opac.toFixed(5);
 
-    function drawLayer(layer: Star[]) {
-      for (const s of layer) {
-        s.x += s.vx; if (s.x > canvas!.width) s.x = 0;
-        s.a += s.da; if (s.a < .05 || s.a > .95) s.da *= -1;
-        const a   = Math.max(.05, Math.min(.95, s.a));
-        const h   = Math.round(a * 255).toString(16).padStart(2, '0');
-        const col = s.gold ? '#E8BF50' : s.pink ? '#FFAAC0' : '#FDF0F7';
-        ctx.beginPath();
-        ctx.arc(s.x % W, s.y % H, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = col + h; ctx.fill();
+      const doneS = Math.abs(targetScale - scale) < 0.0005;
+      const doneO = Math.abs(targetOpac  - opac)  < 0.0005;
+
+      if (!doneS || !doneO) {
+        rafId = requestAnimationFrame(animate);
+      } else {
+        rings!.style.transform = `scale(${targetScale.toFixed(5)})`;
+        rings!.style.opacity   = targetOpac.toFixed(5);
+        animating = false;
       }
     }
 
-    let rafId: number;
-    function tick() {
-      ctx.clearRect(0, 0, W, H);
-      drawLayer(L1); drawLayer(L2); drawLayer(L3);
-      rafId = requestAnimationFrame(tick);
+    function onScroll() {
+      const rect     = section!.getBoundingClientRect();
+      const scrolled = Math.max(0, -rect.top);
+      // Cover the full 5 wheel-notches: progress over 110 % of hero height
+      const progress = Math.min(1, scrolled / (rect.height * 1.1));
+      // ease-out quad
+      const eased    = 1 - Math.pow(1 - progress, 2);
+      targetScale = 1 + eased * 2.0;        // 1× → 3× (was 1.72×)
+      targetOpac  = 1 - eased * 0.88;       // 1 → 0.12 (almost invisible at max)
+
+      if (!animating) {
+        animating = true;
+        rafId = requestAnimationFrame(animate);
+      }
     }
 
-    canvas.style.opacity = '0';
-    canvas.style.transition = 'opacity 2s ease';
-    const startTimeout = setTimeout(() => {
-      rafId = requestAnimationFrame(tick);
-      canvas.style.opacity = '1';
-    }, 2000);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
     return () => {
-      clearTimeout(startTimeout);
+      window.removeEventListener('scroll', onScroll);
       cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', resize);
     };
   }, []);
 
   return (
     <section
+      ref={sectionRef}
       className="hero-section"
       style={{ position:'relative', overflow:'hidden', minHeight:'100vh', display:'flex', alignItems:'center', padding:'7rem 2rem 5rem' }}
     >
@@ -81,8 +75,6 @@ export default function HeroSection() {
       <div className="neb neb-2" />
       <div className="neb neb-3" />
 
-      {/* Étoiles (desktop uniquement) */}
-      <canvas ref={canvasRef} className="hero-stars-canvas" style={{ position:'absolute', inset:0, width:'100%', height:'100%', zIndex:1, pointerEvents:'none' }} />
 
       <div style={{ position:'relative', zIndex:2, maxWidth:'1200px', margin:'0 auto', width:'100%' }} className="hero-inner">
 
@@ -107,9 +99,10 @@ export default function HeroSection() {
         <div className="hero-right" style={{ display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', position:'relative' }}>
           <div style={{ position:'relative', display:'flex', alignItems:'center', justifyContent:'center' }}>
 
-            {/* Rings wrapper (statique : plus d'effet au scroll).
+            {/* Rings wrapper : scale + fade au scroll.
                 position:absolute inset:0 + flex centering preserves the rings' centering. */}
             <div
+              ref={haloRingsRef}
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -164,7 +157,6 @@ export default function HeroSection() {
         }
         @media(max-width:600px){
           .hero-section { padding-top:5rem !important; padding-bottom:2.5rem !important; padding-left:1.25rem !important; padding-right:1.25rem !important; }
-          .hero-stars-canvas { display:none !important; }
           .halo-ring { display:none !important; }
           .photo-glow { width:110px !important; height:110px !important; }
           .photo-frame { width:148px !important; height:198px !important; }
