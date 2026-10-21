@@ -95,7 +95,7 @@ const faq = [
   },
   {
     q: "C'est quoi le support télépathique ?",
-    a: "Un opérateur formé entre en hypnose et communique avec votre partie subliminale via une connexion télépathique. Cette personne perçoit les informations de votre conscience et les communique. C'est la particularité fondamentale de la méthode HRE.",
+    a: "Un support télépathe, formé à la méthode, entre en hypnose et communique avec votre partie subliminale via une connexion télépathique, guidé par l'opérateur. Il perçoit les informations de votre conscience et les transmet. C'est la particularité fondamentale de la méthode HRE.",
   },
   {
     q: "Les résultats sont-ils permanents ?",
@@ -169,7 +169,7 @@ export default function LaMethode() {
                 Fondée en 2012 par <strong style={{ color: 'var(--violet-deep)', fontWeight: 600 }}>Calogéro Grifasi</strong>, chercheur autodidacte passionné par les mécanismes de l&apos;inconscient, la méthode est le fruit d&apos;années d&apos;expérimentation et de recherche.
               </p>
               <p style={{ fontSize: '.9rem', color: 'rgba(30,15,50,.72)', lineHeight: 1.88, marginBottom: '1rem' }}>
-                Sa particularité absolue : grâce à un <strong style={{ color: 'var(--violet-deep)', fontWeight: 600 }}>support télépathique</strong>, vous n&apos;entrez pas vous-même en hypnose. Un opérateur formé entre en état de conscience modifié à votre place et accède aux informations de votre espace énergétique.
+                Sa particularité absolue : grâce à un <strong style={{ color: 'var(--violet-deep)', fontWeight: 600 }}>support télépathique</strong>, vous n&apos;entrez pas vous-même en hypnose. Le support télépathe, formé à la méthode, entre en état de conscience modifié à votre place, guidé par l&apos;opérateur, et accède aux informations de votre espace énergétique.
               </p>
               <p style={{ fontSize: '.9rem', color: 'rgba(30,15,50,.72)', lineHeight: 1.88, marginBottom: '1rem' }}>
                 La méthode repose sur la <strong style={{ color: 'var(--violet-deep)', fontWeight: 600 }}>souveraineté totale de la conscience</strong> : c&apos;est toujours votre propre subconscient qui effectue les transformations. Aucune entité extérieure n&apos;intervient dans votre espace intérieur.

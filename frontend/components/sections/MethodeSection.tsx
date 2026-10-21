@@ -28,7 +28,7 @@ export default function MethodeSection() {
                 L&apos;HRE est une approche thérapeutique fondée par <strong style={{ color:'var(--rose)', fontWeight:600 }}>Calogéro Grifasi</strong> qui permet d&apos;accéder aux zones cachées de l&apos;inconscient profond, au-delà des frontières du temps et de l&apos;espace.
               </p>
               <p style={{ fontSize:'.9rem', color:'var(--dim)', lineHeight:1.88, marginBottom:'1rem' }}>
-                Sa particularité : grâce à un <strong style={{ color:'var(--rose)', fontWeight:600 }}>support télépathique</strong>, vous n&apos;entrez pas vous-même en hypnose. Une tierce personne entre en transe à votre place et accède aux informations de votre inconscient.
+                Sa particularité : grâce à un <strong style={{ color:'var(--rose)', fontWeight:600 }}>support télépathique</strong>, vous n&apos;entrez pas vous-même en hypnose. Le support télépathe entre en transe à votre place, guidé par l&apos;opérateur, et accède aux informations de votre inconscient.
               </p>
               <p style={{ fontSize:'.9rem', color:'var(--dim)', lineHeight:1.88, marginBottom:'1rem' }}>
                 La méthode repose sur la <strong style={{ color:'var(--rose)', fontWeight:600 }}>souveraineté de la conscience</strong> : c&apos;est toujours votre propre subconscient qui effectue les transformations. Aucune entité extérieure n&apos;intervient.
