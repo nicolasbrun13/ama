@@ -62,7 +62,7 @@ const steps = [
   {
     n: 3,
     title: 'La séance hypnotélépathique',
-    desc: "Le support télépathe (une tierce personne formée à la méthode) entre en état de conscience modifié à votre place, puis il est guidé par l'opérateur, Ama. Vous restez totalement conscient et lucide tout au long du processus.",
+    desc: "Le support télépathe (Nag) entre en état de conscience modifié à votre place, puis il est guidé par l'opérateur, Ama. Vous restez totalement conscient et lucide tout au long du processus.",
   },
   {
     n: 4,
