@@ -113,11 +113,26 @@ body {
   z-index: 1; pointer-events: none;
 }
 
+/* Telephone en portrait : la video paysage est tournee de 90 degres (voir lib/videos.ts, rotateOnPortrait).
+   Le conteneur devient la reference de taille (container query) : la video prend sa hauteur comme largeur et inversement. */
+@media (max-width: 767px) and (orientation: portrait) {
+  .vid-bg { container-type: size; }
+  .vid-bg video.vid-rot-portrait {
+    position: absolute; top: 50%; left: 50%;
+    width: 100cqh; height: 100cqw; max-width: none;
+    transform-origin: center;
+    transform: translate(-50%, -50%) rotate(calc(90deg + var(--vid-rot, 0deg))) !important;
+  }
+}
+
 /* ============================================================
    RESPONSIVE — Mobile
    ============================================================ */
 
 @media (max-width: 767px) {
+  /* Les elements ScrollReveal (translateX avant apparition) depassaient du viewport et rendaient la page deplacable
+     horizontalement sur telephone : on les coupe a la largeur de leur section (clip ne cree pas de zone de scroll). */
+  section { overflow-x: clip; }
   /* Section padding */
   section[style*="padding: 6rem 2rem"] {
     padding-top: 3.5rem !important;
@@ -142,6 +157,13 @@ body {
   .eyebrow-pill { font-size: .6rem !important; padding: .3rem .75rem !important; }
   /* Puces au-dessus des titres hero (pages internes) — masquées sur mobile */
   .sub-hero-pill { display: none !important; }
+  /* Heros des pages internes : beaucoup moins hauts sur mobile (le titre garde sa taille, le sous-titre est reduit) */
+  main > section.sub-hero {
+    min-height: 0 !important;
+    padding: 4.75rem 1.15rem 1.5rem !important;
+  }
+  .sub-hero-inner { transform: none !important; }
+  .sub-hero-inner p { font-size: .82rem !important; line-height: 1.6 !important; }
 }
 
 @media (max-width: 600px) {

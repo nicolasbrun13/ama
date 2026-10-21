@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc = DEFAULT_VIDEO, rotate, startDelay = 0, bottomExtend, playbackRate = 0.5 }: Props) {
-  const { src: resolvedSrc, poster } = resolveVideo(videoSrc);
+  const { src: resolvedSrc, poster, rotateOnPortrait } = resolveVideo(videoSrc);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
   // La video n'est telechargee que lorsque la section approche de l'ecran
@@ -108,7 +108,8 @@ export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc
       <video
         autoPlay muted loop playsInline suppressHydrationWarning
         poster={poster}
-        style={rotate ? { transform: `rotate(${rotate}deg)`, transformOrigin: 'center' } : undefined}
+        className={rotateOnPortrait ? 'vid-rot-portrait' : undefined}
+        style={{ ...(rotate ? { transform: `rotate(${rotate}deg)`, transformOrigin: 'center' } : {}), '--vid-rot': `${rotate ?? 0}deg` } as React.CSSProperties}
         onLoadedMetadata={(e) => { (e.target as HTMLVideoElement).playbackRate = playbackRate; }}
       >
         {loadVideo && <source src={resolvedSrc} type="video/mp4" suppressHydrationWarning />}

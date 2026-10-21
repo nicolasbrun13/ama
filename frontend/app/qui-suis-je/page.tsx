@@ -31,13 +31,13 @@ export default function QuiSuisJe() {
   return (
     <main>
       {/* Sub-hero */}
-      <section style={{
+      <section className="sub-hero" style={{
         position: 'relative',
         padding: '4.5rem 2rem', overflow: 'hidden',
         minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
         <VideoBackground videoSrc="/videos/30073.mp4" playbackRate={0.7} overlay="rgba(6,3,15,.72)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
+        <div className="sub-hero-inner" style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div className="sub-hero-pill" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
@@ -224,17 +224,16 @@ export default function QuiSuisJe() {
         @media (max-width: 767px) {
           .qsj-flex { flex-direction: column !important; }
           .qsj-photo { align-self: center !important; }
+          .qsj-photo { margin-top: 1.5rem !important; }
+          .qsj-photo > div { width: 120px !important; height: 165px !important; }
+          .qsj-photo > p { margin-top: 1.25rem !important; }
           .values-grid { grid-template-columns: 1fr !important; }
         }
         @media (min-width: 640px) and (max-width: 900px) {
           .values-grid { grid-template-columns: repeat(2,1fr) !important; }
         }
         @media (max-width: 400px) {
-          .qsj-photo > div {
-            width: 75vw !important;
-            max-width: 200px !important;
-            height: calc(75vw * 330 / 240) !important;
-          }
+          .qsj-photo > div { width: 100px !important; height: 138px !important; }
         }
       `}</style>
     </main>

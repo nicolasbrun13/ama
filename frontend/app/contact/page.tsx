@@ -73,13 +73,13 @@ export default function ContactPage() {
   return (
     <main>
       {/* Sub-hero */}
-      <section style={{
+      <section className="sub-hero" style={{
         position: 'relative',
         padding: '4.5rem 2rem', overflow: 'hidden',
         minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
         <VideoBackground videoSrc="/videos/4034.mp4" overlay="rgba(6,3,15,.68)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1000px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
+        <div className="sub-hero-inner" style={{ position: 'relative', zIndex: 2, maxWidth: '1000px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div className="sub-hero-pill" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
@@ -290,6 +290,10 @@ export default function ContactPage() {
           .contact-grid { grid-template-columns: 1fr !important; }
           .contact-info-cards { display: grid !important; grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; flex-direction: unset !important; }
           .contact-info-cards a, .contact-info-cards div { overflow-wrap: anywhere; }
+        }
+        @media (max-width: 480px) {
+          /* Une carte par ligne : meme largeur, et l'email tient sans etre coupe */
+          .contact-info-cards { grid-template-columns: minmax(0,1fr) !important; }
         }
       `}</style>
     </main>

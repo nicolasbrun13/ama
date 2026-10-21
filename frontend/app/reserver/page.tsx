@@ -259,11 +259,11 @@ export default function ReserverPage() {
   return (
     <main>
       {/* Sub-hero */}
-      <section style={{
+      <section className="sub-hero" style={{
         position: 'relative', padding: '3rem 2rem', overflow: 'hidden', minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
         <VideoBackground overlay="rgba(6,3,15,.82)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto', textAlign: 'center', width: '100%', transform: 'translateY(1.8rem)',  }}>
+        <div className="sub-hero-inner" style={{ position: 'relative', zIndex: 2, maxWidth: '700px', margin: '0 auto', textAlign: 'center', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div className="sub-hero-pill" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',

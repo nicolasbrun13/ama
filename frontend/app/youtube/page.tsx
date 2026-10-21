@@ -251,13 +251,13 @@ export default function YouTubePage() {
   return (
     <main>
       {/* Sub-hero */}
-      <section style={{
+      <section className="sub-hero" style={{
         position: 'relative',
         padding: '4.5rem 2rem', overflow: 'hidden',
         minHeight: '270px', display: 'flex', alignItems: 'center',
       }}>
         <VideoBackground videoSrc="/videos/10418.mp4" overlay="rgba(6,3,15,.70)" />
-        <div style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
+        <div className="sub-hero-inner" style={{ position: 'relative', zIndex: 2, maxWidth: '1100px', margin: '0 auto', width: '100%', transform: 'translateY(1.8rem)',  }}>
           <div className="sub-hero-pill" style={{
             display: 'inline-flex', alignItems: 'center', gap: '.4rem',
             background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.22)',
