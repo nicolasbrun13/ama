@@ -34,6 +34,8 @@ const PAGE_LINE_COLORS: Record<string, string> = {
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  // Des le premier coup de scroll le header prend un fond, sinon les titres de la page passent dessous en transparence
+  const [started, setStarted] = useState(false);
   const [mounted, setMounted] = useState(false);
   // La video du header n'est chargee que lorsque le scroll approche de la fin du hero
   const [navArmed, setNavArmed] = useState(false);
@@ -63,6 +65,7 @@ export default function Navbar() {
 
     const onScroll = () => {
       const past = window.scrollY >= thresholdRef.current;
+      setStarted(window.scrollY > 4);
       if (window.scrollY >= thresholdRef.current - NAV_PRELOAD_PX) setNavArmed(true);
       setScrolled(prev => {
         if (past && !prev) {
@@ -123,8 +126,9 @@ export default function Navbar() {
         top: 0, zIndex: 200,
         left: isGlass ? 0 : undefined,
         right: isGlass ? 0 : undefined,
-        background: isGlass ? 'transparent' : 'rgba(6,3,15,0.90)',
-        backdropFilter: !isGlass ? 'blur(16px)' : 'none',
+        background: isGlass && !started ? 'transparent' : 'rgba(6,3,15,0.90)',
+        backdropFilter: !isGlass || started ? 'blur(16px)' : 'none',
+        transition: 'background .25s ease',
         borderBottom: isGlass ? 'none' : '1px solid var(--border)',
         padding: '0 2rem',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',

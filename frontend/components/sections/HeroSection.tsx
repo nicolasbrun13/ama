@@ -199,8 +199,8 @@ export default function HeroSection() {
         @keyframes glowPulse { 0%,100%{opacity:.6;transform:scale(.9)} 50%{opacity:1;transform:scale(1.1)} }
         .photo-frame { position:relative; z-index:2; width:240px;height:320px; border-radius:120px 120px 100px 100px; border:1px solid rgba(255,197,211,.3); box-shadow:0 24px 80px rgba(0,0,0,.8),0 0 60px rgba(255,197,211,.1); overflow:hidden; cursor:pointer; display:block; transition:box-shadow .3s; }
         .photo-frame:hover { box-shadow:0 28px 90px rgba(0,0,0,.85),0 0 80px rgba(255,197,211,.22); }
-        .photo-frame::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; z-index:3; border-radius:100px 100px 0 0; background:linear-gradient(90deg,transparent,var(--rose),var(--gold-light),var(--rose),transparent); background-size:400% 2px; animation:topShim 3s linear infinite; }
-        .photo-frame::after { content:''; position:absolute; bottom:0;left:0;right:0; height:110px; z-index:2; background:linear-gradient(0deg,rgba(6,3,15,.92) 0%,transparent 100%); border-radius:0 0 100px 100px; pointer-events:none; }
+        .photo-frame::before { content:''; position:absolute; top:0;left:0;right:0; height:2px; z-index:3; background:linear-gradient(90deg,transparent,var(--rose),var(--gold-light),var(--rose),transparent); background-size:400% 2px; animation:topShim 3s linear infinite; }
+        .photo-frame::after { content:''; position:absolute; bottom:0;left:0;right:0; height:34%; z-index:2; background:linear-gradient(0deg,rgba(6,3,15,.92) 0%,transparent 100%); pointer-events:none; }
         @keyframes topShim { 0%{background-position:0 0} 100%{background-position:400% 0} }
         .photo-caption { position:absolute; bottom:0;left:0;right:0; z-index:4; padding:.8rem 1rem 1.1rem; text-align:center; display:flex; flex-direction:column; align-items:center; gap:.3rem; }
       `}</style>
