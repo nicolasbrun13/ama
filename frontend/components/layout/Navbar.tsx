@@ -210,8 +210,8 @@ export default function Navbar() {
         <div className="nav-mobile-menu">
           {[...links, { href: '/reserver', label: 'Réserver une séance' }].map(l => (
             <Link key={l.href} href={l.href} className={`nav-mobile-link${cleanPath === l.href ? ' nav-mobile-active' : ''}`} onClick={(e) => { scrollTop(l.href)(e); setMenuOpen(false); }}>
-              {/* Petite fleur a gauche de la page en cours (et toujours devant "Réserver") */}
-              {(cleanPath === l.href || l.href === '/reserver') && <FlowerIcon className="nav-mobile-flower" />}
+              {/* Petite fleur a gauche de la page en cours */}
+              {cleanPath === l.href && <FlowerIcon className="nav-mobile-flower" />}
               {l.label}
             </Link>
           ))}
