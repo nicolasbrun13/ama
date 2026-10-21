@@ -33,15 +33,16 @@ function getStyle(rel: number, peekY: number): React.CSSProperties {
 
 export default function StepsPrism({ steps }: { steps: Step[] }) {
   const [active, setActive] = useState(0);
-  const [dims, setDims] = useState({ h: 300, clip: 340, peek: 260, pad: '2.2rem 2.8rem' });
+  const [dims, setDims] = useState({ h: 300, clip: 340, peek: 260, pad: '2.2rem 2.8rem', compact: false });
   const blocked = useRef(false);
 
   useEffect(() => {
     const update = () => {
       if (window.innerWidth < 600) {
-        setDims({ h: 220, clip: 256, peek: 190, pad: '1.4rem 1.6rem' });
+        // Mobile : textes un peu plus petits et carte plus haute pour que rien ne soit coupe
+        setDims({ h: 258, clip: 294, peek: 205, pad: '1.15rem 1.3rem', compact: true });
       } else {
-        setDims({ h: 300, clip: 340, peek: 260, pad: '2.2rem 2.8rem' });
+        setDims({ h: 300, clip: 340, peek: 260, pad: '2.2rem 2.8rem', compact: false });
       }
     };
     update();
@@ -55,6 +56,9 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
     setActive(a => (a + d + N) % N);
     setTimeout(() => { blocked.current = false; }, 520);
   }, []);
+
+  // Mobile : les degrades ne couvrent que l'espace autour de la carte active (sinon ils fondent son contenu)
+  const maskH = dims.compact ? `${(dims.clip - dims.h) / 2}px` : '80px';
 
   return (
     <div style={{ maxWidth: '680px', margin: '0 auto', userSelect: 'none' }}>
@@ -71,12 +75,12 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
       >
         {/* Gradient masks — same colour as section bg */}
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '80px',
+          position: 'absolute', top: 0, left: 0, right: 0, height: maskH,
           background: 'linear-gradient(to bottom, rgba(12,6,32,1), rgba(12,6,32,0))',
           zIndex: 10, pointerEvents: 'none',
         }} />
         <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: '80px',
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: maskH,
           background: 'linear-gradient(to top, rgba(12,6,32,1), rgba(12,6,32,0))',
           zIndex: 10, pointerEvents: 'none',
         }} />
@@ -109,7 +113,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
-                  gap: '.85rem',
+                  gap: dims.compact ? '.55rem' : '.85rem',
                   boxShadow: rel === 0
                     ? '0 16px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.04), 0 0 40px rgba(255,197,211,.08)'
                     : '0 8px 30px rgba(0,0,0,.35)',
@@ -119,7 +123,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                 <div style={{
                   fontFamily: '"Playfair Display", serif',
                   fontStyle: 'italic',
-                  fontSize: 'clamp(2.2rem, 4.5vw, 3rem)',
+                  fontSize: dims.compact ? '1.7rem' : 'clamp(2.2rem, 4.5vw, 3rem)',
                   fontWeight: 400,
                   color: 'var(--gold)',
                   opacity: 0.65,
@@ -137,7 +141,7 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                 {/* Title */}
                 <h4 style={{
                   fontFamily: '"Playfair Display", serif',
-                  fontSize: 'clamp(.95rem, 1.8vw, 1.15rem)',
+                  fontSize: dims.compact ? '.92rem' : 'clamp(.95rem, 1.8vw, 1.15rem)',
                   fontWeight: 500,
                   color: 'var(--white)',
                   lineHeight: 1.3,
@@ -148,9 +152,9 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
 
                 {/* Description */}
                 <p style={{
-                  fontSize: '.86rem',
+                  fontSize: dims.compact ? '.78rem' : '.86rem',
                   color: 'var(--dim)',
-                  lineHeight: 1.78,
+                  lineHeight: dims.compact ? 1.6 : 1.78,
                   margin: 0,
                 }}>
                   {s.desc}
@@ -163,9 +167,9 @@ export default function StepsPrism({ steps }: { steps: Step[] }) {
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: '.4rem',
                       color: 'var(--rose)', textDecoration: 'none',
-                      fontSize: '.76rem', fontWeight: 700, letterSpacing: '.1em',
+                      fontSize: dims.compact ? '.7rem' : '.76rem', fontWeight: 700, letterSpacing: '.1em',
                       border: '1px solid rgba(255,197,211,.28)',
-                      borderRadius: '50px', padding: '.4rem 1rem',
+                      borderRadius: '50px', padding: dims.compact ? '.35rem .85rem' : '.4rem 1rem',
                       background: 'rgba(255,197,211,.06)',
                       transition: 'background .2s, border-color .2s',
                       alignSelf: 'flex-start',

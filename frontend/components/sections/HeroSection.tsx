@@ -157,10 +157,10 @@ export default function HeroSection() {
           .photo-glow { width:160px !important; height:160px !important; }
         }
         @media(max-width:600px){
-          .hero-section { padding-top:5rem !important; padding-bottom:2.5rem !important; padding-left:1.25rem !important; padding-right:1.25rem !important; }
+          .hero-section { padding-top:4.8rem !important; padding-bottom:2.5rem !important; padding-left:1.25rem !important; padding-right:1.25rem !important; }
           .halo-ring { display:none !important; }
-          .photo-glow { width:110px !important; height:110px !important; }
-          .photo-frame { width:148px !important; height:198px !important; }
+          .photo-glow { width:100px !important; height:100px !important; }
+          .photo-frame { width:132px !important; height:177px !important; box-shadow:0 8px 22px rgba(0,0,0,.55), 0 0 26px rgba(255,197,211,.1) !important; }
           .photo-caption { padding:.6rem .8rem .8rem !important; gap:.2rem !important; }
           .photo-stars { gap:2px !important; }
           .photo-stars span { font-size:.55rem !important; }

@@ -222,10 +222,10 @@ export default function QuiSuisJe() {
 
       <style>{`
         @media (max-width: 767px) {
-          .qsj-flex { flex-direction: column !important; }
+          .qsj-flex { flex-direction: column !important; gap: 1.25rem !important; }
           .qsj-photo { align-self: center !important; }
           .qsj-photo { margin-top: 1.5rem !important; }
-          .qsj-photo > div { width: 120px !important; height: 165px !important; }
+          .qsj-photo > div { width: 120px !important; height: 165px !important; box-shadow: 0 8px 22px rgba(0,0,0,.5), 0 0 22px rgba(255,197,211,.08) !important; }
           .qsj-photo > p { margin-top: 1.25rem !important; }
           .values-grid { grid-template-columns: 1fr !important; }
         }

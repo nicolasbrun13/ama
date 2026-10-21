@@ -8,6 +8,7 @@ const NAVBAR_H = 66;
 const NAV_PRELOAD_PX = 600; // distance avant la fin du hero a partir de laquelle on charge la video du header
 
 const PAGE_VIDEOS: Record<string, string> = {
+  '/':            '/videos/1610.mp4',
   '/qui-suis-je': '/videos/30073.mp4',
   '/la-methode':  '/videos/30063.mp4',
   '/youtube':     '/videos/10418.mp4',
@@ -15,9 +16,11 @@ const PAGE_VIDEOS: Record<string, string> = {
   '/reserver':    '/videos/1610.mp4',
 };
 const PAGE_RATES: Record<string, number> = {
+  '/':            1,
   '/qui-suis-je': 0.7,
 };
 const PAGE_OVERLAYS: Record<string, string> = {
+  '/':            'rgba(6,3,15,.65)',
   '/qui-suis-je': 'rgba(6,3,15,.72)',
   '/la-methode':  'rgba(6,3,15,.75)',
   '/youtube':     'rgba(6,3,15,.70)',
@@ -39,7 +42,7 @@ export default function Navbar() {
   const thresholdRef = useRef<number>(999);
 
   const cleanPath = (pathname ?? '').replace(/^\/ama/, '') || '/';
-  const isGlass = ['/qui-suis-je', '/la-methode', '/youtube', '/contact', '/reserver'].includes(cleanPath);
+  const isGlass = ['/', '/qui-suis-je', '/la-methode', '/youtube', '/contact', '/reserver'].includes(cleanPath);
   const heroVideo = PAGE_VIDEOS[cleanPath] ? resolveVideo(PAGE_VIDEOS[cleanPath]) : undefined;
   const heroVideoSrc = heroVideo?.src;
   const heroVideoRate = PAGE_RATES[cleanPath] ?? 0.5;
@@ -197,7 +200,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="nav-mobile-menu">
           {[...links, { href: '/reserver', label: '✿ Réserver une séance' }].map(l => (
-            <Link key={l.href} href={l.href} className="nav-mobile-link" onClick={(e) => { scrollTop(l.href)(e); setMenuOpen(false); }}>
+            <Link key={l.href} href={l.href} className={`nav-mobile-link${cleanPath === l.href ? ' nav-mobile-active' : ''}`} onClick={(e) => { scrollTop(l.href)(e); setMenuOpen(false); }}>
               {l.label}
             </Link>
           ))}
@@ -207,7 +210,10 @@ export default function Navbar() {
       <style>{`
         .nav-star { color:var(--rose); font-style:normal; font-size:.9rem; animation:navStarPulse 2.2s ease-in-out infinite; }
         @keyframes navStarPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.2)} }
-        .nav-link { color:rgba(253,240,247,.6); text-decoration:none; font-size:.76rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:.5rem .9rem; transition:color .2s; display:block; }
+        .nav-link { color:rgba(253,240,247,.6); text-decoration:none; font-size:.76rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:.5rem .9rem; transition:color .2s; display:block; position:relative; }
+        /* Petit trait rose sous le lien de la page en cours (desktop) */
+        .nav-link.nav-active::after { content:''; position:absolute; left:.9rem; right:.9rem; bottom:.05rem; height:2px; border-radius:2px; background:linear-gradient(90deg,transparent,var(--rose) 20%,var(--rose) 80%,transparent); box-shadow:0 0 8px rgba(255,197,211,.55); transform-origin:center; animation:navUnderline .35s ease-out; }
+        @keyframes navUnderline { from { transform:scaleX(0); opacity:0 } to { transform:scaleX(1); opacity:1 } }
         .nav-link:hover, .nav-active { color:var(--white) !important; }
         .nav-glass { color:var(--white) !important; }
         .nav-glass:hover, .nav-glass.nav-active { color:var(--white) !important; }
@@ -217,6 +223,8 @@ export default function Navbar() {
         .nav-burger { display:none; }
         .nav-mobile-menu { position:fixed; top:${NAVBAR_H}px; left:0; right:0; background:rgba(6,3,15,.97); border-bottom:1px solid var(--border); padding:1rem 2rem; z-index:199; }
         .nav-mobile-link { display:block; color:var(--white); text-decoration:none; padding:.75rem 0; border-bottom:1px solid rgba(255,197,211,.08); font-size:.9rem; }
+        /* Menu mobile : page en cours en rose et en gras */
+        .nav-mobile-link.nav-mobile-active { color:var(--rose); font-weight:700; }
         @media (max-width: 767px) {
           .nav-desktop { display:none !important; }
           .nav-burger { display:block !important; }
