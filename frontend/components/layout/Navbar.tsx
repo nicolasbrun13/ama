@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { resolveVideo } from '@/lib/videos';
+import FlowerIcon from './FlowerIcon';
 
 const NAVBAR_H = 66;
 const MOBILE_TRIGGER_PX = 4; // mobile : scroll a partir duquel la video apparait dans le header
@@ -180,7 +181,7 @@ export default function Navbar() {
           textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '.5rem',
           position: 'relative', zIndex: 1,
         }}>
-          <span className="nav-star">✿</span>
+          <span className="nav-star"><FlowerIcon /></span>
           Ama
         </Link>
 
@@ -207,8 +208,10 @@ export default function Navbar() {
 
       {menuOpen && (
         <div className="nav-mobile-menu">
-          {[...links, { href: '/reserver', label: '✿ Réserver une séance' }].map(l => (
+          {[...links, { href: '/reserver', label: 'Réserver une séance' }].map(l => (
             <Link key={l.href} href={l.href} className={`nav-mobile-link${cleanPath === l.href ? ' nav-mobile-active' : ''}`} onClick={(e) => { scrollTop(l.href)(e); setMenuOpen(false); }}>
+              {/* Petite fleur a gauche de la page en cours (et toujours devant "Réserver") */}
+              {(cleanPath === l.href || l.href === '/reserver') && <FlowerIcon className="nav-mobile-flower" />}
               {l.label}
             </Link>
           ))}
@@ -230,9 +233,10 @@ export default function Navbar() {
         @keyframes navGlow { 0%,100%{box-shadow:0 4px 20px rgba(160,52,96,.45)} 50%{box-shadow:0 8px 36px rgba(255,197,211,.55),0 0 40px rgba(255,197,211,.15)} }
         .nav-burger { display:none; }
         .nav-mobile-menu { position:fixed; top:${NAVBAR_H}px; left:0; right:0; background:rgba(6,3,15,.97); border-bottom:1px solid var(--border); padding:1rem 2rem; z-index:199; }
-        .nav-mobile-link { display:block; color:var(--white); text-decoration:none; padding:.75rem 0; border-bottom:1px solid rgba(255,197,211,.08); font-size:.9rem; }
+        .nav-mobile-link { display:flex; align-items:center; gap:.55rem; color:var(--white); text-decoration:none; padding:.75rem 0; border-bottom:1px solid rgba(255,197,211,.08); font-size:.9rem; }
         /* Menu mobile : page en cours en rose et en gras */
         .nav-mobile-link.nav-mobile-active { color:var(--rose); font-weight:700; }
+        .nav-mobile-flower { color:var(--rose); font-size:1rem; flex-shrink:0; }
         @media (max-width: 767px) {
           .nav-desktop { display:none !important; }
           .nav-burger { display:block !important; }
