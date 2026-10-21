@@ -26,7 +26,7 @@ const featured: Video = {
 const highlight: Video = {
   id: 'rzDwEVCcAEQ',
   title: 'Présentation Ama et Nag',
-  tag: 'Pour commencer',
+  tag: 'Présentation',
 };
 
 const contentVideos: Video[] = [
@@ -127,6 +127,126 @@ function VideoCard({ video, featured: isFeatured = false }: { video: Video; feat
   );
 }
 
+function FeaturedCard({ video, badge }: { video: Video; badge: string }) {
+  return (
+  <a
+    href={YT_WATCH(video.id)}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="featured-card"
+    style={{
+      display: 'flex', textDecoration: 'none',
+      background: 'rgba(12,6,32,.85)',
+      border: '1px solid rgba(255,197,211,.42)',
+      borderRadius: '14px', overflow: 'hidden',
+      transition: 'border-color .3s, box-shadow .3s',
+      boxShadow: '0 16px 64px rgba(160,52,96,.28), 0 0 80px rgba(255,197,211,.06), inset 0 1px 0 rgba(255,255,255,.05)',
+    }}
+  >
+    {/* Thumbnail */}
+    <div style={{ position: 'relative', width: '495px', flexShrink: 0, aspectRatio: '16/9', background: 'rgba(6,3,15,.9)' }}>
+      <Image
+        src={video.customThumb ?? YT_THUMB(video.id)}
+        alt={video.title}
+        fill
+        style={{ objectFit: 'cover' }}
+        sizes="495px"
+      />
+      {/* Badge "Dernière vidéo" */}
+      <div style={{
+        position: 'absolute', top: '14px', left: '14px', zIndex: 1,
+        background: 'linear-gradient(135deg,#A03460,#6A1030)',
+        color: 'white', borderRadius: '50px',
+        padding: '.28rem .8rem',
+        fontSize: '.56rem', fontWeight: 700, letterSpacing: '.16em',
+        textTransform: 'uppercase' as const,
+        boxShadow: '0 4px 16px rgba(160,52,96,.55)',
+      }}>{badge}</div>
+      {/* Play overlay */}
+      <div className="featured-play" style={{
+        position: 'absolute', inset: 0,
+        background: 'rgba(6,3,15,.35)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        opacity: 0, transition: 'opacity .25s',
+      }}>
+        <div style={{
+          width: '64px', height: '64px', borderRadius: '50%',
+          background: 'rgba(255,197,211,.85)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '1.4rem', color: '#000',
+          boxShadow: '0 4px 24px rgba(255,197,211,.5)',
+        }}>▶</div>
+      </div>
+    </div>
+
+    {/* Info panel */}
+    <div style={{
+      flex: 1,
+      padding: '2rem 2.25rem',
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
+      borderLeft: '1px solid rgba(255,197,211,.18)',
+      background: 'linear-gradient(135deg, rgba(30,8,68,.92) 0%, rgba(8,3,24,.96) 100%)',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      {/* Ambient glow */}
+      <div style={{
+        position: 'absolute', top: '-50px', right: '-50px',
+        width: '260px', height: '260px', borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(255,197,211,.16) 0%, transparent 70%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div>
+        {video.tag && (
+          <span style={{
+            display: 'inline-block', marginBottom: '1rem',
+            background: 'rgba(255,197,211,.1)', border: '1px solid rgba(255,197,211,.25)',
+            color: 'var(--rose)', fontSize: '.6rem', letterSpacing: '.16em',
+            textTransform: 'uppercase', padding: '.22rem .75rem', borderRadius: '50px',
+          }}>
+            {video.tag}
+          </span>
+        )}
+        <h2 style={{
+          fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
+          fontSize: 'clamp(1.3rem, 2vw, 1.65rem)', fontWeight: 400,
+          color: 'var(--white)', lineHeight: 1.3, marginBottom: '.75rem',
+        }}>
+          {video.title}
+        </h2>
+        <div style={{
+          width: '36px', height: '1px',
+          background: 'linear-gradient(to right, var(--rose), transparent)',
+          marginBottom: '.75rem',
+        }} />
+      </div>
+
+      <div>
+        {video.date && (
+          <p style={{
+            fontSize: '.72rem', color: 'rgba(253,240,247,.35)',
+            letterSpacing: '.08em', marginBottom: '1.5rem',
+          }}>
+            {video.date}
+          </p>
+        )}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+          background: 'linear-gradient(135deg,#A03460,#6A1030)',
+          color: 'white', borderRadius: '50px',
+          padding: '.6rem 1.4rem',
+          fontSize: '.72rem', fontWeight: 700, letterSpacing: '.12em',
+          textTransform: 'uppercase' as const,
+          boxShadow: '0 4px 20px rgba(160,52,96,.35)',
+        }}>
+          ▶ Regarder
+        </div>
+      </div>
+    </div>
+  </a>
+  );
+}
+
 export default function YouTubePage() {
   return (
     <main>
@@ -173,131 +293,7 @@ export default function YouTubePage() {
       <section style={{ background: 'var(--bg-mid)', padding: '3rem 2rem 5rem' }}>
         <div style={{ maxWidth: '920px', margin: '0 auto' }}>
 
-          <div style={{ marginBottom: '1.75rem' }}>
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '.4rem',
-              background: 'rgba(255,197,211,.08)', border: '1px solid rgba(255,197,211,.12)',
-              borderRadius: '50px', padding: '.35rem 1rem',
-              fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
-              textTransform: 'uppercase' as const, color: 'var(--rose)',
-            }}>
-              ✿ Dernière vidéo
-            </div>
-          </div>
-
-          <a
-            href={YT_WATCH(featured.id)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="featured-card"
-            style={{
-              display: 'flex', textDecoration: 'none',
-              background: 'rgba(12,6,32,.85)',
-              border: '1px solid rgba(255,197,211,.42)',
-              borderRadius: '14px', overflow: 'hidden',
-              transition: 'border-color .3s, box-shadow .3s',
-              boxShadow: '0 16px 64px rgba(160,52,96,.28), 0 0 80px rgba(255,197,211,.06), inset 0 1px 0 rgba(255,255,255,.05)',
-            }}
-          >
-            {/* Thumbnail */}
-            <div style={{ position: 'relative', width: '495px', flexShrink: 0, aspectRatio: '16/9', background: 'rgba(6,3,15,.9)' }}>
-              <Image
-                src={featured.customThumb ?? YT_THUMB(featured.id)}
-                alt={featured.title}
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="495px"
-              />
-              {/* Badge "Dernière vidéo" */}
-              <div style={{
-                position: 'absolute', top: '14px', left: '14px', zIndex: 1,
-                background: 'linear-gradient(135deg,#A03460,#6A1030)',
-                color: 'white', borderRadius: '50px',
-                padding: '.28rem .8rem',
-                fontSize: '.56rem', fontWeight: 700, letterSpacing: '.16em',
-                textTransform: 'uppercase' as const,
-                boxShadow: '0 4px 16px rgba(160,52,96,.55)',
-              }}>✦ Dernière vidéo</div>
-              {/* Play overlay */}
-              <div className="featured-play" style={{
-                position: 'absolute', inset: 0,
-                background: 'rgba(6,3,15,.35)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                opacity: 0, transition: 'opacity .25s',
-              }}>
-                <div style={{
-                  width: '64px', height: '64px', borderRadius: '50%',
-                  background: 'rgba(255,197,211,.85)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '1.4rem', color: '#000',
-                  boxShadow: '0 4px 24px rgba(255,197,211,.5)',
-                }}>▶</div>
-              </div>
-            </div>
-
-            {/* Info panel */}
-            <div style={{
-              flex: 1,
-              padding: '2rem 2.25rem',
-              display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-              borderLeft: '1px solid rgba(255,197,211,.18)',
-              background: 'linear-gradient(135deg, rgba(30,8,68,.92) 0%, rgba(8,3,24,.96) 100%)',
-              position: 'relative', overflow: 'hidden',
-            }}>
-              {/* Ambient glow */}
-              <div style={{
-                position: 'absolute', top: '-50px', right: '-50px',
-                width: '260px', height: '260px', borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(255,197,211,.16) 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }} />
-
-              <div>
-                {featured.tag && (
-                  <span style={{
-                    display: 'inline-block', marginBottom: '1rem',
-                    background: 'rgba(255,197,211,.1)', border: '1px solid rgba(255,197,211,.25)',
-                    color: 'var(--rose)', fontSize: '.6rem', letterSpacing: '.16em',
-                    textTransform: 'uppercase', padding: '.22rem .75rem', borderRadius: '50px',
-                  }}>
-                    {featured.tag}
-                  </span>
-                )}
-                <h2 style={{
-                  fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
-                  fontSize: 'clamp(1.3rem, 2vw, 1.65rem)', fontWeight: 400,
-                  color: 'var(--white)', lineHeight: 1.3, marginBottom: '.75rem',
-                }}>
-                  {featured.title}
-                </h2>
-                <div style={{
-                  width: '36px', height: '1px',
-                  background: 'linear-gradient(to right, var(--rose), transparent)',
-                  marginBottom: '.75rem',
-                }} />
-              </div>
-
-              <div>
-                <p style={{
-                  fontSize: '.72rem', color: 'rgba(253,240,247,.35)',
-                  letterSpacing: '.08em', marginBottom: '1.5rem',
-                }}>
-                  {featured.date}
-                </p>
-                <div style={{
-                  display: 'inline-flex', alignItems: 'center', gap: '.5rem',
-                  background: 'linear-gradient(135deg,#A03460,#6A1030)',
-                  color: 'white', borderRadius: '50px',
-                  padding: '.6rem 1.4rem',
-                  fontSize: '.72rem', fontWeight: 700, letterSpacing: '.12em',
-                  textTransform: 'uppercase' as const,
-                  boxShadow: '0 4px 20px rgba(160,52,96,.35)',
-                }}>
-                  ▶ Regarder
-                </div>
-              </div>
-            </div>
-          </a>
+          <FeaturedCard video={featured} badge="✦ Dernière vidéo" />
 
         </div>
       </section>
@@ -323,8 +319,8 @@ export default function YouTubePage() {
               Comprendre la méthode
             </h2>
           </div>
-          <div style={{ maxWidth: '720px', margin: '0 auto 3rem' }}>
-            <VideoCard video={highlight} featured />
+          <div style={{ maxWidth: '920px', margin: '0 auto 3rem' }}>
+            <FeaturedCard video={highlight} badge="✦ Pour commencer" />
           </div>
           <p style={{
             textAlign: 'center', marginBottom: '1.25rem',
