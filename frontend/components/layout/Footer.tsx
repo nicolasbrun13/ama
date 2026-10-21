@@ -159,7 +159,7 @@ export default function Footer() {
         <div className="footer-bottom" style={{ borderTop:'1px solid rgba(255,255,255,.04)', paddingTop:'1.5rem', display:'grid', gridTemplateColumns:'1fr auto 1fr', alignItems:'center', fontSize:'.7rem', color:'var(--dim)' }}>
           <span>© 2026 Anne-Marie Blanc · Hypnose HRE · Tous droits réservés</span>
           <span className="footer-credit">
-            Communication : <a href="https://agence-stylia.fr" target="_blank" rel="noopener noreferrer" style={{ color:'var(--rose)', textDecoration:'none' }}>agence-stylia.fr</a>
+            Site réalisé par <a href="https://agence-stylia.fr" target="_blank" rel="noopener noreferrer" style={{ color:'var(--rose)', textDecoration:'none' }}>agence-stylia.fr</a>
           </span>
           <span style={{ justifySelf:'end' }}>
             <Link href="/mentions-legales" onClick={scrollTop('/mentions-legales')} style={{ color:'var(--dim)', textDecoration:'none', marginRight:'1rem' }}>Mentions légales &amp; CGV</Link>
