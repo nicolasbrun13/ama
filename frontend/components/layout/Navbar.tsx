@@ -155,7 +155,7 @@ export default function Navbar() {
         )}
 
         {/* Barre dégradée en bas du navbar — rose ou violette selon la page */}
-        {isGlass && scrolled && (
+        {isGlass && scrolled && cleanPath !== '/' && (
           <div style={{
             position: 'absolute', bottom: 0, left: 0, right: 0,
             height: '1px',
