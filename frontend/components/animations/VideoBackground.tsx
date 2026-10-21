@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import { resolveVideo } from '@/lib/videos';
+import { useNearViewport } from './useNearViewport';
 
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 const DEFAULT_VIDEO = '/videos/1610.mp4';
 
 interface Props {
@@ -14,8 +15,11 @@ interface Props {
 }
 
 export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc = DEFAULT_VIDEO, rotate, startDelay = 0, bottomExtend, playbackRate = 0.5 }: Props) {
-  const resolvedSrc = videoSrc.startsWith('http') ? videoSrc : `${BASE}${videoSrc}`;
+  const { src: resolvedSrc, poster } = resolveVideo(videoSrc);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  // La video n'est telechargee que lorsque la section approche de l'ecran
+  const loadVideo = useNearViewport(wrapRef);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -100,13 +104,14 @@ export default function VideoBackground({ overlay = 'rgba(6,3,15,.72)', videoSrc
   }, []);
 
   return (
-    <div className="vid-bg" style={{ '--vid-overlay': overlay, ...(bottomExtend ? { bottom: `-${bottomExtend}px` } : {}) } as React.CSSProperties}>
+    <div ref={wrapRef} className="vid-bg" style={{ '--vid-overlay': overlay, ...(bottomExtend ? { bottom: `-${bottomExtend}px` } : {}) } as React.CSSProperties}>
       <video
         autoPlay muted loop playsInline suppressHydrationWarning
+        poster={poster}
         style={rotate ? { transform: `rotate(${rotate}deg)`, transformOrigin: 'center' } : undefined}
         onLoadedMetadata={(e) => { (e.target as HTMLVideoElement).playbackRate = playbackRate; }}
       >
-        <source src={resolvedSrc} type="video/mp4" suppressHydrationWarning />
+        {loadVideo && <source src={resolvedSrc} type="video/mp4" suppressHydrationWarning />}
       </video>
       <canvas ref={canvasRef} className="vid-canvas" />
     </div>

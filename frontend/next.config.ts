@@ -66,6 +66,12 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: securityHeaders,
       },
+      {
+        // Videos et posters : le nom contient un hash du contenu (voir lib/videos.ts), donc immutable est sur.
+        // Ne jamais remplacer un fichier de public/videos/ en gardant son nom.
+        source: '/videos/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
     ];
   },
 };

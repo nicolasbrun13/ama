@@ -1,24 +1,25 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { resolveVideo } from '@/lib/videos';
+import { useNearViewport } from '@/components/animations/useNearViewport';
 
 const YT_URL = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
 
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 const PAGE_RATES: Record<string, number> = {
   '/':            1,
   '/reserver':    1,
   '/qui-suis-je': 0.7,
 };
 const PAGE_VIDEOS: Record<string, string> = {
-  '/':                 `${BASE}/videos/1610.mp4`,
-  '/qui-suis-je':      `${BASE}/videos/30073.mp4`,
-  '/la-methode':       `${BASE}/videos/30063.mp4`,
-  '/youtube':          `${BASE}/videos/10418.mp4`,
-  '/contact':          `${BASE}/videos/4034.mp4`,
-  '/reserver':         `${BASE}/videos/1610.mp4`,
-  '/mentions-legales': `${BASE}/videos/30063.mp4`,
+  '/':                 '/videos/1610.mp4',
+  '/qui-suis-je':      '/videos/30073.mp4',
+  '/la-methode':       '/videos/30063.mp4',
+  '/youtube':          '/videos/10418.mp4',
+  '/contact':          '/videos/4034.mp4',
+  '/reserver':         '/videos/1610.mp4',
+  '/mentions-legales': '/videos/30063.mp4',
 };
 
 function YouTubeLogo() {
@@ -34,6 +35,20 @@ export default function Footer() {
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
+  const footerRef = useRef<HTMLElement>(null);
+  // La video du footer n'est chargee que lorsque le footer approche de l'ecran
+  const nearFooter = useNearViewport(footerRef, '400px 0px');
+  // Sur les pages courtes le footer est visible des le chargement : on attend que la video du hero soit prete
+  // (ou 5 s) pour ne pas telecharger deux fois le meme fichier en parallele.
+  const [heroSettled, setHeroSettled] = useState(false);
+  useEffect(() => {
+    const hero = document.querySelector<HTMLVideoElement>('main section .vid-bg video');
+    const done = () => setHeroSettled(true);
+    const timer = setTimeout(done, hero && hero.readyState < 4 ? 5000 : 0);
+    hero?.addEventListener('canplaythrough', () => { clearTimeout(timer); done(); }, { once: true });
+    return () => clearTimeout(timer);
+  }, []);
+  const loadVideo = nearFooter && heroSettled;
 
   // Strip the /ama basePath prefix if present
   const cleanPath = pathname.replace(/^\/ama/, '') || '/';
@@ -44,13 +59,13 @@ export default function Footer() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
-  const videoSrc = PAGE_VIDEOS[cleanPath] ?? PAGE_VIDEOS['/'];
+  const { src: videoSrc, poster: videoPoster } = resolveVideo(PAGE_VIDEOS[cleanPath] ?? PAGE_VIDEOS['/']);
   const videoRate = PAGE_RATES[cleanPath] ?? 0.5;
 
   const noVideo = ['/', '/la-methode', '/qui-suis-je', '/youtube', '/mentions-legales'].includes(cleanPath);
 
   return (
-    <footer className={noVideo ? 'footer-transparent' : ''} style={{ background: noVideo ? 'transparent' : '#030208', borderTop: noVideo ? 'none' : '1px solid var(--border)', padding:'3.5rem 2rem 2rem', position:'relative', overflow:'hidden' }}>
+    <footer ref={footerRef} className={noVideo ? 'footer-transparent' : ''} style={{ background: noVideo ? 'transparent' : '#030208', borderTop: noVideo ? 'none' : '1px solid var(--border)', padding:'3.5rem 2rem 2rem', position:'relative', overflow:'hidden' }}>
 
       {/* Video background — only on pages where last section doesn't extend into footer */}
       {mounted && !noVideo && (
@@ -62,6 +77,7 @@ export default function Footer() {
             loop
             playsInline
             aria-hidden="true"
+            poster={videoPoster}
             onLoadedMetadata={(e) => { (e.target as HTMLVideoElement).playbackRate = videoRate; }}
             style={{
               position: 'absolute', inset: 0,
@@ -72,7 +88,7 @@ export default function Footer() {
               zIndex: 0,
             }}
           >
-            <source src={videoSrc} type="video/mp4" />
+            {loadVideo && <source src={videoSrc} type="video/mp4" />}
           </video>
 
           {/* Overlay to darken further */}

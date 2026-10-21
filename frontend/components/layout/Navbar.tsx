@@ -2,16 +2,17 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { resolveVideo } from '@/lib/videos';
 
 const NAVBAR_H = 66;
-const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const NAV_PRELOAD_PX = 600; // distance avant la fin du hero a partir de laquelle on charge la video du header
 
 const PAGE_VIDEOS: Record<string, string> = {
-  '/qui-suis-je': `${BASE}/videos/30073.mp4`,
-  '/la-methode':  `${BASE}/videos/30063.mp4`,
-  '/youtube':     `${BASE}/videos/10418.mp4`,
-  '/contact':     `${BASE}/videos/4034.mp4`,
-  '/reserver':    `${BASE}/videos/1610.mp4`,
+  '/qui-suis-je': '/videos/30073.mp4',
+  '/la-methode':  '/videos/30063.mp4',
+  '/youtube':     '/videos/10418.mp4',
+  '/contact':     '/videos/4034.mp4',
+  '/reserver':    '/videos/1610.mp4',
 };
 const PAGE_RATES: Record<string, number> = {
   '/qui-suis-je': 0.7,
@@ -31,13 +32,16 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  // La video du header n'est chargee que lorsque le scroll approche de la fin du hero
+  const [navArmed, setNavArmed] = useState(false);
   const pathname = usePathname();
   const navVideoRef = useRef<HTMLVideoElement>(null);
   const thresholdRef = useRef<number>(999);
 
   const cleanPath = (pathname ?? '').replace(/^\/ama/, '') || '/';
   const isGlass = ['/qui-suis-je', '/la-methode', '/youtube', '/contact', '/reserver'].includes(cleanPath);
-  const heroVideoSrc = PAGE_VIDEOS[cleanPath];
+  const heroVideo = PAGE_VIDEOS[cleanPath] ? resolveVideo(PAGE_VIDEOS[cleanPath]) : undefined;
+  const heroVideoSrc = heroVideo?.src;
   const heroVideoRate = PAGE_RATES[cleanPath] ?? 0.5;
   const heroOverlay = PAGE_OVERLAYS[cleanPath] ?? 'rgba(6,3,15,.72)';
   const heroLineColor = PAGE_LINE_COLORS[cleanPath] ?? 'rgba(255,197,211,.7)';
@@ -56,6 +60,7 @@ export default function Navbar() {
 
     const onScroll = () => {
       const past = window.scrollY >= thresholdRef.current;
+      if (window.scrollY >= thresholdRef.current - NAV_PRELOAD_PX) setNavArmed(true);
       setScrolled(prev => {
         if (past && !prev) {
           // Sync currentTime au moment exact de la transition
@@ -83,10 +88,12 @@ export default function Navbar() {
   // Réinitialise scrolled + recalcule le seuil à chaque changement de page
   useEffect(() => {
     setScrolled(false);
+    setNavArmed(false);
     // Délai court pour laisser le DOM de la nouvelle page se rendre
     const timer = setTimeout(() => {
       thresholdRef.current = getThreshold();
       if (window.scrollY >= thresholdRef.current) setScrolled(true);
+      if (window.scrollY >= thresholdRef.current - NAV_PRELOAD_PX) setNavArmed(true);
     }, 50);
     return () => clearTimeout(timer);
   }, [cleanPath]);
@@ -134,10 +141,11 @@ export default function Navbar() {
               key={heroVideoSrc}
               ref={navVideoRef}
               autoPlay muted loop playsInline suppressHydrationWarning
+              poster={heroVideo?.poster}
               onLoadedMetadata={(e) => { (e.target as HTMLVideoElement).playbackRate = heroVideoRate; }}
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 30%' }}
             >
-              <source src={heroVideoSrc} type="video/mp4" suppressHydrationWarning />
+              {navArmed && <source src={heroVideoSrc} type="video/mp4" suppressHydrationWarning />}
             </video>
             <div style={{ position: 'absolute', inset: 0, background: heroOverlay }} />
           </div>
