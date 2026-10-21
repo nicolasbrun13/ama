@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { resolveVideo } from '@/lib/videos';
 
 const NAVBAR_H = 66;
+const MOBILE_TRIGGER_PX = 4; // mobile : scroll a partir duquel la video apparait dans le header
 const NAV_PRELOAD_PX = 600; // distance avant la fin du hero a partir de laquelle on charge la video du header
 
 const PAGE_VIDEOS: Record<string, string> = {
@@ -31,11 +32,22 @@ const PAGE_LINE_COLORS: Record<string, string> = {
   '/la-methode': 'rgba(196,176,245,.7)',
 };
 
+// Telephone : la video du header prend le relais au tout premier scroll. PC : a la fin du hero.
+const isMobileView = () => window.matchMedia('(max-width: 767px)').matches;
+
+const getThreshold = () => {
+  if (isMobileView()) return MOBILE_TRIGGER_PX;
+  const hero = document.querySelector('main > section:first-child') as HTMLElement | null;
+  if (!hero) return 999;
+  return hero.offsetTop + hero.offsetHeight - NAVBAR_H;
+};
+
+// Scroll a partir duquel on charge la video du header (mobile : des le premier scroll)
+const armAt = (threshold: number) => (isMobileView() ? 1 : threshold - NAV_PRELOAD_PX);
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  // Des le premier coup de scroll le header prend un fond, sinon les titres de la page passent dessous en transparence
-  const [started, setStarted] = useState(false);
   const [mounted, setMounted] = useState(false);
   // La video du header n'est chargee que lorsque le scroll approche de la fin du hero
   const [navArmed, setNavArmed] = useState(false);
@@ -51,12 +63,6 @@ export default function Navbar() {
   const heroOverlay = PAGE_OVERLAYS[cleanPath] ?? 'rgba(6,3,15,.72)';
   const heroLineColor = PAGE_LINE_COLORS[cleanPath] ?? 'rgba(255,197,211,.7)';
 
-  const getThreshold = () => {
-    const hero = document.querySelector('main > section:first-child') as HTMLElement | null;
-    if (!hero) return 999;
-    return hero.offsetTop + hero.offsetHeight - NAVBAR_H;
-  };
-
   // Scroll + resize listener (monté une seule fois)
   useEffect(() => {
     setMounted(true);
@@ -65,8 +71,7 @@ export default function Navbar() {
 
     const onScroll = () => {
       const past = window.scrollY >= thresholdRef.current;
-      setStarted(window.scrollY > 4);
-      if (window.scrollY >= thresholdRef.current - NAV_PRELOAD_PX) setNavArmed(true);
+      if (window.scrollY >= armAt(thresholdRef.current)) setNavArmed(true);
       setScrolled(prev => {
         if (past && !prev) {
           // Sync currentTime au moment exact de la transition
@@ -99,7 +104,7 @@ export default function Navbar() {
     const timer = setTimeout(() => {
       thresholdRef.current = getThreshold();
       if (window.scrollY >= thresholdRef.current) setScrolled(true);
-      if (window.scrollY >= thresholdRef.current - NAV_PRELOAD_PX) setNavArmed(true);
+      if (window.scrollY >= armAt(thresholdRef.current)) setNavArmed(true);
     }, 50);
     return () => clearTimeout(timer);
   }, [cleanPath]);
@@ -126,9 +131,8 @@ export default function Navbar() {
         top: 0, zIndex: 200,
         left: isGlass ? 0 : undefined,
         right: isGlass ? 0 : undefined,
-        background: isGlass && !started ? 'transparent' : 'rgba(6,3,15,0.90)',
-        backdropFilter: !isGlass || started ? 'blur(16px)' : 'none',
-        transition: 'background .25s ease',
+        background: isGlass ? 'transparent' : 'rgba(6,3,15,0.90)',
+        backdropFilter: !isGlass ? 'blur(16px)' : 'none',
         borderBottom: isGlass ? 'none' : '1px solid var(--border)',
         padding: '0 2rem',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
