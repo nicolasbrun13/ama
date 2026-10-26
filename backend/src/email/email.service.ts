@@ -200,7 +200,7 @@ export class EmailService {
   }
 
   // ── Notification à Ama ─────────────────────────────────────────────────────
-  async sendConfirmationToAma(dto: CreateReservationDto): Promise<void> {
+  async sendConfirmationToAma(dto: CreateReservationDto, manualPayment = false): Promise<void> {
     const icsBuffer = this.generateIcs(dto, true);
     const fn  = escHtml(dto.firstName);
     const ln  = escHtml(dto.lastName);
@@ -214,7 +214,7 @@ export class EmailService {
       from:    `"Site Ama HRE" <${process.env.SMTP_USER}>`,
       to:      this.amaEmail,
       replyTo: dto.email,  // Ama peut répondre directement au client
-      subject: `Nouvelle réservation — ${dto.firstName} ${dto.lastName} — ${dto.date} à ${dto.time}`,
+      subject: `${manualPayment ? 'Nouvelle réservation (paiement à vérifier)' : 'Nouvelle réservation'} — ${dto.firstName} ${dto.lastName} — ${dto.date} à ${dto.time}`,
       html: emailWrapper(`
         <h2 style="color:${VIOLET};font-family:Georgia,serif;font-style:italic;font-size:1.3rem;margin-bottom:1.5rem;">Nouvelle réservation</h2>
         <table style="width:100%;border-collapse:collapse;">
@@ -229,7 +229,7 @@ export class EmailService {
           <tr><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};">Mode</td>
               <td style="padding:.5rem .75rem;color:${TEXT};">Zoom</td></tr>
           <tr style="background:${VIOLET_CARD};"><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};">Paiement</td>
-              <td style="padding:.5rem .75rem;font-weight:700;color:${SUCCESS};">150 € confirmé via PayPal</td></tr>
+              <td style="padding:.5rem .75rem;font-weight:700;color:${manualPayment ? VIOLET_DARK : SUCCESS};">${manualPayment ? '150 € à vérifier sur ton compte PayPal (paypal.me), le client a utilisé le lien de paiement' : '150 € confirmé via PayPal'}</td></tr>
           ${msg ? `<tr><td style="padding:.5rem .75rem;font-size:.82rem;color:${SUBTEXT};vertical-align:top;">Message</td>
               <td style="padding:.5rem .75rem;font-style:italic;color:${SUBTEXT};">${msg}</td></tr>` : ''}
         </table>
@@ -244,7 +244,7 @@ export class EmailService {
   }
 
   // ── Confirmation au client ─────────────────────────────────────────────────
-  async sendConfirmationToClient(dto: CreateReservationDto): Promise<void> {
+  async sendConfirmationToClient(dto: CreateReservationDto, manualPayment = false): Promise<void> {
     const icsBuffer = this.generateIcs(dto);
     const fn  = escHtml(dto.firstName);
     const dt  = escHtml(dto.date);
@@ -261,14 +261,14 @@ export class EmailService {
 
         <p style="color:${TEXT};line-height:1.85;margin-bottom:1.5rem;">
           Bonjour <strong>${fn}</strong>,<br><br>
-          Votre réservation a bien été enregistrée et votre paiement confirmé.
+          Votre réservation a bien été enregistrée${manualPayment ? '.' : ' et votre paiement confirmé.'}
         </p>
 
         <div style="background:${VIOLET_CARD};border-left:3px solid ${ROSE};padding:1.2rem 1.5rem;border-radius:0 8px 8px 0;margin-bottom:2rem;">
           <p style="font-weight:700;color:${VIOLET_DARK};margin-bottom:.75rem;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;">Récapitulatif</p>
           <p style="color:${TEXT};font-size:.9rem;margin-bottom:.35rem;">📅 &nbsp;<strong>${dt}</strong> à <strong>${tm}</strong></p>
           <p style="color:${TEXT};font-size:.9rem;margin-bottom:.35rem;">💻 &nbsp;Via Zoom — le lien vous sera envoyé le jour même</p>
-          <p style="color:${SUCCESS};font-size:.9rem;">✅ &nbsp;Paiement de 150 € confirmé</p>
+          ${manualPayment ? '' : `<p style="color:${SUCCESS};font-size:.9rem;">✅ &nbsp;Paiement de 150 € confirmé</p>`}
         </div>
 
         <h3 style="font-family:Georgia,serif;font-style:italic;color:${VIOLET};font-size:1.05rem;margin-bottom:1rem;">Préparer votre séance</h3>

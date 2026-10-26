@@ -1,6 +1,7 @@
 import {
   Injectable,
   BadRequestException,
+  ForbiddenException,
   ConflictException,
   InternalServerErrorException,
   Logger,
@@ -235,5 +236,44 @@ export class PaymentService {
     }
 
     return { success: true, captureID };
+  }
+
+  /** Mode paiement manuel (lien paypal.me, en attendant les clés API) : aucune vérification
+   *  de paiement côté serveur, Ama contrôle ses encaissements à la main.
+   *  Désactivé par défaut : il faut MANUAL_PAYMENT=true, sinon n'importe qui réserverait gratuitement. */
+  async createManualReservation(dto: CreateReservationDto): Promise<{ success: boolean }> {
+    if (process.env.MANUAL_PAYMENT !== 'true') {
+      throw new ForbiddenException('Réservation sans paiement en ligne non activée.');
+    }
+    if (!isValidSlot(dto.date, dto.time)) {
+      throw new BadRequestException('Créneau invalide ou expiré.');
+    }
+    if (await this.reservationsService.isSlotTaken(dto.date, dto.time)) {
+      throw new ConflictException("Ce créneau vient d'être réservé par quelqu'un d'autre.");
+    }
+
+    try {
+      await this.reservationsService.create(dto, true);
+    } catch (err: unknown) {
+      if ((err as { code?: string }).code === 'P2002') {
+        throw new ConflictException("Ce créneau vient d'être réservé par quelqu'un d'autre.");
+      }
+      throw err;
+    }
+
+    // Réservation en base : un échec SMTP ne fait jamais échouer la requête
+    const results = await Promise.allSettled([
+      this.emailService.sendConfirmationToAma(dto, true),
+      this.emailService.sendConfirmationToClient(dto, true),
+    ]);
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') {
+        this.logger.error(
+          `Échec envoi mail (${i === 0 ? 'Ama' : dto.email}) pour la résa manuelle du ${dto.date} ${dto.time}`,
+          r.reason instanceof Error ? r.reason.stack : String(r.reason),
+        );
+      }
+    });
+    return { success: true };
   }
 }

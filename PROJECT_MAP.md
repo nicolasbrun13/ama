@@ -60,6 +60,16 @@ Calendriers (/reserver, CalendarSection, ResaSection)
 
 POST/GET /api/reservations → 405 (plus de réservation sans paiement)
 
+### Mode paiement manuel (lien paypal.me, temporaire, màj 2026-10-26)
+Tant que les cles API PayPal ne sont pas la : `MANUAL_PAYMENT=true` (backend) + `NEXT_PUBLIC_PAYPAL_ME_URL=https://paypal.me/amablanc`
+(frontend, fige au build, et NEXT_PUBLIC_PAYPAL_CLIENT_ID vide). `lib/manualPayment.ts` calcule `MANUAL_PAYMENT`.
+/reserver → PaypalButton affiche : 1. lien `paypal.me/amablanc/150` (nouvel onglet) 2. bouton "J'ai paye, confirmer"
+  → POST /api/payment/manual-reservation → `PaymentService.createManualReservation` (403 si MANUAL_PAYMENT!=true,
+    400 creneau invalide, 409 pris) → insert Reservation (sans paypalOrderId) → mails variante sans mention de paiement
+    cote client ; mail Ama "paiement a verifier sur PayPal". AUCUNE verification de paiement : Ama controle a la main.
+Retour au bouton PayPal automatique : renseigner les cles, MANUAL_PAYMENT=false, vider NEXT_PUBLIC_PAYPAL_ME_URL, rebuild front.
+Attention : la facture J+1 (sendInvoiceToClient) dit toujours "Paiement recu via PayPal".
+
 Cron toutes les 15 min (SchedulerService) :
   18h-22h Paris : rappels J-1 (reminderSentAt)
   8h-12h Paris  : factures J+1 (invoiceSentAt)

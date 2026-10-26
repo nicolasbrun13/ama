@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import { BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { ReservationsService } from '../reservations/reservations.service';
 import { EmailService } from '../email/email.service';
@@ -32,7 +32,11 @@ function setup(routes: Routes = {}) {
     isSlotTaken: vi.fn().mockResolvedValue(false),
     create: vi.fn().mockResolvedValue({ id: 'r1' }),
   };
-  const email = { sendRefundFailureAlert: vi.fn().mockResolvedValue(undefined) };
+  const email = {
+    sendRefundFailureAlert: vi.fn().mockResolvedValue(undefined),
+    sendConfirmationToAma: vi.fn().mockResolvedValue(undefined),
+    sendConfirmationToClient: vi.fn().mockResolvedValue(undefined),
+  };
   const service = new PaymentService(
     reservations as unknown as ReservationsService,
     email as unknown as EmailService,
@@ -173,5 +177,32 @@ describe('PaymentService.captureOrder', () => {
     const { service, fetchMock } = setup();
     await expect(service.captureOrder('ORDER1', { ...dto, date: '2027-02-04' })).rejects.toBeInstanceOf(BadRequestException);
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+});
+
+describe('PaymentService.createManualReservation', () => {
+  afterEach(() => { delete process.env.MANUAL_PAYMENT; });
+
+  it("refuse si MANUAL_PAYMENT n'est pas activé", async () => {
+    const { service, reservations } = setup();
+    await expect(service.createManualReservation(dto)).rejects.toBeInstanceOf(ForbiddenException);
+    expect(reservations.create).not.toHaveBeenCalled();
+  });
+
+  it('crée la résa sans appeler PayPal et envoie les mails en variante manuelle', async () => {
+    process.env.MANUAL_PAYMENT = 'true';
+    const { service, reservations, email, fetchMock } = setup();
+    await expect(service.createManualReservation(dto)).resolves.toEqual({ success: true });
+    expect(reservations.create).toHaveBeenCalledWith(dto, true);
+    expect(email.sendConfirmationToAma).toHaveBeenCalledWith(dto, true);
+    expect(email.sendConfirmationToClient).toHaveBeenCalledWith(dto, true);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('409 si le créneau est déjà pris', async () => {
+    process.env.MANUAL_PAYMENT = 'true';
+    const { service, reservations } = setup();
+    reservations.isSlotTaken.mockResolvedValue(true);
+    await expect(service.createManualReservation(dto)).rejects.toBeInstanceOf(ConflictException);
   });
 });

@@ -21,4 +21,12 @@ export class PaymentController {
   captureOrder(@Body() body: CaptureOrderDto) {
     return this.paymentService.captureOrder(body.orderID, body.reservationData);
   }
+
+  /** POST /api/payment/manual-reservation
+   *  Body : { reservationData } (validé). Mode lien paypal.me : crée la résa sans vérifier le paiement.
+   *  Actif seulement si MANUAL_PAYMENT=true. */
+  @Post('manual-reservation')
+  manualReservation(@Body() body: CreateOrderDto) {
+    return this.paymentService.createManualReservation(body.reservationData);
+  }
 }

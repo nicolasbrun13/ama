@@ -1,5 +1,6 @@
 'use client';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
+import { MANUAL_PAYMENT, PAYPAL_ME_URL } from '@/lib/manualPayment';
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 
 export type ReservationPayload = {
@@ -40,11 +41,49 @@ async function postJson<T>(url: string, body: unknown, fallbackMsg: string): Pro
   return data;
 }
 
+function ManualPayment({ reservationData, onSuccess, onError }: Props) {
+  const [loading, setLoading] = useState(false);
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
+  const btn: React.CSSProperties = {
+    display: 'block', width: '100%', textAlign: 'center', borderRadius: '8px', padding: '.95rem 1rem',
+    fontSize: '.92rem', fontWeight: 700, fontFamily: 'Nunito, sans-serif', cursor: 'pointer', textDecoration: 'none',
+  };
+
+  async function confirm() {
+    setLoading(true);
+    try {
+      await postJson(`${basePath}/api/payment/manual-reservation`, { reservationData }, "Erreur lors de l'enregistrement de la réservation");
+      onSuccess('');
+    } catch (err) {
+      if (err instanceof ApiError) onError(err.message, { slotTaken: err.status === 409 });
+      else onError("Erreur lors de l'enregistrement de la réservation. Veuillez réessayer.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
+      <a href={`${PAYPAL_ME_URL}/150`} target="_blank" rel="noopener noreferrer"
+        style={{ ...btn, background: '#FFC439', color: '#111', border: '1px solid #FFC439' }}>
+        1. Payer 150 € avec PayPal
+      </a>
+      <button type="button" onClick={confirm} disabled={loading}
+        style={{ ...btn, background: 'var(--rose-deep)', color: 'white', border: '1px solid var(--rose-deep)', opacity: loading ? .6 : 1 }}>
+        {loading ? 'Enregistrement…' : "2. J'ai payé, confirmer ma réservation"}
+      </button>
+    </div>
+  );
+}
+
 export default function PaypalButton({ reservationData, onSuccess, onError }: Props) {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? '';
   const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
   // Dernière erreur serveur : le SDK PayPal ne transmet pas toujours notre message à onError
   const lastError = useRef<ApiError | null>(null);
+
+  if (MANUAL_PAYMENT) return <ManualPayment reservationData={reservationData} onSuccess={onSuccess} onError={onError} />;
 
   if (!clientId || clientId.startsWith('[')) {
     return (

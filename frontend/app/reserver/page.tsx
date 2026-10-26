@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import VideoBackground from '@/components/animations/VideoBackground';
+import { MANUAL_PAYMENT } from '@/lib/manualPayment';
 import type { ReservationPayload } from '@/components/payment/PaypalButton';
 import { OPEN_ISO, OPEN_LABEL, SLOT_TIME, isAvailableDate } from '@/lib/availableDates';
 import { fetchTakenDates, useTakenDates } from '@/lib/useTakenDates';
@@ -299,8 +300,8 @@ export default function ReserverPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '1rem' }} className="steps-grid">
             {[
               { n: 1, title: 'Remplissez le formulaire', desc: 'Vos coordonnées et la date souhaitée (vendredi à 13h30)' },
-              { n: 2, title: 'Paiement sécurisé PayPal', desc: '150 € par carte bancaire ou en 4 fois sans frais' },
-              { n: 3, title: 'Confirmation instantanée', desc: 'Un email avec le fichier .ics est envoyé immédiatement' },
+              { n: 2, title: 'Paiement sécurisé PayPal', desc: MANUAL_PAYMENT ? '150 € via PayPal, puis confirmez votre réservation' : '150 € par carte bancaire ou en 4 fois sans frais' },
+              { n: 3, title: 'Confirmation par email', desc: 'Un email avec le fichier .ics est envoyé immédiatement' },
             ].map((s) => (
               <div key={s.n} style={{
                 display: 'flex', flexDirection: 'row', alignItems: 'flex-start',
@@ -345,7 +346,7 @@ export default function ReserverPage() {
                 Séance confirmée !
               </h2>
               <p style={{ fontSize: '.9rem', color: 'var(--dim)', lineHeight: 1.8, maxWidth: '440px', margin: '0 auto' }}>
-                Votre paiement a bien été reçu. Vous allez recevoir un email de confirmation avec le fichier .ics pour ajouter la séance à votre agenda.
+                {MANUAL_PAYMENT ? 'Votre réservation est enregistrée.' : 'Votre paiement a bien été reçu.'} Vous allez recevoir un email de confirmation avec le fichier .ics pour ajouter la séance à votre agenda.
               </p>
               <p style={{ fontSize: '.8rem', color: 'rgba(253,240,247,.35)', marginTop: '1.5rem' }}>
                 {form.dateVoulue} à 13h30 · Via Zoom
