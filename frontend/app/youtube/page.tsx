@@ -5,7 +5,7 @@ import SacredGeometryBg from '@/components/decorations/SacredGeometryBg';
 
 export const metadata: Metadata = {
   title: 'YouTube — Ama · Hypnose HRE',
-  description: "Retrouvez les vidéos d'Ama sur YouTube : témoignages clients, explications de la méthode HRE et explorations de l'inconscient.",
+  description: "Retrouvez les vidéos d'Ama sur YouTube : séances filmées, explications de la méthode HRE et explorations de l'inconscient.",
 };
 
 const CHANNEL = 'https://www.youtube.com/channel/UCZEYtzvqQwfPhC-oXASQyWA';
@@ -18,7 +18,7 @@ const featured: Video = {
   id: 'UzQzHmQs6EA',
   title: 'Meryam — Séance HRE',
   date: '18 sept. 2026',
-  tag: 'Témoignage',
+  tag: 'Séance',
   customThumb: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/youtube-featured.png`,
 };
 
@@ -36,17 +36,17 @@ const contentVideos: Video[] = [
 ];
 
 const testimonials: Video[] = [
-  { id: 'BRI4kSc5zfY', title: 'Karine', date: '15 juin 2026', tag: 'Témoignage' },
-  { id: '1hqh4Hnsq34', title: 'Patrice', date: '25 avr. 2026', tag: 'Témoignage' },
-  { id: 'GktQtr89Ljg', title: 'Caroline', date: '24 avr. 2026', tag: 'Témoignage' },
-  { id: 'gUgLv6wgwEg', title: 'Emilie', date: '21 mars 2026', tag: 'Témoignage' },
-  { id: 'foANxz4jQsY', title: 'Delphine', date: '19 janv. 2026', tag: 'Témoignage' },
-  { id: 'qeg20SzbFZI', title: 'Candice', date: '9 janv. 2026', tag: 'Témoignage' },
-  { id: '1utH_xKUnT0', title: 'Anais', date: '14 nov. 2025', tag: 'Témoignage' },
-  { id: 'NXF49jQjXFg', title: 'Elodie', date: '9 nov. 2025', tag: 'Témoignage' },
-  { id: '0FTljynEfaI', title: 'Angélique', date: '19 oct. 2025', tag: 'Témoignage' },
-  { id: 'rp8P_DVkK5o', title: 'Gianni', date: '6 oct. 2025', tag: 'Témoignage' },
-  { id: 'QjuVsCJFrkg', title: 'Lydie', date: '26 avr. 2025', tag: 'Témoignage' },
+  { id: 'BRI4kSc5zfY', title: 'Karine', date: '15 juin 2026', tag: 'Séance' },
+  { id: '1hqh4Hnsq34', title: 'Patrice', date: '25 avr. 2026', tag: 'Séance' },
+  { id: 'GktQtr89Ljg', title: 'Caroline', date: '24 avr. 2026', tag: 'Séance' },
+  { id: 'gUgLv6wgwEg', title: 'Emilie', date: '21 mars 2026', tag: 'Séance' },
+  { id: 'foANxz4jQsY', title: 'Delphine', date: '19 janv. 2026', tag: 'Séance' },
+  { id: 'qeg20SzbFZI', title: 'Candice', date: '9 janv. 2026', tag: 'Séance' },
+  { id: '1utH_xKUnT0', title: 'Anais', date: '14 nov. 2025', tag: 'Séance' },
+  { id: 'NXF49jQjXFg', title: 'Elodie', date: '9 nov. 2025', tag: 'Séance' },
+  { id: '0FTljynEfaI', title: 'Angélique', date: '19 oct. 2025', tag: 'Séance' },
+  { id: 'rp8P_DVkK5o', title: 'Gianni', date: '6 oct. 2025', tag: 'Séance' },
+  { id: 'QjuVsCJFrkg', title: 'Lydie', date: '26 avr. 2025', tag: 'Séance' },
 ];
 
 function VideoCard({ video, featured: isFeatured = false }: { video: Video; featured?: boolean }) {
@@ -346,13 +346,13 @@ export default function YouTubePage() {
               fontSize: '.67rem', fontWeight: 700, letterSpacing: '.22em',
               textTransform: 'uppercase' as const, color: 'var(--rose)',
             }}>
-              ✿ Témoignages
+              ✿ Séances
             </div>
             <h2 style={{
               fontFamily: '"Playfair Display", serif', fontStyle: 'italic',
               fontSize: 'clamp(1.5rem, 2.5vw, 2rem)', color: 'var(--white)',
             }}>
-              Ils ont vécu la séance
+              Des séances en vidéo
             </h2>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1.1rem' }} className="yt-testi-grid">

@@ -17,7 +17,7 @@ export default function YoutubeSection() {
           </div>
           <h2 className="section-h2">Découvrez l&apos;<em>HRE en vidéo</em></h2>
           <p className="section-lead">
-            Témoignages, explications de la méthode et explorations de l&apos;inconscient — directement sur YouTube.
+            Séances, explications de la méthode et explorations de l&apos;inconscient, directement sur YouTube.
           </p>
         </ScrollReveal>
 
